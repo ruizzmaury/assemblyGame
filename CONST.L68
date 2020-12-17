@@ -1,0 +1,52 @@
+000013AA Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 17/12/2020 19:54:40
+
+00000000                             1  ; =============================================================================
+00000000                             2  ; TITLE    : GAME CONSTANTS
+00000000                             3  ; AUTHOR   : MAURICI RUIZ PLAZA
+00000000                             4  ; HISTORY  : 15/12/2020  -  CREATION
+00000000                             5  ; =============================================================================
+00000000                             6  
+00000000                             7  ; ----BLOCK RELATED CONSTANTS--------------------------------------------------
+00000000                             8  
+00000000  =00000028                  9  BLOCWDTH    EQU     40                  ; BLOCK WIDTH
+00000000  =00000028                 10  BLOCHEIG    EQU     40                  ; BLOCK HEIGHT
+00000000                            11  
+00000000                            12  ; ---- BLOCK TYPES - 00BBGGRR -----------------------
+00000000  =00000001                 13  BLOCID      EQU       1                 ; BLOCK IDENTIFIER
+00000000                            14  
+00000000                            15  ; STONE
+00000000  =00000014                 16  STNINITX    EQU     BLOCWDTH/2              ; INITIALX STONES
+Line 17 ERROR: Undefined symbol
+00000000                            17  STNINITY    EQU     SCRHEIGH-BLOCWDTH/2     ; INITIALY STONES                                  
+00000000  =00A7A7AD                 18  BLOCPCOL    EQU     $00A7A7AD         ; PEN COLOR
+00000000  =00676767                 19  BLOCFCOL    EQU       $00676767         ; FILL COLOR
+00000000                            20  
+00000000                            21  ; DIRT
+00000000  =00A7A7AD                 22  DIRTPCOL    EQU       $00A7A7AD         ; PEN COLOR
+00000000  =00676767                 23  DIRTFCOL    EQU       $00676767         ; FILL COLOR
+00000000                            24  
+00000000                            25  ; GRASS
+00000000  =00A7A7AD                 26  GRASPCOL    EQU       $00A7A7AD         ; PEN COLOR
+00000000  =00676767                 27  GRASFCOL    EQU       $00676767         ; FILL COLOR
+00000000                            28  
+Line 29 WARNING: END directive missing, starting address not set
+
+1 error detected
+1 warning generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+BLOCFCOL            676767
+BLOCHEIG            28
+BLOCID              1
+BLOCPCOL            A7A7AD
+BLOCWDTH            28
+DIRTFCOL            676767
+DIRTPCOL            A7A7AD
+GRASFCOL            676767
+GRASPCOL            A7A7AD
+STNINITX            14

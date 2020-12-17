@@ -1,0 +1,890 @@
+0000141A Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 17/12/2020 20:47:20
+
+00000000                             1  ; =============================================================================
+00000000                             2  ; TITLE    : EXAMPLE GAME (MAIN PROGRAM)
+00000000                             3  ; AUTHOR   : ANTONI BURGUERA
+00000000                             4  ; HISTORY  : 10-OCT-2020 - CREATION
+00000000                             5  ;            11-OCT-2020 - MINOR CHANGES
+00000000                             6  ; =============================================================================
+00000000                             7  
+00001000                             8              ORG     $1000
+00001000                             9  
+00001000                            10  ; --- CODE INCLUDES -----------------------------------------------------------
+00001000                            11  
+00001000                            12              INCLUDE "SYSCONST.X68"          ; SYSTEM CONSTANTS
+00001000                            13  ; =============================================================================
+00001000                            14  ; TITLE    : SYSTEM CONSTANTS
+00001000                            15  ; AUTHOR   : ANTONI BURGUERA
+00001000                            16  ; HISTORY  : XX-XXX-201X - CREATION
+00001000                            17  ;            11-OCT-2020 - MINOR CHANGES
+00001000                            18  ; =============================================================================
+00001000                            19  
+00001000                            20  ; --- TRAP RELATED CONSTANTS --------------------------------------------------
+00001000                            21  
+00001000  =00000000                 22  KBDTRAP     EQU     0                       ; KEYBOARD UPDATE TRAP
+00001000  =00000001                 23  SCRTRAP     EQU     1                       ; SCREEN REFRESH TRAP
+00001000                            24  
+00001000                            25  ; --- KEY CODES (EASy68K)
+00001000                            26  
+00001000  =00000020                 27  KBDCHRSP    EQU     $20                     ; SPACE KEY
+00001000  =0000004D                 28  KBDCHRMK    EQU     'M'                     ; M KEY
+00001000  =00000010                 29  KBDCHRSH    EQU     $10                     ; SHIFT KEY
+00001000  =00000050                 30  KBDCHRPK    EQU     'P'                     ; P KEY
+00001000  =00000025                 31  KBDCHRLF    EQU     $25                     ; LEFT KEY
+00001000  =00000026                 32  KBDCHRUP    EQU     $26                     ; UP KEY
+00001000  =00000027                 33  KBDCHRRT    EQU     $27                     ; RIGHT KEY
+00001000  =00000028                 34  KBDCHRDN    EQU     $28                     ; DOWN KEY
+00001000                            35  
+00001000                            36  ; --- KEYBOARD MAPPING --------------------------------------------------------
+00001000                            37  
+00001000  =00000025                 38  KBDLEFT     EQU     KBDCHRLF                ; LEFT BUTTON
+00001000  =00000026                 39  KBDUP       EQU     KBDCHRUP                ; UP BUTTON
+00001000  =00000027                 40  KBDRIGHT    EQU     KBDCHRRT                ; RIGHT BUTTON
+00001000  =00000028                 41  KBDDOWN     EQU     KBDCHRDN                ; DOWN BUTTON
+00001000  =00000020                 42  KBDFIRE1    EQU     KBDCHRSP                ; FIRE 1 BUTTON
+00001000  =0000004D                 43  KBDFIRE2    EQU     KBDCHRMK                ; FIRE 2 BUTTON
+00001000  =00000010                 44  KBDFIRE3    EQU     KBDCHRSH                ; FIRE 3 BUTTON
+00001000  =00000050                 45  KBDPAUSE    EQU     KBDCHRPK                ; PAUSE BUTTON
+00001000                            46  
+00001000                            47  ; --- KEYBOARD BITFIELD MASKS -------------------------------------------------
+00001000                            48  ; CONVENIENCE CONSTANTS TO ACCESS THE FOLLOWING BIT-FIELD.
+00001000                            49  ; THIS BIT-FIELD IS USED BY SYSTEM VARS (KBDVAL) AND (KBDEDGE).
+00001000                            50  ; +---+---+---+---+---+---+---+---+
+00001000                            51  ; | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |
+00001000                            52  ; +---+---+---+---+---+---+---+---+
+00001000                            53  ;   |   |   |   |   |   |   |   |
+00001000                            54  ;   |   |   |   |   |   |   |   +---------- LEFT BUTTON
+00001000                            55  ;   |   |   |   |   |   |   +-------------- UP BUTTON
+00001000                            56  ;   |   |   |   |   |   +------------------ RIGHT BUTTON
+00001000                            57  ;   |   |   |   |   +---------------------- DOWN BUTTON
+00001000                            58  ;   |   |   |   +-------------------------- FIRE 1 BUTTON
+00001000                            59  ;   |   |   +------------------------------ FIRE 2 BUTTON
+00001000                            60  ;   |   +---------------------------------- FIRE 3 BUTTON
+00001000                            61  ;   +-------------------------------------- PAUSE BUTTON
+00001000                            62  
+00001000  =00000001                 63  KBDMSKLF    EQU     %00000001
+00001000  =00000002                 64  KBDMSKUP    EQU     %00000010
+00001000  =00000004                 65  KBDMSKRT    EQU     %00000100
+00001000  =00000008                 66  KBDMSKDN    EQU     %00001000
+00001000  =00000010                 67  KBDMSKF1    EQU     %00010000
+00001000  =00000020                 68  KBDMSKF2    EQU     %00100000
+00001000  =00000040                 69  KBDMSKF3    EQU     %01000000
+00001000  =00000080                 70  KBDMSKPS    EQU     %10000000
+00001000                            71  
+00001000                            72  ; --- KEYBOARD BITFIELD POSITIONS ---------------------------------------------
+00001000                            73  
+00001000  =00000000                 74  KBDBITLF    EQU     0
+00001000  =00000001                 75  KBDBITUP    EQU     1
+00001000  =00000002                 76  KBDBITRT    EQU     2
+00001000  =00000003                 77  KBDBITDN    EQU     3
+00001000  =00000004                 78  KBDBITF1    EQU     4
+00001000  =00000005                 79  KBDBITF2    EQU     5
+00001000  =00000006                 80  KBDBITF3    EQU     6
+00001000  =00000007                 81  KBDBITPS    EQU     7
+00001000                            82  
+00001000                            83  ; --- SCREEN RELATED CONSTANTS ------------------------------------------------
+00001000                            84  
+00001000  =00000500                 85  SCRWIDTH    EQU     1280                    ; SCREEN WIDTH (PIXELS)
+00001000  =000002D0                 86  SCRHEIGH    EQU     720                     ; SCREEN HEIGHT (PIXELS)
+00001000  =00000001                 87  SCRIRQ      EQU     1                       ; SCREEN INTERRUPT NUMBER
+00001000  =00000014                 88  SCRTIM      EQU     20                      ; SCREEN TIMER (MS)
+00001000                            89  
+00001000                            90  ; --- DYNAMIC MEMORY CONSTANTS ------------------------------------------------
+00001000                            91  
+00001000  =00000040                 92  DMMBSIZE    EQU     64                      ; BLOCK SIZE (BYTES). POWER OF TWO
+00001000  =00000032                 93  DMMBNUM     EQU     50                      ; NUMBER OF BLOCKS
+00001000  =00000000                 94  DMMSYSID    EQU     0                       ; SYSTEM OWNER ID (MUST BE 0)
+00001000                            95  
+00001000                            96  -------------------- end include --------------------
+00001000                            97              INCLUDE "SYSTEM.X68"            ; SYSTEM CODE
+00001000                            98  ; =============================================================================
+00001000                            99  ; TITLE    : SYSTEM MANAGEMENT (SYSTEM CODE)
+00001000                           100  ; AUTHOR   : ANTONI BURGUERA
+00001000                           101  ; COMMENTS : IT IS DIVIDED IN THREE BLOCKS:
+00001000                           102  ;            - SYS : GENERIC.
+00001000                           103  ;            - SCR : SCREEN MANAGEMENT.
+00001000                           104  ;            - KBD : KEYBOARD MANAGEMENT.
+00001000                           105  ; HISTORY  : XX-XXX-201X - CREATION
+00001000                           106  ;            11-OCT-2020 - MINOR CHANGES
+00001000                           107  ; =============================================================================
+00001000                           108  
+00001000                           109  ; -----------------------------------------------------------------------------
+00001000                           110  SYSINIT
+00001000                           111  ; INITIALIZES THE SYSTEM
+00001000                           112  ; INPUT    - NONE
+00001000                           113  ; OUTPUT   - NONE
+00001000                           114  ; MODIFIES - NONE
+00001000                           115  ; -----------------------------------------------------------------------------
+00001000  205F                     116              MOVE.L  (A7)+,A0                ; GET RETURN ADDRESS
+00001002  4EB9 000010B4            117              JSR     KBDINIT                 ; INIT KEYBOARD
+00001008  4EB9 0000101C            118              JSR     SCRINIT                 ; INIT SCREEN
+0000100E  4EB9 00001114            119              JSR     DMMINIT                 ; INIT DYNAMIC MEMORY
+00001014  027C DFFF                120              ANDI.W  #$DFFF,SR               ; SWITCH TO USER
+00001018  2F08                     121              MOVE.L  A0,-(A7)                ; PUT RETURN ADDRESS
+0000101A  4E75                     122              RTS
+0000101C                           123  
+0000101C                           124  ; =============================================================================
+0000101C                           125  ; SCREEN MANAGEMENT (SYSTEM CODE)
+0000101C                           126  ; =============================================================================
+0000101C                           127  
+0000101C                           128  ; -----------------------------------------------------------------------------
+0000101C                           129  SCRINIT
+0000101C                           130  ; INITIALIZES THE SCREEN, SCREEN-RELATED INTERRUPT AND VARS.
+0000101C                           131  ; INPUT    - NONE
+0000101C                           132  ; OUTPUT   - NONE
+0000101C                           133  ; MODIFIES - D0,D1,D2,D3
+0000101C                           134  ; -----------------------------------------------------------------------------
+0000101C  007C 0700                135              ORI.W   #$0700,SR               ; DISABLE ALL INT
+00001020  21FC 0000109A 0084       136              MOVE.L  #SCRUPD,($80+SCRTRAP*4) ; INSTALL TRAP
+00001028  223C 050002D0            137              MOVE.L  #SCRWIDTH<<16|SCRHEIGH,D1 ; SET RESOLUTION
+0000102E  103C 0021                138              MOVE.B  #33,D0
+00001032  4E4F                     139              TRAP    #15
+00001034  7201                     140              MOVE.L  #1,D1                   ; SET WINDOWED MODE
+00001036  4E4F                     141              TRAP    #15
+00001038  323C FF00                142              MOVE.W  #$FF00,D1               ; CLEAR VISIBLE BUFFER
+0000103C  103C 000B                143              MOVE.B  #11,D0
+00001040  4E4F                     144              TRAP    #15
+00001042  123C 0011                145              MOVE.B  #17,D1                  ; ENABLE DOUBLE BUFFER
+00001046  103C 005C                146              MOVE.B  #92,D0
+0000104A  4E4F                     147              TRAP    #15
+0000104C  323C FF00                148              MOVE.W  #$FF00,D1               ; CLEAR HIDDEN BUFFER
+00001050  103C 000B                149              MOVE.B  #11,D0
+00001054  4E4F                     150              TRAP    #15
+00001056  21FC 0000108C 0064       151              MOVE.L  #SCRISR,($60+SCRIRQ*4)  ; SET EXCEPTION VECTOR
+0000105E  123C 0005                152              MOVE.B  #5,D1                   ; ENABLE EXCEPTION PROCESSING
+00001062  103C 0020                153              MOVE.B  #32,D0
+00001066  4E4F                     154              TRAP    #15
+00001068  143C 0081                155              MOVE.B  #%10000000|SCRIRQ,D2    ; ENABLE AUTO-IRQ
+0000106C  163C 0014                156              MOVE.B  #SCRTIM,D3
+00001070  123C 0006                157              MOVE.B  #6,D1
+00001074  103C 0020                158              MOVE.B  #32,D0
+00001078  4E4F                     159              TRAP    #15
+0000107A  4239 00001448            160              CLR.B   (SCRINTCT)              ; PREPARE INTERRUPT FLAG
+00001080  4239 00001449            161              CLR.B   (SCRCYCCT)              ; PREPARE CYCLE COUNTER
+00001086  027C F8FF                162              ANDI.W  #$F8FF,SR               ; ENABLE INTS
+0000108A  4E75                     163              RTS
+0000108C                           164  
+0000108C                           165  ; -----------------------------------------------------------------------------
+0000108C                           166  SCRISR
+0000108C                           167  ; SCREEN TIMER ISR. INCREASES THE INTERRUPT COUNTER AND UPDATES DOUBLE BUFFER.
+0000108C                           168  ; INPUT    - NONE
+0000108C                           169  ; OUTPUT   - NONE
+0000108C                           170  ; MODIFIES - NONE
+0000108C                           171  ; -----------------------------------------------------------------------------
+0000108C  5239 00001448            172              ADDQ.B  #1,(SCRINTCT)           ; UPDATE INT FLAG/COUNTER
+00001092  5239 00001449            173              ADDQ.B  #1,(SCRCYCCT)           ; UPDATE CYCLE COUNTER
+00001098  4E73                     174              RTE
+0000109A                           175  
+0000109A                           176  ; -----------------------------------------------------------------------------
+0000109A                           177  SCRUPD
+0000109A                           178  ; TRAP SERVICE ROUTINE IN CHARGE OF VISUALIZING CURRENT FRAME AND CLEARING
+0000109A                           179  ; BUFFER FOR THE NEXT ONE.
+0000109A                           180  ; INPUT    - NONE
+0000109A                           181  ; OUTPUT   - NONE
+0000109A                           182  ; MODIFIES - NONE
+0000109A                           183  ; -----------------------------------------------------------------------------
+0000109A  48A7 C000                184              MOVEM.W D0-D1,-(A7)
+0000109E  103C 005E                185              MOVE.B  #94,D0                  ; UPDATE DOUBLE BUFFER
+000010A2  4E4F                     186              TRAP    #15
+000010A4  323C FF00                187              MOVE.W  #$FF00,D1               ; CLEAR HIDDEN BUFFER
+000010A8  103C 000B                188              MOVE.B  #11,D0
+000010AC  4E4F                     189              TRAP    #15
+000010AE  4C9F 0003                190              MOVEM.W (A7)+,D0-D1
+000010B2  4E73                     191              RTE
+000010B4                           192  
+000010B4                           193  ; =============================================================================
+000010B4                           194  ; KEYBOARD MANAGEMENT (SYSTEM CODE)
+000010B4                           195  ; =============================================================================
+000010B4                           196  
+000010B4                           197  ; -----------------------------------------------------------------------------
+000010B4                           198  KBDINIT
+000010B4                           199  ; INITIALIZES THE SYSTEM VARIABLES KBDSYS AND KBDVAL
+000010B4                           200  ; INPUT    - NONE
+000010B4                           201  ; OUTPUT   - NONE
+000010B4                           202  ; MODIFIES - NONE
+000010B4                           203  ; -----------------------------------------------------------------------------
+000010B4  4239 00001446            204              CLR.B   (KBDVAL)                ; INIT VARS
+000010BA  4239 00001447            205              CLR.B   (KBDEDGE)
+000010C0  21FC 000010CA 0080       206              MOVE.L  #KBDREAD,($80+KBDTRAP*4) ; INSTALL
+000010C8  4E75                     207              RTS
+000010CA                           208  
+000010CA                           209  ; -----------------------------------------------------------------------------
+000010CA                           210  KBDREAD
+000010CA                           211  ; TRAP SERVICE ROUTINE.
+000010CA                           212  ; UPDATES THE SYSTEM VARIABLES KBDEDGE AND KBDVAL ACCORDING TO THE BITFIELD
+000010CA                           213  ; DESCRIBED IN SYSCONST. KBDVAL HOLDS THE CURRENT VALUES AND KBDEFGE HOLDS
+000010CA                           214  ; RISING EDGES FROM PREVIOUS CALL TO THE CURRENT ONE.
+000010CA                           215  ; INPUT    - NONE
+000010CA                           216  ; OUTPUT   - (KBDVAL) AND (KBDEDGE)
+000010CA                           217  ; MODIFIES - NONE
+000010CA                           218  ; -----------------------------------------------------------------------------
+000010CA  48E7 F000                219              MOVEM.L D0-D3,-(A7)
+000010CE  103C 0013                220              MOVE.B  #19,D0
+000010D2  223C 50104D20            221              MOVE.L  #KBDPAUSE<<24+KBDFIRE3<<16+KBDFIRE2<<8+KBDFIRE1,D1
+000010D8  4E4F                     222              TRAP    #15
+000010DA  6100 002A                223              BSR     .STORE                  ; STORE FIRE1,FIRE2,FIRE3 AND PAUSE
+000010DE  223C 28272625            224              MOVE.L  #KBDDOWN<<24+KBDRIGHT<<16+KBDUP<<8+KBDLEFT,D1
+000010E4  4E4F                     225              TRAP    #15
+000010E6  6100 001E                226              BSR     .STORE                  ; STORE KEY UP,DOWN,LEFT AND RIGTH.
+000010EA  1039 00001446            227              MOVE.B  (KBDVAL),D0             ; COMPUTE EDGE.
+000010F0  4600                     228              NOT.B   D0                      ; EDGE=NOT(PREVIOUS) AND CURRENT.
+000010F2  C002                     229              AND.B   D2,D0
+000010F4  13C2 00001446            230              MOVE.B  D2,(KBDVAL)             ; STORE VALUES (PRESS AND EDGE)
+000010FA  13C0 00001447            231              MOVE.B  D0,(KBDEDGE)
+00001100  4CDF 000F                232              MOVEM.L (A7)+,D0-D3
+00001104  4E73                     233              RTE
+00001106                           234  
+00001106  363C 0003                235  .STORE      MOVE.W  #3,D3                   ; TRANSLATES THE 8-BIT ENCODING
+0000110A  E189                     236  .LOOP       LSL.L   #8,D1                   ; OF TRAP #15 TASK 19 INTO A 1-BIT
+0000110C  E312                     237              ROXL.B  #1,D2                   ; PER KEYPRESS ENCODING
+0000110E  51CB FFFA                238              DBRA.W  D3,.LOOP
+00001112  4E75                     239              RTS
+00001114                           240  
+00001114                           241  ; =============================================================================
+00001114                           242  ; DYNAMIC MEMORY MANAGEMENT (SYSTEM CODE)
+00001114                           243  ; DYNAMIC MEMORY IS A SET OF DMMBNUM SLOTS OF DMMBSIZE BYTES EACH ONE.
+00001114                           244  ; DMMBSIZE MUST BE POWER OF TWO. A SLOT HAS:
+00001114                           245  ; - HEADER - 1 WORD. SPECIFIES THE OWNER (0 MEANS OWNED BY SYSTEM)
+00001114                           246  ; - DATA   - DMMBSIZE - 2 BYTES. MAY CONTAIN VARS AND ANY KIND OF DATA RELATED
+00001114                           247  ;            THE THE OWNER. IF OWNER==0, DATA IS MEANINGLESS.
+00001114                           248  ; =============================================================================
+00001114                           249  
+00001114                           250  ; -----------------------------------------------------------------------------
+00001114                           251  DMMINIT
+00001114                           252  ; INITIALIZES THE DYNAMIC MEMORY TO ALL OWNED BY SYSTEM.
+00001114                           253  ; INPUT    - NONE
+00001114                           254  ; OUTPUT   - NONE
+00001114                           255  ; MODIFIES - NONE
+00001114                           256  ; -----------------------------------------------------------------------------
+00001114  48E7 8080                257              MOVEM.L D0/A0,-(A7)
+00001118  41F9 00001480            258              LEA     DMMDATA,A0
+0000111E  303C 0031                259              MOVE.W  #DMMBNUM-1,D0
+00001122  30BC 0000                260  .LOOP       MOVE.W  #DMMSYSID,(A0)
+00001126  D1FC 00000040            261              ADD.L   #DMMBSIZE,A0
+0000112C  51C8 FFF4                262              DBRA.W  D0,.LOOP
+00001130  4CDF 0101                263              MOVEM.L (A7)+,D0/A0
+00001134  4E75                     264              RTS
+00001136                           265  
+00001136                           266  ; -----------------------------------------------------------------------------
+00001136                           267  DMMFIRST
+00001136                           268  ; SEARCHES THE FIRST MEMORY SLOT NOT OWNED BY SYSTEM AND OUTPUTS A POINTER
+00001136                           269  ; TO THE CORRESPONDING DATA (SLOT ADDRESS+2)
+00001136                           270  ; INPUT    - NONE
+00001136                           271  ; OUTPUT   - A0   : POINTER TO THE DATA OR 0 IF NOT FOUND
+00001136                           272  ; MODIFIES - NONE (ASIDE OF OUTPUT)
+00001136                           273  ; -----------------------------------------------------------------------------
+00001136  41F9 00001480            274              LEA     DMMDATA,A0
+0000113C  4A58                     275  DMMFRLOP    TST.W   (A0)+
+0000113E  6600 0016                276              BNE     DMMFRFND
+00001142  D1FC 0000003E            277              ADD.L   #DMMBSIZE-2,A0
+00001148  B1FC 000020FF            278  DMMFRCOM    CMP.L   #DMMDATA+DMMBSIZE*DMMBNUM-1,A0
+0000114E  6DEC                     279              BLT     DMMFRLOP
+00001150  207C 00000000            280              MOVE.L  #0,A0
+00001156  4E75                     281  DMMFRFND    RTS
+00001158                           282  
+00001158                           283  ; -----------------------------------------------------------------------------
+00001158                           284  DMMNEXT
+00001158                           285  ; SEARCHES THE NEXT MEMORY SLOT NOT OWNED BY SYSTEM AND OUTPUTS A POINTER
+00001158                           286  ; TO THE CORRESPONDING DATA (SLOT ADDRESS+2)
+00001158                           287  ; INPUT    - A0   : POINTER WITHIN THE CURRENT SLOT
+00001158                           288  ; OUTPUT   - A0   : POINTER TO THE DATA OR 0 IF NOT FOUND
+00001158                           289  ; MODIFIES - NONE (ASIDE OF OUTPUT)
+00001158                           290  ; -----------------------------------------------------------------------------
+00001158  2F00                     291              MOVE.L  D0,-(A7)
+0000115A  2008                     292              MOVE.L  A0,D0
+0000115C  C0BC FFFFFFC0            293              AND.L   #-DMMBSIZE,D0           ; TAKE ADVANTAGE OF ALIGNMENT
+00001162  0680 00000040            294              ADD.L   #DMMBSIZE,D0
+00001168  2040                     295              MOVE.L  D0,A0
+0000116A  201F                     296              MOVE.L  (A7)+,D0
+0000116C  60DA                     297              BRA     DMMFRCOM
+0000116E                           298  
+0000116E                           299  ; -----------------------------------------------------------------------------
+0000116E                           300  DMMFRSTO
+0000116E                           301  ; SEARCHES THE FIRST MEMORY SLOT WITH THE SPECIFIED ID AND OUTPUTS A POINTER
+0000116E                           302  ; TO THE CORRESPONDING DATA (SLOT ADDRESS+2)
+0000116E                           303  ; INPUT    - D0.W : ID TO SEARCH
+0000116E                           304  ; OUTPUT   - A0   : POINTER TO THE DATA OR 0 IF NOT FOUND
+0000116E                           305  ; MODIFIES - NONE (ASIDE OF OUTPUT)
+0000116E                           306  ; -----------------------------------------------------------------------------
+0000116E  41F9 00001480            307              LEA     DMMDATA,A0
+00001174  B058                     308  DMMFLOOP    CMP.W   (A0)+,D0
+00001176  6700 0016                309              BEQ     DMMFFND
+0000117A  D1FC 0000003E            310              ADD.L   #DMMBSIZE-2,A0
+00001180  B1FC 000020FF            311  DMMFCOM     CMP.L   #DMMDATA+DMMBSIZE*DMMBNUM-1,A0
+00001186  6DEC                     312              BLT     DMMFLOOP
+00001188  207C 00000000            313              MOVE.L  #0,A0
+0000118E  4E75                     314  DMMFFND     RTS
+00001190                           315  
+00001190                           316  ; -----------------------------------------------------------------------------
+00001190                           317  DMMNEXTO
+00001190                           318  ; SEARCHES THE NEXT MEMORY SLOT WITH THE SPECIFIED ID AND OUTPUTS A POINTER
+00001190                           319  ; TO THE CORRESPONDING DATA (SLOT ADDRESS+2)
+00001190                           320  ; INPUT    - D0.W : ID TO SEARCH
+00001190                           321  ;            A0   : POINTER WITHIN THE CURRENT SLOT
+00001190                           322  ; OUTPUT   - A0   : POINTER TO THE DATA OR 0 IF NOT FOUND
+00001190                           323  ; MODIFIES - NONE (ASIDE OF OUTPUT)
+00001190                           324  ; -----------------------------------------------------------------------------
+00001190  2F00                     325              MOVE.L  D0,-(A7)
+00001192  2008                     326              MOVE.L  A0,D0
+00001194  C0BC FFFFFFC0            327              AND.L   #-DMMBSIZE,D0           ; TAKE ADVANTAGE OF ALIGNMENT
+0000119A  0680 00000040            328              ADD.L   #DMMBSIZE,D0
+000011A0  2040                     329              MOVE.L  D0,A0
+000011A2  201F                     330              MOVE.L  (A7)+,D0
+000011A4  60DA                     331              BRA     DMMFCOM
+000011A6                           332  
+000011A6                           333  ; -----------------------------------------------------------------------------
+000011A6                           334  DMMALLOC
+000011A6                           335  ; SEARCHES THE FIRST FREE (SYS OWNED) SLOT, ASSIGNS TO THE SPECIFIED OWNER
+000011A6                           336  ; AND RETURNS A POINTER TO THE CORRESPONDING DATA (SLOT ADDRESS + 2)
+000011A6                           337  ; INPUT    - D0.W : ID TO ASSIGN
+000011A6                           338  ; OUTPUT   - A0   : POINTER TO THE DATA OR 0 IF NOT FREE SPACE
+000011A6                           339  ; MODIFIES - NONE (ASIDE OF OUTPUT)
+000011A6                           340  ; -----------------------------------------------------------------------------
+000011A6  3F00                     341              MOVE.W  D0,-(A7)
+000011A8  4240                     342              CLR.W   D0
+000011AA  4EB8 116E                343              JSR     DMMFRSTO
+000011AE  301F                     344              MOVE.W  (A7)+,D0
+000011B0  B1FC 00000000            345              CMP.L   #0,A0
+000011B6  6700 0006                346              BEQ     .END
+000011BA  3140 FFFE                347              MOVE.W  D0,-2(A0)
+000011BE  4E75                     348  .END        RTS
+000011C0                           349  
+000011C0                           350  ; -----------------------------------------------------------------------------
+000011C0                           351  DMMFREE
+000011C0                           352  ; FREES THE SLOT TO WHICH THE PROVIDED POINTER BELONGS BY SETTING ITS OWNED TO
+000011C0                           353  ; SYSTEM (0)
+000011C0                           354  ; INPUT    - A0   : POINTER BELONGING TO THE SLOT TO FREE
+000011C0                           355  ; OUTPUT   - NONE
+000011C0                           356  ; MODIFIES - NONE
+000011C0                           357  ; -----------------------------------------------------------------------------
+000011C0  48E7 8080                358              MOVEM.L D0/A0,-(A7)
+000011C4  2008                     359              MOVE.L  A0,D0
+000011C6  C0BC FFFFFFC0            360              AND.L   #-DMMBSIZE,D0           ; TAKE ADVANTAGE OF ALIGNMENT
+000011CC  2040                     361              MOVE.L  D0,A0
+000011CE  4250                     362              CLR.W   (A0)
+000011D0  4CDF 0101                363              MOVEM.L (A7)+,D0/A0
+000011D4  4E75                     364              RTS
+000011D4  4E75                     365  -------------------- end include --------------------
+000011D6                           366              INCLUDE "CONST.X68"             ; GAME CONSTANTS
+000011D6                           367  ; =============================================================================
+000011D6                           368  ; TITLE    : GAME CONSTANTS
+000011D6                           369  ; AUTHOR   : MAURICI RUIZ PLAZA
+000011D6                           370  ; HISTORY  : 15/12/2020  -  CREATION
+000011D6                           371  ; =============================================================================
+000011D6                           372  
+000011D6                           373  ; ----BLOCK RELATED CONSTANTS--------------------------------------------------
+000011D6                           374  
+000011D6  =00000028                375  BLOCWDTH    EQU     40                  ; BLOCK WIDTH
+000011D6  =00000028                376  BLOCHEIG    EQU     40                  ; BLOCK HEIGHT
+000011D6                           377  
+000011D6                           378  ; ---- BLOCK TYPES - 00BBGGRR -----------------------
+000011D6  =00000001                379  BLOCID      EQU       1                 ; BLOCK IDENTIFIER
+000011D6                           380  
+000011D6                           381  ; STONE
+000011D6  =00000014                382  STNINITX    EQU     BLOCWDTH/2              ; INITIALX STONES
+000011D6  =000002BC                383  STNINITY    EQU     SCRHEIGH-BLOCWDTH/2     ; INITIALY STONES                                  
+000011D6  =00A7A7AD                384  BLOCPCOL    EQU     $00A7A7AD               ; PEN COLOR
+000011D6  =00676767                385  BLOCFCOL    EQU      $00676767          ; FILL COLOR
+000011D6                           386  
+000011D6                           387  ; DIRT
+000011D6  =00000014                388  DRTINITX    EQU     BLOCWDTH/2              ; INITIALX DIRT
+000011D6  =000002A8                389  DRTINITY    EQU     SCRHEIGH-BLOCWDTH       ; INITIALY DIRT
+000011D6  =00A7A7AD                390  DIRTPCOL    EQU      $00A7A7AD               ; PEN COLOR
+000011D6  =00676767                391  DIRTFCOL    EQU      $00676767               ; FILL COLOR
+000011D6                           392  
+000011D6                           393  ; GRASS
+000011D6  =00A7A7AD                394  GRASPCOL    EQU      $00A7A7AD         ; PEN COLOR
+000011D6  =00676767                395  GRASFCOL    EQU      $00676767         ; FILL COLOR
+000011D6                           396  
+000011D6                           397  
+000011D6                           398  -------------------- end include --------------------
+000011D6                           399              INCLUDE "RANDOM.X68"            ; RANDOM NUMBER GENERATOR
+000011D6                           400  ; =============================================================================
+000011D6                           401  ; TITLE    : PSEUDO-RANDOM NUMBER GENERATOR
+000011D6                           402  ; AUTHOR   : ANTONI BURGUERA
+000011D6                           403  ; COMMENTS : VERY LAZY AND STUPID "ALGORITHM" IMPLEMENTED.
+000011D6                           404  ; HISTORY  : XX-XXX-201X - CREATION
+000011D6                           405  ;            11-OCT-2020 - MINOR CHANGES
+000011D6                           406  ; =============================================================================
+000011D6                           407  
+000011D6                           408  ; -----------------------------------------------------------------------------
+000011D6                           409  RNDINIT
+000011D6                           410  ; INITIALIZES RANDOM NUMBER GENERATOR
+000011D6                           411  ; INPUT    - NONE
+000011D6                           412  ; OUTPUT   - NONE
+000011D6                           413  ; MODIFIES - NONE
+000011D6                           414  ; -----------------------------------------------------------------------------
+000011D6  4239 00002104            415              CLR.B   (RNDINDEX)
+000011DC  4E75                     416              RTS
+000011DE                           417  ; -----------------------------------------------------------------------------
+000011DE                           418  RNDGET
+000011DE                           419  ; PROVIDES A PSEUDO-RANDOM BYTE
+000011DE                           420  ; INPUT    - NONE
+000011DE                           421  ; OUTPUT   - D0.L RANDOM VALUE (ONLY BYTE)
+000011DE                           422  ; MODIFIES - NONE (ASIDE OF OUTPUT)
+000011DE                           423  ; -----------------------------------------------------------------------------
+000011DE  2F08                     424              MOVE.L  A0,-(A7)
+000011E0  41F9 000011FC            425              LEA     .RANDVEC,A0
+000011E6  4280                     426              CLR.L   D0
+000011E8  1039 00002104            427              MOVE.B  (RNDINDEX),D0
+000011EE  1030 0800                428              MOVE.B  (A0,D0.L),D0
+000011F2  5239 00002104            429              ADDQ.B  #1,(RNDINDEX)
+000011F8  205F                     430              MOVE.L  (A7)+,A0
+000011FA  4E75                     431              RTS
+000011FC                           432  
+000011FC= A2 EE 9A 0C F5 24 ...    433  .RANDVEC    DC.B    162, 238, 154, 12 , 245, 36 , 32 , 103
+00001204= 2A A3 51 26 E0 AC ...    434              DC.B    42 , 163, 81 , 38 , 224, 172, 19 , 69
+0000120C= 75 51 CA FD 33 EB ...    435              DC.B    117, 81 , 202, 253, 51 , 235, 108, 154
+00001214= 60 CC E7 B8 9A EB ...    436              DC.B    96 , 204, 231, 184, 154, 235, 34 , 203
+0000121C= 1D 76 B5 95 B0 89 ...    437              DC.B    29 , 118, 181, 149, 176, 137, 62 , 108
+00001224= 39 15 48 C9 6E CA ...    438              DC.B    57 , 21 , 72 , 201, 110, 202, 159, 41
+0000122C= 43 E7 E2 7C 37 25 ...    439              DC.B    67 , 231, 226, 124, 55 , 37 , 84 , 62
+00001234= E9 94 CE E9 E4 52 ...    440              DC.B    233, 148, 206, 233, 228, 82 , 243, 78
+0000123C= 37 6D 9A 84 A2 28 ...    441              DC.B    55 , 109, 154, 132, 162, 40 , 30 , 39
+00001244= 19 E2 C6 77 80 D4 ...    442              DC.B    25 , 226, 198, 119, 128, 212, 232, 225
+0000124C= 0A 5A 32 67 33 C2 ...    443              DC.B    10 , 90 , 50 , 103, 51 , 194, 222, 40
+00001254= 59 80 DC 0E 57 FC ...    444              DC.B    89 , 128, 220, 14 , 87 , 252, 243, 252
+0000125C= 8A AB BC F7 07 4D ...    445              DC.B    138, 171, 188, 247, 7  , 77 , 29 , 234
+00001264= EF D5 77 6E 1E BB ...    446              DC.B    239, 213, 119, 110, 30 , 187, 131, 23
+0000126C= D6 E0 2A 8F BD 28 ...    447              DC.B    214, 224, 42 , 143, 189, 40 , 212, 130
+00001274= 13 4F 66 EC 0A 64 ...    448              DC.B    19 , 79 , 102, 236, 10 , 100, 122, 188
+0000127C= 56 52 9A 16 9B 90 ...    449              DC.B    86 , 82 , 154, 22 , 155, 144, 7  , 199
+00001284= 06 8A A4 F7 01 DA ...    450              DC.B    6  , 138, 164, 247, 1  , 218, 166, 82
+0000128C= F2 E7 77 28 B1 76 ...    451              DC.B    242, 231, 119, 40 , 177, 118, 220, 102
+00001294= A4 42 E3 81 B1 67 ...    452              DC.B    164, 66 , 227, 129, 177, 103, 165, 108
+0000129C= BF CE FA 16 BF 38 ...    453              DC.B    191, 206, 250, 22 , 191, 56 , 30 , 161
+000012A4= D1 8B 50 0C 5F 49 ...    454              DC.B    209, 139, 80 , 12 , 95 , 73 , 168, 56
+000012AC= DE 4C 14 A2 40 DC ...    455              DC.B    222, 76 , 20 , 162, 64 , 220, 93 , 12
+000012B4= B6 9B 0A 38 5D AB ...    456              DC.B    182, 155, 10 , 56 , 93 , 171, 89 , 6
+000012BC= E2 1B DD 75 15 82 ...    457              DC.B    226, 27 , 221, 117, 21 , 130, 101, 18
+000012C4= 8A 26 51 30 9F 47 ...    458              DC.B    138, 38 , 81 , 48 , 159, 71 , 57 , 21
+000012CC= 1E 8A BB 71 C6 6E ...    459              DC.B    30 , 138, 187, 113, 198, 110, 185, 152
+000012D4= 9F 47 E5 34 94 27 ...    460              DC.B    159, 71 , 229, 52 , 148, 39 , 77 , 6
+000012DC= 7D 06 D6 BA 30 0F ...    461              DC.B    125, 6  , 214, 186, 48 , 15 , 212, 22
+000012E4= EC 7F 7E 03 CF 2D ...    462              DC.B    236, 127, 126, 3  , 207, 45 , 193, 2
+000012EC= 94 5B 23 F2 8B CD ...    463              DC.B    148, 91 , 35 , 242, 139, 205, 248, 237
+000012F4= 74 33 EC B9 0F D5 ...    464              DC.B    116, 51 , 236, 185, 15 , 213, 221, 6
+000012F4= 74 33 EC B9 0F D5 ...    465  -------------------- end include --------------------
+000012FC                           466              INCLUDE "AGENTLST.X68"          ; 
+000012FC                           467  ; =============================================================================
+000012FC                           468  ; TITLE    : AGENT LIST
+000012FC                           469  ; AUTHOR   : ANTONI BURGUERA
+000012FC                           470  ; COMMENTS : EACH AGENT HAS A DATA BLOCK FROM DMM AS FOLLOWS:
+000012FC                           471  ;              +0 - LONG : UPDATE SUBROUTINE POINTER
+000012FC                           472  ;              +4 - LONG : PLOT SUBROUTINE POINTER
+000012FC                           473  ;              +8:END    : DATA (AGENT SPECIFIC)
+000012FC                           474  ; HISTORY  : XX-XXX-201X - CREATION
+000012FC                           475  ;            11-OCT-2020 - MINOR CHANGES
+000012FC                           476  ; =============================================================================
+000012FC                           477  
+000012FC                           478  ; -----------------------------------------------------------------------------
+000012FC                           479  AGLADD
+000012FC                           480  ; CREATES A NEW AGENT
+000012FC                           481  ; INPUT    - A1 - POINTER TO AGENT INIT FUNCTION
+000012FC                           482  ;            A2 - POINTER TO AGENT UPDATE FUNCTION
+000012FC                           483  ;            A3 - POINTER TO AGENT PLOT FUNCTION
+000012FC                           484  ;            D0 - AGENT TYPE (USED AS OWNED BY DMM)
+000012FC                           485  ;            D1 - AGENT INITIALIZATION PARAMETER 1
+000012FC                           486  ;            D2 - AGENT INITIALIZATION PARAMETER 2
+000012FC                           487  ;            D3 - AGENT INITIALIZATION PARAMETER 3
+000012FC                           488  ; OUTPUT   - NONE
+000012FC                           489  ; MODIFIES - NONE
+000012FC                           490  ; -----------------------------------------------------------------------------
+000012FC  2F08                     491              MOVE.L  A0,-(A7)
+000012FE  4EB8 11A6                492              JSR     DMMALLOC
+00001302  B1FC 00000000            493              CMP.L   #0,A0
+00001308  6700 0008                494              BEQ     .END
+0000130C  20CA                     495              MOVE.L  A2,(A0)+
+0000130E  20CB                     496              MOVE.L  A3,(A0)+
+00001310  4E91                     497              JSR     (A1)
+00001312  205F                     498  .END        MOVE.L  (A7)+,A0
+00001314  4E75                     499              RTS
+00001316                           500  
+00001316                           501  ; -----------------------------------------------------------------------------
+00001316                           502  AGLUPD
+00001316                           503  ; UPDATES THE AGENT LIST. PRIOR TO CALLING THE UPDATE FUNCTIONS, A0 IS SET
+00001316                           504  ; TO THE DATA BLOCK OF THE CORRESPONDING SLOT.
+00001316                           505  ; INPUT    - NONE
+00001316                           506  ; OUTPUT   - NONE
+00001316                           507  ; MODIFIES - NONE
+00001316                           508  ; -----------------------------------------------------------------------------
+00001316  48E7 00C0                509              MOVEM.L A0-A1,-(A7)
+0000131A  4EB8 1136                510              JSR     DMMFIRST
+0000131E  B1FC 00000000            511  .LOOP       CMP.L   #0,A0
+00001324  6700 000E                512              BEQ     .END
+00001328  2250                     513              MOVE.L  (A0),A1
+0000132A  5088                     514              ADD.L   #8,A0
+0000132C  4E91                     515              JSR     (A1)
+0000132E  4EB8 1158                516              JSR     DMMNEXT
+00001332  60EA                     517              BRA     .LOOP
+00001334  4CDF 0300                518  .END        MOVEM.L (A7)+,A0-A1
+00001338  4E75                     519              RTS
+0000133A                           520  
+0000133A                           521  ; -----------------------------------------------------------------------------
+0000133A                           522  AGLPLOT
+0000133A                           523  ; PLOTS THE AGENT LIST. PRIOR TO CALLING THE UPDATE FUNCTIONS, A0 IS SET
+0000133A                           524  ; TO THE DATA BLOCK OF THE CORRESPONDING SLOT.
+0000133A                           525  ; INPUT    - NONE
+0000133A                           526  ; OUTPUT   - NONE
+0000133A                           527  ; MODIFIES - NONE
+0000133A                           528  ; -----------------------------------------------------------------------------
+0000133A  48E7 00C0                529              MOVEM.L A0-A1,-(A7)
+0000133E  4EB8 1136                530              JSR     DMMFIRST
+00001342  B1FC 00000000            531  .LOOP       CMP.L   #0,A0
+00001348  6700 0010                532              BEQ     .END
+0000134C  2268 0004                533              MOVE.L  4(A0),A1
+00001350  5088                     534              ADD.L   #8,A0
+00001352  4E91                     535              JSR     (A1)
+00001354  4EB8 1158                536              JSR     DMMNEXT
+00001358  60E8                     537              BRA     .LOOP
+0000135A  4CDF 0300                538  .END        MOVEM.L (A7)+,A0-A1
+0000135E  4E75                     539              RTS
+00001360                           540  
+00001360                           541  ; -----------------------------------------------------------------------------
+00001360  =000011C0                542  AGLKILL     EQU     DMMFREE
+00001360                           543  ; KILLS THE AGENT BY RELEASING ITS MEMORY
+00001360                           544  ; INPUT    - A0 POINTER WITHIN THE AGENT MEMORY
+00001360                           545  ; OUTPUT   - NONE
+00001360                           546  ; MODIFIES - NONE
+00001360                           547  ; NOTE     - IT IS JUST A WRAPPER FOR DMMFREE
+00001360                           548  ; -----------------------------------------------------------------------------
+00001360                           549  -------------------- end include --------------------
+00001360                           550              INCLUDE "BLOCK.X68"             ; BLOCK MANAGEMENT
+00001360                           551  
+00001360                           552  ;-----------------------------------------------------------
+00001360                           553  BLOCINIT
+00001360                           554  ; INITIALIZE BLOCK
+00001360                           555  ; INPUT     - D1.W  STONE PLACE COORDINATE 
+00001360                           556  ; OUTPUT    - NONE
+00001360                           557  ; MODIFIES  - NONE  
+00001360                           558  ;-----------------------------------------------------------
+00001360                           559                         
+00001360  3081                     560              MOVE.W  D1, (A0)
+00001362  38BC 02BC                561              MOVE.W  #STNINITY, (A4)
+00001366                           562              
+00001366  4E75                     563              RTS
+00001368                           564  
+00001368                           565  
+00001368                           566  ;-----------------------------------------------------------
+00001368                           567  BLOCUPD
+00001368                           568  ; UPDATE BLOCK
+00001368                           569  ; INPUT     - NONE
+00001368                           570  ; OUTPUT    - NONE
+00001368                           571  ; MODIFIES  - NONE  
+00001368                           572  ;-----------------------------------------------------------
+00001368  4E75                     573              RTS
+0000136A                           574  
+0000136A                           575  
+0000136A                           576  
+0000136A                           577  ;-----------------------------------------------------------
+0000136A                           578  BLOCPLOT
+0000136A                           579  ; PLOT BLOCK
+0000136A                           580  ; INPUT     - NONE
+0000136A                           581  ; OUTPUT    - NONE
+0000136A                           582  ; MODIFIES  - NONE  
+0000136A                           583  ;-----------------------------------------------------------
+0000136A  48E7 F800                584              MOVEM.L D0-D4, -(A7)            ; STACK REGISTER
+0000136E  103C 0050                585              MOVE.B  #80, D0                 ; SET PEN COLOR TASK
+00001372  223C 00A7A7AD            586              MOVE.L  #BLOCPCOL, D1           ; BLOCK COLOR
+00001378  4E4F                     587              TRAP #15; SET PEN COLOR
+0000137A  103C 0051                588              MOVE.B  #81, D0                 ; SET FILL COLOR TASK
+0000137E  223C 00676767            589              MOVE.L  #BLOCFCOL, D1           ; BLOCK COLOR
+00001384  4E4F                     590              TRAP #15; SET FILL COLOR
+00001386                           591              
+00001386  3210                     592              MOVE.W  (A0),D1                 ; D1:=XCENTER
+00001388  3414                     593              MOVE.W  (A4),D2                 ; D2:=YCENTER
+0000138A  3601                     594              MOVE.W  D1, D3                  ; D3:=XCENTER
+0000138C  3802                     595              MOVE.W  D2, D4                  ; D4:=YCENTER
+0000138E                           596              
+0000138E  0441 0014                597              SUB.W   #BLOCWDTH/2, D1         ; D1:=XLEFT
+00001392  0442 0014                598              SUB.W   #BLOCHEIG/2, D2         ; D2:=YTOP
+00001396  0643 0014                599              ADD.W   #BLOCWDTH/2, D3         ; D3:=XRIGHT
+0000139A  0644 0014                600              ADD.W   #BLOCHEIG/2, D4         ; D4:=YBOTTOM
+0000139E  103C 0057                601              MOVE.B  #87, D0
+000013A2  4E4F                     602              TRAP    #15                     ; DRAW BLOCK
+000013A4  4CDF 001F                603              MOVEM.L (A7)+, D0-D4            ; RESTORE REGISTERS
+000013A8  4E75                     604              RTS
+000013AA                           605  
+000013AA                           606  
+000013AA                           607  -------------------- end include --------------------
+000013AA                           608              INCLUDE "LAND.X68"              ; LAND CREATION
+000013AA                           609  
+000013AA                           610  ;-----------------------------------------------------------
+000013AA                           611  STNEINIT
+000013AA                           612  ; CREATE BASELAND OF STONES
+000013AA                           613  ; INPUT     - NONE
+000013AA                           614  ; OUTPUT    - NONE
+000013AA                           615  ; MODIFIES  - NONE  
+000013AA                           616  ;-----------------------------------------------------------
+000013AA                           617              
+000013AA  48E7 F000                618              MOVEM.L D0-D3, -(A7)            ; STACK REGISTER
+000013AE  48E7 0070                619              MOVEM.L A1-A3, -(A7)
+000013B2                           620              
+000013B2                           621              
+000013B2  143C 0020                622              MOVE.B  #SCRWIDTH/BLOCWDTH, D2  ; NUMBER OF STONE BLOCKS
+000013B6  363C 0014                623              MOVE.W  #STNINITX, D3                     
+000013BA                           624              
+000013BA  303C 0001                625              MOVE.W  #BLOCID, D0
+000013BE  43F8 1360                626              LEA     BLOCINIT, A1
+000013C2  45F8 1368                627              LEA     BLOCUPD, A2
+000013C6  47F8 136A                628              LEA     BLOCPLOT, A3                                      
+000013CA                           629              
+000013CA  3203                     630  .LOOPS      MOVE.W  D3, D1            
+000013CC  4EB8 12FC                631              JSR     AGLADD
+000013D0  0643 0028                632              ADD.W   #BLOCWDTH, D3
+000013D4  51CA FFF4                633              DBRA.W  D2, .LOOPS
+000013D8                           634              
+000013D8  4CDF 0E00                635              MOVEM.L (A7)+, A1-A3
+000013DC  4CDF 000F                636              MOVEM.L (A7)+, D0-D3            ; RESTORE REGISTERS
+000013E0  4E75                     637              RTS
+000013E2                           638              
+000013E2                           639                        
+000013E2                           640  DIRTINIT
+000013E2                           641  ; INITIALIZE BASELAND OF DIRT 
+000013E2                           642  ; INPUT     - D1.W  DIRT PLACE COORDINATE 
+000013E2                           643  ; OUTPUT    - NONE
+000013E2                           644  ; MODIFIES  - NONE  
+000013E2                           645  ;-----------------------------------------------------------
+000013E2                           646              
+000013E2  48E7 F000                647              MOVEM.L D0-D3, -(A7)            ; STACK REGISTER
+000013E6  48E7 0070                648              MOVEM.L A1-A3, -(A7)
+000013EA                           649              
+000013EA                           650              
+000013EA  143C 0020                651              MOVE.B  #SCRWIDTH/BLOCWDTH, D2  ; NUMBER OF STONE BLOCKS
+000013EE  363C 0014                652              MOVE.W  #STNINITX, D3                     
+000013F2                           653              
+000013F2  303C 0001                654              MOVE.W  #BLOCID, D0
+000013F6  43F8 1360                655              LEA     BLOCINIT, A1
+000013FA  45F8 1368                656              LEA     BLOCUPD, A2
+000013FE  47F8 136A                657              LEA     BLOCPLOT, A3                                      
+00001402                           658              
+00001402  3203                     659  .ROWDIRT    MOVE.W  D3, D1            
+00001404  4EB8 12FC                660              JSR     AGLADD
+00001408  0643 0028                661              ADD.W   #BLOCWDTH, D3
+0000140C  51CA FFF4                662              DBRA.W  D2, .ROWDIRT    
+00001410                           663              
+00001410  4CDF 0E00                664              MOVEM.L (A7)+, A1-A3
+00001414  4CDF 000F                665              MOVEM.L (A7)+, D0-D3            ; RESTORE REGISTERS
+00001418  4E75                     666              RTS
+0000141A                           667  
+0000141A                           668  
+0000141A                           669  
+0000141A                           670  
+0000141A                           671   
+0000141A                           672            
+0000141A                           673  
+0000141A                           674  -------------------- end include --------------------
+0000141A                           675  
+0000141A                           676  ; --- INITIALIZE --------------------------------------------------------------
+0000141A                           677  
+0000141A  4EB8 1000                678  START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
+0000141E                           679               
+0000141E                           680  
+0000141E                           681              ; TO DO : ADD YOUR GAME INITIALIZATION HERE
+0000141E  4EB8 11D6                682              JSR       RNDINIT
+00001422                           683              
+00001422                           684              
+00001422                           685              ; GENERATES BASELAND OF STONES
+00001422                           686                          
+00001422  4EB8 13AA                687              JSR      STNEINIT
+00001426                           688  
+00001426                           689     
+00001426                           690             
+00001426                           691  
+00001426                           692              
+00001426                           693              
+00001426                           694  
+00001426                           695  
+00001426                           696  ; --- UPDATE ------------------------------------------------------------------
+00001426                           697  
+00001426  4E40                     698  .LOOP       TRAP    #KBDTRAP                ; READ KEYBOARD
+00001428                           699  
+00001428                           700              ; TO DO : ADD YOUR GAME UPDATE HERE
+00001428  4EB8 1316                701              JSR      AGLUPD
+0000142C                           702  
+0000142C                           703  ; --- WAIT SYNCH --------------------------------------------------------------
+0000142C                           704  
+0000142C  4A39 00001448            705  .WINT       TST.B   (SCRINTCT)              ; WAIT FOR INTERRUPT
+00001432  67F8                     706              BEQ     .WINT
+00001434  4239 00001448            707              CLR.B   (SCRINTCT)
+0000143A                           708  
+0000143A                           709  ; --- PLOT --------------------------------------------------------------------
+0000143A                           710  
+0000143A                           711              ; TO DO : ADD YOUR GAME PLOT HERE           
+0000143A  4EB8 133A                712              JSR     AGLPLOT
+0000143E                           713  
+0000143E  4E41                     714              TRAP    #SCRTRAP                ; SHOW GRAPHICS
+00001440  60E4                     715              BRA     .LOOP                   ; MAIN LOOP
+00001442  FFFF FFFF                716              SIMHALT
+00001446                           717  
+00001446                           718  ; --- VARIABLES ---------------------------------------------------------------
+00001446                           719  
+00001446                           720              INCLUDE "SYSVAR.X68"
+00001446                           721  ; =============================================================================
+00001446                           722  ; TITLE    : SYSTEM VARIABLES
+00001446                           723  ; AUTHOR   : ANTONI BURGUERA
+00001446                           724  ; COMMENTS : NOTE THAT ALL THESE VARS ARE USED TO SHARE DATA FROM SYSTEM TO
+00001446                           725  ;            USER. THUS THEY MUST NOT BE IN PROTECTED MEMORY.
+00001446                           726  ;            NOTE THAT USING DMMDATA IN SUCH WAY IS A BAD IDEA, AS USER
+00001446                           727  ;            APPLICATIONS CAN ALSO FREE OR CHANGE OWNERSHIP. NONETHELESS, FOR
+00001446                           728  ;            THE SAKE OF THIS EXAMPLE THIS IS GOOD ENOUGH.
+00001446                           729  ; HISTORY  : XX-XXX-201X - CREATION
+00001446                           730  ;            11-OCT-2020 - MINOR CHANGES
+00001446                           731  ; =============================================================================
+00001446                           732  
+00001446                           733  ; --- KEYBOARD RELATED VARIABLES ----------------------------------------------
+00001446                           734  
+00001446                           735  KBDVAL      DS.B    1                       ; KEY PRESSED=1
+00001447                           736  KBDEDGE     DS.B    1                       ; KEY CHANGED=1
+00001448                           737  
+00001448                           738              DS.W    0
+00001448                           739  
+00001448                           740  ; --- SCREEN RELATED VARIABLES ------------------------------------------------
+00001448                           741  
+00001448                           742  SCRINTCT    DS.B    1                       ; INTERRUPT COUNTER/FLAG
+00001449                           743  SCRCYCCT    DS.B    1                       ; CYCLE COUNTER
+0000144A                           744              DS.W    0
+0000144A                           745  
+0000144A                           746  ; --- DYNAMIC MEMORY VARIABLES ------------------------------------------------
+0000144A                           747  
+00001480                           748              ORG     (*+DMMBSIZE-1)&-DMMBSIZE ; ALIGN TO DMMBSIZE
+00001480                           749  DMMDATA     DS.B    DMMBSIZE*DMMBNUM        ; DYNAMIC MEMORY ALLOCATION SPACE
+00002100                           750              DS.W    0                       ; JUST IN CASE (SIZE IS POW OF TWO)
+00002100                           751  -------------------- end include --------------------
+00002100                           752              INCLUDE "VAR.X68"
+00002100                           753  ; =============================================================================
+00002100                           754  ; TITLE    : GAME VARIABLES
+00002100                           755  ; AUTHOR   : MAURICI RUIZ
+00002100                           756  ; HISTORY  : 15/12/2020  - CREATION
+00002100                           757  ; =============================================================================
+00002100                           758  
+00002100                           759  
+00002100                           760  ;---- BLOCK RELATED VARIABLES -------------------------------------------------
+00002100                           761  
+00002100                           762  BLOCKX      DS.W    1                       ; BLOCK X COORDINATE (XCENTER)
+00002102                           763  BLOCKY      DS.W    1                       ; BLOCK Y COORDINATE (XCENTER)
+00002104                           764  
+00002104                           765  
+00002104                           766  ; --- RANDOM NUMBER GENERATOR VARIABLES ---------------------------------------
+00002104                           767  
+00002104                           768  RNDINDEX    DS.B    1                       ; RANDOM INDEX
+00002106                           769              DS.W    0
+00002106                           770  -------------------- end include --------------------
+00002106                           771              END    START
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+AGLADD              12FC
+AGLADD:END          1312
+AGLKILL             11C0
+AGLPLOT             133A
+AGLPLOT:END         135A
+AGLPLOT:LOOP        1342
+AGLUPD              1316
+AGLUPD:END          1334
+AGLUPD:LOOP         131E
+BLOCFCOL            676767
+BLOCHEIG            28
+BLOCID              1
+BLOCINIT            1360
+BLOCKX              2100
+BLOCKY              2102
+BLOCPCOL            A7A7AD
+BLOCPLOT            136A
+BLOCUPD             1368
+BLOCWDTH            28
+DIRTFCOL            676767
+DIRTINIT            13E2
+DIRTINIT:ROWDIRT    1402
+DIRTPCOL            A7A7AD
+DMMALLOC            11A6
+DMMALLOC:END        11BE
+DMMBNUM             32
+DMMBSIZE            40
+DMMDATA             1480
+DMMFCOM             1180
+DMMFFND             118E
+DMMFIRST            1136
+DMMFLOOP            1174
+DMMFRCOM            1148
+DMMFREE             11C0
+DMMFRFND            1156
+DMMFRLOP            113C
+DMMFRSTO            116E
+DMMINIT             1114
+DMMINIT:LOOP        1122
+DMMNEXT             1158
+DMMNEXTO            1190
+DMMSYSID            0
+DRTINITX            14
+DRTINITY            2A8
+GRASFCOL            676767
+GRASPCOL            A7A7AD
+KBDBITDN            3
+KBDBITF1            4
+KBDBITF2            5
+KBDBITF3            6
+KBDBITLF            0
+KBDBITPS            7
+KBDBITRT            2
+KBDBITUP            1
+KBDCHRDN            28
+KBDCHRLF            25
+KBDCHRMK            4D
+KBDCHRPK            50
+KBDCHRRT            27
+KBDCHRSH            10
+KBDCHRSP            20
+KBDCHRUP            26
+KBDDOWN             28
+KBDEDGE             1447
+KBDFIRE1            20
+KBDFIRE2            4D
+KBDFIRE3            10
+KBDINIT             10B4
+KBDLEFT             25
+KBDMSKDN            8
+KBDMSKF1            10
+KBDMSKF2            20
+KBDMSKF3            40
+KBDMSKLF            1
+KBDMSKPS            80
+KBDMSKRT            4
+KBDMSKUP            2
+KBDPAUSE            50
+KBDREAD             10CA
+KBDREAD:LOOP        110A
+KBDREAD:STORE       1106
+KBDRIGHT            27
+KBDTRAP             0
+KBDUP               26
+KBDVAL              1446
+RNDGET              11DE
+RNDGET:RANDVEC      11FC
+RNDINDEX            2104
+RNDINIT             11D6
+SCRCYCCT            1449
+SCRHEIGH            2D0
+SCRINIT             101C
+SCRINTCT            1448
+SCRIRQ              1
+SCRISR              108C
+SCRTIM              14
+SCRTRAP             1
+SCRUPD              109A
+SCRWIDTH            500
+START               141A
+START:LOOP          1426
+START:WINT          142C
+STNEINIT            13AA
+STNEINIT:LOOPS      13CA
+STNINITX            14
+STNINITY            2BC
+SYSINIT             1000
