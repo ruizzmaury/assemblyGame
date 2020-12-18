@@ -1,6 +1,6 @@
-000013AA Starting Address
+00001468 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 17/12/2020 19:54:40
+Created On: 18/12/2020 18:39:07
 
 00000000                             1  ; =============================================================================
 00000000                             2  ; TITLE    : GAME CONSTANTS
@@ -10,43 +10,52 @@ Created On: 17/12/2020 19:54:40
 00000000                             6  
 00000000                             7  ; ----BLOCK RELATED CONSTANTS--------------------------------------------------
 00000000                             8  
-00000000  =00000028                  9  BLOCWDTH    EQU     40                  ; BLOCK WIDTH
-00000000  =00000028                 10  BLOCHEIG    EQU     40                  ; BLOCK HEIGHT
-00000000                            11  
-00000000                            12  ; ---- BLOCK TYPES - 00BBGGRR -----------------------
-00000000  =00000001                 13  BLOCID      EQU       1                 ; BLOCK IDENTIFIER
+00000000  =00000028                  9  BLOCSIZE    EQU     40                  ; BLOCK WIDTH
+00000000                            10  
+00000000                            11  ; ---- BLOCK TYPES - 00BBGGRR -----------------------
+00000000  =00000001                 12  BLOCID      EQU      1                 ; BLOCK IDENTIFIER
+00000000  =00000000                 13  BLOCPCOL    EQU      $00000000               ; PEN COLOR
 00000000                            14  
 00000000                            15  ; STONE
-00000000  =00000014                 16  STNINITX    EQU     BLOCWDTH/2              ; INITIALX STONES
+00000000  =00000014                 16  STNINITX    EQU     BLOCSIZE/2              ; INITIALX STONES
 Line 17 ERROR: Undefined symbol
-00000000                            17  STNINITY    EQU     SCRHEIGH-BLOCWDTH/2     ; INITIALY STONES                                  
-00000000  =00A7A7AD                 18  BLOCPCOL    EQU     $00A7A7AD         ; PEN COLOR
-00000000  =00676767                 19  BLOCFCOL    EQU       $00676767         ; FILL COLOR
+00000000                            17  STNINITY    EQU     SCRHEIGH-BLOCSIZE/2     ; INITIALY STONES                                  
+00000000  =00A7A7AD                 18  STNPCOL    EQU      $00A7A7AD               ; PEN COLOR
+00000000  =00676767                 19  STNFCOL    EQU       $00676767          ; FILL COLOR
 00000000                            20  
 00000000                            21  ; DIRT
-00000000  =00A7A7AD                 22  DIRTPCOL    EQU       $00A7A7AD         ; PEN COLOR
-00000000  =00676767                 23  DIRTFCOL    EQU       $00676767         ; FILL COLOR
-00000000                            24  
-00000000                            25  ; GRASS
-00000000  =00A7A7AD                 26  GRASPCOL    EQU       $00A7A7AD         ; PEN COLOR
-00000000  =00676767                 27  GRASFCOL    EQU       $00676767         ; FILL COLOR
-00000000                            28  
-Line 29 WARNING: END directive missing, starting address not set
+00000000  =00000014                 22  DRTINITX    EQU     BLOCSIZE/2              ; INITIALX DIRT
+Line 23 ERROR: Undefined symbol
+00000000                            23  DRTINITY    EQU     SCRHEIGH-BLOCSIZE       ; INITIALY DIRT
+00000000  =00A7A7AD                 24  DIRTPCOL    EQU      $00A7A7AD               ; PEN COLOR
+00000000  =00676767                 25  DIRTFCOL    EQU      $00676767               ; FILL COLOR
+00000000                            26  
+00000000                            27  ; GRASS
+00000000  =00A7A7AD                 28  GRASPCOL    EQU      $00A7A7AD         ; PEN COLOR
+00000000  =00676767                 29  GRASFCOL    EQU      $00676767         ; FILL COLOR
+00000000                            30  
+00000000                            31  
+00000000                            32  
+00000000                            33  
+00000000                            34  
+00000000                            35  
+Line 36 WARNING: END directive missing, starting address not set
 
-1 error detected
+2 errors detected
 1 warning generated
 
 
 SYMBOL TABLE INFORMATION
 Symbol-name         Value
 -------------------------
-BLOCFCOL            676767
-BLOCHEIG            28
 BLOCID              1
-BLOCPCOL            A7A7AD
-BLOCWDTH            28
+BLOCPCOL            0
+BLOCSIZE            28
 DIRTFCOL            676767
 DIRTPCOL            A7A7AD
+DRTINITX            14
 GRASFCOL            676767
 GRASPCOL            A7A7AD
+STNFCOL             676767
 STNINITX            14
+STNPCOL             A7A7AD

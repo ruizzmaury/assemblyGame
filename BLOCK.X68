@@ -5,6 +5,8 @@
 * Description: ALL ABOUT THE BLOCK BEHAVIOR
 *-----------------------------------------------------------
 
+COLORB      DC.L    0
+
 ;-----------------------------------------------------------
 BLOCINIT
 ; INITIALIZE BLOCK
@@ -14,7 +16,8 @@ BLOCINIT
 ;-----------------------------------------------------------
                        
             MOVE.W	D1, (A0)
-	MOVE.W	#STNINITY, (A4)
+	MOVE.W	D2, (A4)
+	
 	
 		RTS
 
@@ -42,7 +45,7 @@ BLOCPLOT
 	MOVE.L	#BLOCPCOL, D1	; BLOCK COLOR
 	TRAP #15	; SET PEN COLOR
 	MOVE.B	#81, D0	; SET FILL COLOR TASK
-	MOVE.L	#BLOCFCOL, D1	; BLOCK COLOR
+	MOVE.L	#STNFCOL,D1	; BLOCK COLOR
 	TRAP #15	; SET FILL COLOR
 	
 	MOVE.W	(A0),D1	; D1:=XCENTER
@@ -50,14 +53,17 @@ BLOCPLOT
 	MOVE.W	D1, D3	; D3:=XCENTER
 	MOVE.W	D2, D4	; D4:=YCENTER
 	
-	SUB.W	#BLOCWDTH/2, D1	; D1:=XLEFT
-	SUB.W	#BLOCHEIG/2, D2	; D2:=YTOP
-	ADD.W	#BLOCWDTH/2, D3	; D3:=XRIGHT
-	ADD.W	#BLOCHEIG/2, D4	; D4:=YBOTTOM
+	SUB.W	#BLOCSIZE/2, D1	; D1:=XLEFT
+	SUB.W	#BLOCSIZE/2, D2	; D2:=YTOP
+	ADD.W	#BLOCSIZE/2, D3	; D3:=XRIGHT
+	ADD.W	#BLOCSIZE/2, D4	; D4:=YBOTTOM
 	MOVE.B	#87, D0
 	TRAP	#15	; DRAW BLOCK
 	MOVEM.L (A7)+, D0-D4 	; RESTORE REGISTERS
 	RTS
+
+
+
 
 
 *~Font name~Fixedsys~

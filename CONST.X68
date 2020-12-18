@@ -6,30 +6,35 @@
 
 ; ----BLOCK RELATED CONSTANTS--------------------------------------------------
 
-BLOCWDTH    EQU	40                  ; BLOCK WIDTH	
-BLOCHEIG    EQU	40                  ; BLOCK HEIGHT
+BLOCSIZE    EQU	40                  ; BLOCK WIDTH	
 
 ; ---- BLOCK TYPES - 00BBGGRR -----------------------
-BLOCID      EQU	  1                 ; BLOCK IDENTIFIER
+
+BLOCPCOL    EQU      $00000000               ; PEN COLOR
 
 ; STONE
-STNINITX    EQU     BLOCWDTH/2              ; INITIALX STONES
-STNINITY    EQU     SCRHEIGH-BLOCWDTH/2     ; INITIALY STONES                                  
-BLOCPCOL    EQU     $00A7A7AD               ; PEN COLOR	
-BLOCFCOL    EQU	 $00676767          ; FILL COLOR
+STNID       EQU	  1                 ; STONE IDENTIFIER
+STNINITX    EQU     BLOCSIZE/2              ; INITIALX STONES
+STNINITY    EQU     SCRHEIGH-BLOCSIZE/2     ; INITIALY STONES                                  	
+STNFCOL     EQU	 $00676767          ; FILL STONE COLOR
 
 ; DIRT
-DRTINITX    EQU     BLOCWDTH/2              ; INITIALX DIRT
-DRTINITY    EQU     SCRHEIGH-BLOCWDTH       ; INITIALY DIRT
-DIRTPCOL    EQU	 $00A7A7AD               ; PEN COLOR	
-DIRTFCOL    EQU	 $00676767               ; FILL COLOR
+DIRTID      EQU	  2                 ; DIRT IDENTIFIER
+DRTINITX    EQU     BLOCSIZE/2              ; INITIALX DIRT
+DRTINITY    EQU     SCRHEIGH-BLOCSIZE       ; INITIALY DIRT	
+DIRTFCOL    EQU	 $00002850              ; FILL DIRT COLOR 
 
 ; GRASS
-GRASPCOL    EQU	 $00A7A7AD         ; PEN COLOR	
-GRASFCOL    EQU	 $00676767         ; FILL COLOR	
+GRASSID     EQU	 3                 ; GRASS IDENTIFIER	
+GRASFCOL    EQU	 $00008C50         ; FILL GRASS COLOR	
+
+
+
+
+
 
 
 *~Font name~Fixedsys~
-*~Font size~18~
+*~Font size~9~
 *~Tab type~0~
 *~Tab size~4~

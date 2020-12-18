@@ -25,10 +25,11 @@ START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
             ; TO DO : ADD YOUR GAME INITIALIZATION HERE
             JSR	  RNDINIT
             
+
             
             ; GENERATES BASELAND OF STONES
                         
-            JSR      STNEINIT
+            JSR      LANDINIT
 
    
            
@@ -64,6 +65,8 @@ START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
             INCLUDE "SYSVAR.X68"
             INCLUDE "VAR.X68"
             END    START
+
+
 
 
 
