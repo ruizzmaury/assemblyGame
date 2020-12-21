@@ -1,6 +1,6 @@
-00001468 Starting Address
+0000145C Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 18/12/2020 18:39:07
+Created On: 21/12/2020 0:27:51
 
 00000000                             1  ; =============================================================================
 00000000                             2  ; TITLE    : GAME CONSTANTS
@@ -13,49 +13,56 @@ Created On: 18/12/2020 18:39:07
 00000000  =00000028                  9  BLOCSIZE    EQU     40                  ; BLOCK WIDTH
 00000000                            10  
 00000000                            11  ; ---- BLOCK TYPES - 00BBGGRR -----------------------
-00000000  =00000001                 12  BLOCID      EQU      1                 ; BLOCK IDENTIFIER
+00000000                            12  
 00000000  =00000000                 13  BLOCPCOL    EQU      $00000000               ; PEN COLOR
-00000000                            14  
-00000000                            15  ; STONE
-00000000  =00000014                 16  STNINITX    EQU     BLOCSIZE/2              ; INITIALX STONES
-Line 17 ERROR: Undefined symbol
-00000000                            17  STNINITY    EQU     SCRHEIGH-BLOCSIZE/2     ; INITIALY STONES                                  
-00000000  =00A7A7AD                 18  STNPCOL    EQU      $00A7A7AD               ; PEN COLOR
-00000000  =00676767                 19  STNFCOL    EQU       $00676767          ; FILL COLOR
-00000000                            20  
-00000000                            21  ; DIRT
-00000000  =00000014                 22  DRTINITX    EQU     BLOCSIZE/2              ; INITIALX DIRT
-Line 23 ERROR: Undefined symbol
-00000000                            23  DRTINITY    EQU     SCRHEIGH-BLOCSIZE       ; INITIALY DIRT
-00000000  =00A7A7AD                 24  DIRTPCOL    EQU      $00A7A7AD               ; PEN COLOR
-00000000  =00676767                 25  DIRTFCOL    EQU      $00676767               ; FILL COLOR
-00000000                            26  
-00000000                            27  ; GRASS
-00000000  =00A7A7AD                 28  GRASPCOL    EQU      $00A7A7AD         ; PEN COLOR
-00000000  =00676767                 29  GRASFCOL    EQU      $00676767         ; FILL COLOR
+Line 14 ERROR: Undefined symbol
+00000000                            14  NROWBLKS    EQU     SCRWIDTH/BLOCSIZE       ; NUMBER OF BLOCKS PER ROW TO PAINT
+Line 15 ERROR: Undefined symbol
+00000000                            15  NCOLBLKS    EQU     SCRHEIGH/BLOCSIZE       ; NUMBER OF BLOCKS PER COLUMN TO PAINT
+00000000                            16  
+00000000                            17  
+00000000                            18  ; STONE
+00000000  =00000001                 19  STNID       EQU       1                 ; STONE IDENTIFIER
+Line 20 ERROR: Undefined symbol
+00000000                            20  NUMSTN      EQU     SCRHEIGH/BLOCSIZE       ; NUMBER OF STONES TO PAINT
+00000000  =00000014                 21  STNINITX    EQU     BLOCSIZE/2              ; INITIALX STONES
+Line 22 ERROR: Undefined symbol
+00000000                            22  STNINITY    EQU     SCRHEIGH-BLOCSIZE/2     ; INITIALY STONES                                  
+00000000  =00676767                 23  STNFCOL     EQU      $00676767          ; FILL STONE COLOR
+00000000                            24  
+00000000                            25  ; DIRT
+00000000  =00000002                 26  DIRTID      EQU       2                 ; DIRT IDENTIFIER
+00000000  =00000014                 27  DRTINITX    EQU     BLOCSIZE/2              ; INITIALX DIRT
+Line 28 ERROR: Undefined symbol
+00000000                            28  DRTINITY    EQU     SCRHEIGH-BLOCSIZE/2       ; INITIALY DIRT
+00000000  =00002850                 29  DIRTFCOL    EQU      $00002850              ; FILL DIRT COLOR 
 00000000                            30  
-00000000                            31  
-00000000                            32  
-00000000                            33  
+00000000                            31  ; GRASS
+00000000  =00000003                 32  GRASSID     EQU      3                 ; GRASS IDENTIFIER
+00000000  =00008C50                 33  GRASFCOL    EQU      $00008C50         ; FILL GRASS COLOR
 00000000                            34  
 00000000                            35  
-Line 36 WARNING: END directive missing, starting address not set
+00000000                            36  
+00000000                            37  
+00000000                            38  
+00000000                            39  
+00000000                            40  
+Line 41 WARNING: END directive missing, starting address not set
 
-2 errors detected
+5 errors detected
 1 warning generated
 
 
 SYMBOL TABLE INFORMATION
 Symbol-name         Value
 -------------------------
-BLOCID              1
 BLOCPCOL            0
 BLOCSIZE            28
-DIRTFCOL            676767
-DIRTPCOL            A7A7AD
+DIRTFCOL            2850
+DIRTID              2
 DRTINITX            14
-GRASFCOL            676767
-GRASPCOL            A7A7AD
+GRASFCOL            8C50
+GRASSID             3
 STNFCOL             676767
+STNID               1
 STNINITX            14
-STNPCOL             A7A7AD

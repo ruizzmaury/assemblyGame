@@ -16,10 +16,11 @@ BLOCINIT
 ;-----------------------------------------------------------
                        
             MOVE.W	D1, (A0)
-	MOVE.W	D2, (A4)
+	 MOVE.W	D2, 2(A0)
+	 MOVE.L	D3, 4(A0)
 	
 	
-		RTS
+	RTS
 
 
 ;-----------------------------------------------------------
@@ -45,11 +46,11 @@ BLOCPLOT
 	MOVE.L	#BLOCPCOL, D1	; BLOCK COLOR
 	TRAP #15	; SET PEN COLOR
 	MOVE.B	#81, D0	; SET FILL COLOR TASK
-	MOVE.L	#STNFCOL,D1	; BLOCK COLOR
+	MOVE.L	4(A0),D1	; BLOCK COLOR
 	TRAP #15	; SET FILL COLOR
 	
 	MOVE.W	(A0),D1	; D1:=XCENTER
-	MOVE.W	(A4),D2	; D2:=YCENTER
+	MOVE.W	2(A0),D2	; D2:=YCENTER
 	MOVE.W	D1, D3	; D3:=XCENTER
 	MOVE.W	D2, D4	; D4:=YCENTER
 	
@@ -66,7 +67,8 @@ BLOCPLOT
 
 
 
-*~Font name~Fixedsys~
-*~Font size~9~
+
+*~Font name~Courier New~
+*~Font size~12~
 *~Tab type~0~
 *~Tab size~4~

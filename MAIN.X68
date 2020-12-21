@@ -29,7 +29,9 @@ START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
             
             ; GENERATES BASELAND OF STONES
                         
-            JSR      LANDINIT
+            JSR      STNEINIT
+            JSR      DIRTINIT
+            JSR      GRASINIT
 
    
            
@@ -71,7 +73,9 @@ START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
 
 
 
-*~Font name~Fixedsys~
-*~Font size~9~
+
+
+*~Font name~Courier New~
+*~Font size~12~
 *~Tab type~0~
 *~Tab size~4~

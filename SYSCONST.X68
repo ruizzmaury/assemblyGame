@@ -78,10 +78,12 @@ SCRTIM      EQU     20                      ; SCREEN TIMER (MS)
 ; --- DYNAMIC MEMORY CONSTANTS ------------------------------------------------
 
 DMMBSIZE    EQU     64                      ; BLOCK SIZE (BYTES). POWER OF TWO
-DMMBNUM     EQU     50                      ; NUMBER OF BLOCKS
+DMMBNUM     EQU     320                      ; NUMBER OF BLOCKS
 DMMSYSID    EQU     0                       ; SYSTEM OWNER ID (MUST BE 0)
 
-*~Font name~Fixedsys~
-*~Font size~18~
+
+
+*~Font name~Courier New~
+*~Font size~12~
 *~Tab type~0~
 *~Tab size~4~
