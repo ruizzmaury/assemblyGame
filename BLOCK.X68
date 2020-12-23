@@ -5,12 +5,12 @@
 * Description: ALL ABOUT THE BLOCK BEHAVIOR
 *-----------------------------------------------------------
 
-COLORB      DC.L    0
-
 ;-----------------------------------------------------------
 BLOCINIT
 ; INITIALIZE BLOCK
-; INPUT	- D1.W  STONE PLACE COORDINATE 
+; INPUT	- D1.W  X PLACE COORDINATE
+;          - D2.W  Y PLACE COORDINATE 
+;          - D3.L  BLOCK COLOR
 ; OUTPUT	- NONE
 ; MODIFIES	- NONE	
 ;-----------------------------------------------------------
@@ -62,6 +62,7 @@ BLOCPLOT
 	TRAP	#15	; DRAW BLOCK
 	MOVEM.L (A7)+, D0-D4 	; RESTORE REGISTERS
 	RTS
+
 
 
 

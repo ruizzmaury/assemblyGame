@@ -6,88 +6,118 @@
 *-----------------------------------------------------------
 ;-----------------------------------------------------------
 
-STNEINIT
+DIRTINIT
 ; CREATE LAND
 ; INPUT	- NONE
 ; OUTPUT	- NONE
 ; MODIFIES	- NONE	
 ;-----------------------------------------------------------
-           
-            MOVEM.L D0-D4/A1-A3,-(A7)
+            MOVEM.L D0-D5, -(A7)	; STACK REGISTER
+            MOVEM.L A1-A3, -(A7)
             
-            MOVE.W  #NROWBLKS,D4
-            MOVE.W  #BLOCID,D0
-            LEA     BLOCINIT,A1
-            LEA     BLOCUPD,A2
-            LEA     BLOCPLOT,A3
-            MOVE.W  #STNINITX, D1
+            
+            MOVE.W  #3, D4  ; NUMBER OF STONE BLOCKS
+            MOVE.W  #STNINITX, D5                     
+            
+            MOVE.W  #BLOCID, D0
+            LEA	BLOCINIT, A1
+            LEA     BLOCUPD, A2
+            LEA     BLOCPLOT, A3
             MOVE.W  #STNINITY, D2
-            MOVE.L  #STNFCOL, D3
-
-.LOOPS      JSR     AGLADD
-            ADD.W  #BLOCSIZE, D1
-            DBRA.W  D4,.LOOPS
+            MOVE.L  #STNFCOL, D3                           
             
-            MOVEM.L (A7)+,D0-D4/A1-A3
+            MOVE.W  D5, D1                       
+.LOOPCOL    JSR     AGLADD
+            SUB.W   #BLOCSIZE, D2
+            DBRA.W  D4, .LOOPCOL
+            
+            MOVEM.L (A7)+, A1-A3
+            MOVEM.L (A7)+, D0-D5 	; RESTORE REGISTERS
             RTS
 
 
 
+
+
 ;-----------------------------------------------------------
-DIRTINIT
+STNEINIT
 ; CREATE BASELAND OF STONES
 ; INPUT	- NONE
 ; OUTPUT	- NONE
 ; MODIFIES	- NONE	
 ;-----------------------------------------------------------
             
-            MOVEM.L D0-D4/A1-A3,-(A7)
+            MOVEM.L D0-D5, -(A7)	; STACK REGISTER
+            MOVEM.L A1-A3, -(A7)
             
-            MOVE.W  #NROWBLKS,D4
-            MOVE.W  #BLOCID,D0
-            LEA     BLOCINIT,A1
-            LEA     BLOCUPD,A2
-            LEA     BLOCPLOT,A3
-            MOVE.W  #STNINITX, D1
-            MOVE.W  #STNINITY-BLOCSIZE, D2
-            MOVE.L  #DIRTFCOL, D3
-
-.LOOPS      JSR     AGLADD
-            ADD.W  #BLOCSIZE, D1
-            DBRA.W  D4,.LOOPS
             
-            MOVEM.L (A7)+,D0-D4/A1-A3
+            MOVE.W  #SCRWIDTH/BLOCSIZE, D4  ; NUMBER OF STONE BLOCKS
+            MOVE.W  #STNINITX, D5                     
+            
+            MOVE.W  #BLOCID, D0
+            LEA	 BLOCINIT, A1
+            LEA     BLOCUPD, A2
+            LEA     BLOCPLOT, A3
+            MOVE.W  #STNINITY, D2
+            MOVE.L  #STNFCOL, D3                           
+            
+.LOOPS      MOVE.W  D5, D1                       
+            JSR     AGLADD
+            ADD.W   #BLOCSIZE, D5
+            DBRA.W  D4, .LOOPS
+            
+            MOVEM.L (A7)+, A1-A3
+            MOVEM.L (A7)+, D0-D5 	; RESTORE REGISTERS
             RTS
-
 
             
 ;-----------------------------------------------------------                      
-GRASINIT
-; INITIALIZE BASELAND OF DIRT 
-; INPUT	- D1.W  DIRT PLACE COORDINATE 
+LANDINIT
+; INITIALIZE BASELAND  
+; INPUT	- NONE
 ; OUTPUT	- NONE
 ; MODIFIES	- NONE	
 ;-----------------------------------------------------------
+            MOVEM.L D0-D5, -(A7)	; STACK REGISTER
+            MOVEM.L A1-A3, -(A7)
             
-            MOVEM.L D0-D4/A1-A3,-(A7)
             
-            MOVE.W  #NROWBLKS,D4
-            MOVE.W  #BLOCID,D0
-            LEA     BLOCINIT,A1
-            LEA     BLOCUPD,A2
-            LEA     BLOCPLOT,A3
-            MOVE.W  #GRASINTX, D1
-            MOVE.W  #GRASINTY, D2
+            MOVE.W  #SCRWIDTH/BLOCSIZE, D5  ; NUMBER OF COLUMNS                     
+            
+            MOVE.W  #BLOCID, D0              ; INITIALIZE BLOCK
+            LEA	BLOCINIT, A1
+            LEA     BLOCUPD, A2
+            LEA     BLOCPLOT, A3
+            MOVE.W  #STNINITY, D2
+                                      
+            
+            MOVE.W  #STNINITX, D1                       
+.LOOPCOL    
+            MOVE.L  #STNFCOL, D3            ; STONE
+            JSR     GETRDIRT
+            MOVE.W  D0, D4                  ; NUMBER OF DIRT BLOCKS FROM ARRAY OF RANDOM
+            JSR     AGLADD
+            SUB.W   #BLOCSIZE, D2
+            MOVE.L  #DIRTFCOL, D3
+            
+.LOOPDIR    JSR     AGLADD 
+            SUB.W   #BLOCSIZE, D2                       
+            DBRA.W  D4, .LOOPDIR
+            
             MOVE.L  #GRASFCOL, D3
-
-.LOOPG      JSR     AGLADD
-            ADD.W  #BLOCSIZE, D1
-            DBRA.W  D4,.LOOPG
+            JSR     AGLADD
             
-            MOVEM.L (A7)+,D0-D4/A1-A3
-            RTS
- 
-          
+            ADD.W   #BLOCSIZE, D1
+            MOVE.W  #STNINITY, D2
+            DBRA.W  D5, .LOOPCOL
+
+            
+            MOVEM.L (A7)+, A1-A3
+            MOVEM.L (A7)+, D0-D5 	; RESTORE REGISTERS
+            RTS            
+;-----------------------------------------------------------                      
+
+
 
 
 

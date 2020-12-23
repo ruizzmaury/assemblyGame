@@ -1,6 +1,6 @@
-0000145C Starting Address
+00001504 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 21/12/2020 0:36:01
+Created On: 21/12/2020 13:10:48
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      : LAND MANAGEMENT
@@ -17,101 +17,209 @@ Created On: 21/12/2020 0:36:01
 00000000                            13  ; MODIFIES  - NONE  
 00000000                            14  ;-----------------------------------------------------------
 00000000                            15             
-00000000  48E7 F870                 16              MOVEM.L D0-D4/A1-A3,-(A7)
+00000000  48E7 F070                 16              MOVEM.L D0-D3/A1-A3,-(A7)
 00000004                            17              
-Line 18 ERROR: Undefined symbol
-00000004  383C BD16                 18              MOVE.W  #NROWBLKS,D4
+00000004                            18              
 Line 19 ERROR: Undefined symbol
-00000008  303C BD16                 19              MOVE.W  #STNID,D0
+00000004  303C BD16                 19              MOVE.W  #BLOCID,D0
 Line 20 ERROR: Undefined symbol
-0000000C  43F9 004DBD16             20              LEA     BLOCINIT,A1
+00000008  43F9 004DBD16             20              LEA     BLOCINIT,A1
 Line 21 ERROR: Undefined symbol
-00000012  45F9 004DBD16             21              LEA     BLOCUPD,A2
+0000000E  45F9 004DBD16             21              LEA     BLOCUPD,A2
 Line 22 ERROR: Undefined symbol
-00000018  47F9 004DBD16             22              LEA     BLOCPLOT,A3
+00000014  47F9 004DBD16             22              LEA     BLOCPLOT,A3
 Line 23 ERROR: Undefined symbol
-0000001E  323C BD16                 23              MOVE.W  #STNINITX, D1
+0000001A  323C BD16                 23              MOVE.W  #STNINITX, D1
 Line 24 ERROR: Undefined symbol
-00000022  343C BD16                 24              MOVE.W  #STNINITY, D2
+0000001E  343C BD16                 24              MOVE.W  #STNINITY, D2
 Line 25 ERROR: Undefined symbol
-00000026  263C 004DBD16             25              MOVE.L  #STNFCOL, D3
-0000002C                            26  
+00000022  263C 004DBD16             25              MOVE.L  #STNFCOL, D3
+00000028                            26  
 Line 27 ERROR: Undefined symbol
-0000002C  4EB9 004DBD16             27  .LOOPA      JSR     AGLADD
-Line 28 ERROR: Undefined symbol
-00000032  0641 BD16                 28              ADD.W  #BLOCSIZE, D1
-00000036  51CC FFF4                 29              DBRA.W  D4,.LOOPA
-0000003A                            30              
-0000003A  4CDF 0E1F                 31              MOVEM.L (A7)+,D0-D4/A1-A3
-0000003E  4E75                      32              RTS
-00000040                            33  
-00000040                            34  
-00000040                            35  
-00000040                            36  ;-----------------------------------------------------------
-00000040                            37  DIRTINIT
-00000040                            38  ; CREATE BASELAND OF STONES
-00000040                            39  ; INPUT     - NONE
-00000040                            40  ; OUTPUT    - NONE
-00000040                            41  ; MODIFIES  - NONE  
-00000040                            42  ;-----------------------------------------------------------
-00000040                            43              
-00000040  48E7 F870                 44              MOVEM.L D0-D4/A1-A3,-(A7)
-00000044                            45              
-00000044  383C 0010                 46              MOVE.W  #$10,D4
+00000028  4EB9 004DBD16             27              JSR     AGLADD
+0000002E                            28             
+0000002E                            29              
+0000002E                            30              
+0000002E  4CDF 0E0F                 31              MOVEM.L (A7)+,D0-D3/A1-A3
+00000032  4E75                      32              RTS
+00000034                            33  
+00000034                            34  
+00000034                            35  
+00000034                            36  ;-----------------------------------------------------------
+00000034                            37  LANDINIT
+00000034                            38  ; CREATE BASELAND 
+00000034                            39  ; INPUT     - NONE
+00000034                            40  ; OUTPUT    - NONE
+00000034                            41  ; MODIFIES  - NONE  
+00000034                            42  ;-----------------------------------------------------------
+00000034                            43              
+00000034  48E7 F870                 44              MOVEM.L D0-D4/A1-A3,-(A7)
+Line 45 ERROR: Undefined symbol
+00000038  4EB9 004DBD16             45              JSR     GETRDIRT
+0000003E  3800                      46              MOVE.W  D0, D4
 Line 47 ERROR: Undefined symbol
-00000048  303C BD16                 47              MOVE.W  #DIRTID,D0
+00000040  303C BD16                 47              MOVE.W  #BLOCID,D0
 Line 48 ERROR: Undefined symbol
-0000004C  43F9 004DBD16             48              LEA     BLOCINIT,A1
+00000044  43F9 004DBD16             48              LEA     BLOCINIT,A1
 Line 49 ERROR: Undefined symbol
-00000052  45F9 004DBD16             49              LEA     BLOCUPD,A2
+0000004A  45F9 004DBD16             49              LEA     BLOCUPD,A2
 Line 50 ERROR: Undefined symbol
-00000058  47F9 004DBD16             50              LEA     BLOCPLOT,A3
+00000050  47F9 004DBD16             50              LEA     BLOCPLOT,A3
 Line 51 ERROR: Undefined symbol
-0000005E  323C BD16                 51              MOVE.W  #DRTINITX, D1
-Line 52 ERROR: Undefined symbol
-00000062  343C BD16                 52              MOVE.W  #DRTINITY, D2
+00000056  323C BD16                 51              MOVE.W  #STNINITX, D1
+0000005A                            52              
 Line 53 ERROR: Undefined symbol
-00000066  263C 004DBD16             53              MOVE.L  #DIRTFCOL, D3
-0000006C                            54  
-Line 55 ERROR: Undefined symbol
-0000006C  4EB9 004DBD16             55  .LOOPA      JSR     AGLADD
+0000005A  343C BD16                 53              MOVE.W  #STNINITY, D2
+Line 54 ERROR: Undefined symbol
+0000005E  263C 004DBD16             54              MOVE.L  #STNFCOL, D3
+00000064                            55  
 Line 56 ERROR: Undefined symbol
-00000072  0641 BD16                 56              ADD.W  #BLOCSIZE, D1
-00000076  51CC FFF4                 57              DBRA.W  D4,.LOOPA
-0000007A                            58              
-0000007A  4CDF 0E1F                 59              MOVEM.L (A7)+,D0-D4/A1-A3
-0000007E  4E75                      60              RTS
-00000080                            61  
-00000080                            62  
-00000080                            63              
-00000080                            64  ;-----------------------------------------------------------                      
-00000080                            65  GRASINIT
-00000080                            66  ; INITIALIZE BASELAND OF DIRT 
-00000080                            67  ; INPUT     - D1.W  DIRT PLACE COORDINATE 
-00000080                            68  ; OUTPUT    - NONE
-00000080                            69  ; MODIFIES  - NONE  
-00000080                            70  ;-----------------------------------------------------------
-00000080                            71              
-00000080                            72              
-00000080                            73   
-00000080                            74            
-00000080                            75  
-00000080                            76  
-00000080                            77  
-00000080                            78  
-00000080                            79  
-00000080                            80  
-Line 81 WARNING: END directive missing, starting address not set
+00000064  4EB9 004DBD16             56              JSR     AGLADD
+0000006A                            57  
+0000006A                            58              
+Line 59 ERROR: Comma expected
+0000006A                            59              MOVE.W  #STNINITY-BLOCSIZE, D2
+Line 60 ERROR: Undefined symbol
+0000006A  263C 004DBD16             60              MOVE.L  #DIRTFCOL, D3
+00000070                            61  
+Line 62 ERROR: Symbol value differs between first and second pass
+00000070                            62  .LOOPS      JSR     AGLADD
+Line 63 ERROR: Undefined symbol
+00000070  0442 BD16                 63              SUB.W  #BLOCSIZE, D2
+00000074  51CC FFFE                 64              DBRA.W  D4,.LOOPS
+00000078                            65              
+Line 66 ERROR: Undefined symbol
+00000078  263C 004DBD16             66              MOVE.L  #GRASFCOL, D3
+0000007E                            67              
+Line 68 ERROR: Undefined symbol
+0000007E  4EB9 004DBD16             68              JSR     AGLADD
+00000084                            69              
+00000084  4CDF 0E1F                 70              MOVEM.L (A7)+,D0-D4/A1-A3
+00000088  4E75                      71              RTS
+0000008A                            72  
+0000008A                            73  
+0000008A                            74              
+0000008A                            75  ;-----------------------------------------------------------                      
+Line 76 ERROR: Symbol value differs between first and second pass
+0000008A                            76  GRASINIT
+0000008A                            77  ; INITIALIZE BASELAND OF DIRT 
+0000008A                            78  ; INPUT     - D1.W  DIRT PLACE COORDINATE 
+0000008A                            79  ; OUTPUT    - NONE
+0000008A                            80  ; MODIFIES  - NONE  
+0000008A                            81  ;-----------------------------------------------------------
+0000008A                            82              
+0000008A  48E7 F070                 83              MOVEM.L D0-D3/A1-A3,-(A7)
+0000008E                            84              
+Line 85 ERROR: Undefined symbol
+0000008E  303C BD16                 85              MOVE.W  #BLOCID,D0
+Line 86 ERROR: Undefined symbol
+00000092  43F9 004DBD16             86              LEA     BLOCINIT,A1
+Line 87 ERROR: Undefined symbol
+00000098  45F9 004DBD16             87              LEA     BLOCUPD,A2
+Line 88 ERROR: Undefined symbol
+0000009E  47F9 004DBD16             88              LEA     BLOCPLOT,A3
+Line 89 ERROR: Undefined symbol
+000000A4  323C BD16                 89              MOVE.W  #GRASINTX, D1
+Line 90 ERROR: Undefined symbol
+000000A8  343C BD16                 90              MOVE.W  #GRASINTY, D2
+Line 91 ERROR: Undefined symbol
+000000AC  263C 004DBD16             91              MOVE.L  #GRASFCOL, D3
+000000B2                            92  
+Line 93 ERROR: Undefined symbol
+000000B2  4EB9 004DBD16             93              JSR     AGLADD
+000000B8                            94                         
+000000B8  4CDF 0E0F                 95              MOVEM.L (A7)+,D0-D3/A1-A3
+000000BC  4E75                      96              RTS
+000000BE                            97   
+000000BE                            98            
+000000BE                            99  ;-----------------------------------------------------------
+Line 100 ERROR: Symbol value differs between first and second pass
+000000BE                           100  PROVINIT
+000000BE                           101  ; CREATE BASELAND 
+000000BE                           102  ; INPUT     - NONE
+000000BE                           103  ; OUTPUT    - NONE
+000000BE                           104  ; MODIFIES  - NONE  
+000000BE                           105  ;-----------------------------------------------------------
+000000BE                           106              
+000000BE  48E7 FC70                107              MOVEM.L D0-D5/A1-A3,-(A7)
+000000C2                           108              
+Line 109 ERROR: Undefined symbol
+000000C2  3A3C BD16                109              MOVE.W  #NROWBLKS, D5
+000000C6                           110   
+Line 111 ERROR: Undefined symbol
+000000C6  4EB9 004DBD16            111              JSR     GETRDIRT
+000000CC  3800                     112              MOVE.W  D0, D4
+Line 113 ERROR: Undefined symbol
+000000CE  303C BD16                113              MOVE.W  #BLOCID,D0
+Line 114 ERROR: Undefined symbol
+000000D2  43F9 004DBD16            114              LEA     BLOCINIT,A1
+Line 115 ERROR: Undefined symbol
+000000D8  45F9 004DBD16            115              LEA     BLOCUPD,A2
+Line 116 ERROR: Undefined symbol
+000000DE  47F9 004DBD16            116              LEA     BLOCPLOT,A3
+Line 117 ERROR: Undefined symbol
+000000E4  323C BD16                117              MOVE.W  #STNINITX, D1
+000000E8                           118              
+Line 119 ERROR: Undefined symbol
+000000E8  343C BD16                119              MOVE.W  #STNINITY, D2
+000000EC                           120              
+000000EC                           121              
+000000EC                           122  
+Line 123 ERROR: Symbol value differs between first and second pass
+000000EC                           123  .LOOPCOL    
+Line 124 ERROR: Undefined symbol
+000000EC  263C 004DBD16            124              MOVE.L  #STNFCOL, D3
+Line 125 ERROR: Undefined symbol
+000000F2  4EB9 004DBD16            125              JSR     AGLADD
+000000F8                           126  
+000000F8                           127              
+Line 128 ERROR: Comma expected
+000000F8                           128              MOVE.W  #STNINITY-BLOCSIZE, D2
+Line 129 ERROR: Undefined symbol
+000000F8  263C 004DBD16            129              MOVE.L  #DIRTFCOL, D3
+000000FE                           130  
+Line 131 ERROR: Symbol value differs between first and second pass
+000000FE                           131  .LOOPR      JSR     AGLADD
+Line 132 ERROR: Undefined symbol
+000000FE  0442 BD16                132              SUB.W  #BLOCSIZE, D2
+00000102  51CC 0008                133              DBRA.W  D4,.LOOPR
+00000106                           134              
+Line 135 ERROR: Undefined symbol
+00000106  263C 004DBD16            135              MOVE.L  #GRASFCOL, D3
+0000010C                           136              
+Line 137 ERROR: Undefined symbol
+0000010C  4EB9 004DBD16            137              JSR     AGLADD
+00000112                           138              
+Line 139 ERROR: Comma expected
+00000112                           139              MOVE.W  #STNINITX-BLOCSIZE, D1
+00000112  51CD FFE2                140              DBRA.W  D5, .LOOPCOL
+00000116                           141              
+00000116  4CDF 0E3F                142              MOVEM.L (A7)+,D0-D5/A1-A3
+0000011A  4E75                     143              RTS
+0000011C                           144  
+0000011C                           145  
+0000011C                           146              
+0000011C                           147  ;-----------------------------------------------------------                      
+0000011C                           148  
+0000011C                           149  
+0000011C                           150  
+0000011C                           151  
+0000011C                           152  
+0000011C                           153  
+0000011C                           154  
+Line 155 WARNING: END directive missing, starting address not set
 
-19 errors detected
+51 errors detected
 1 warning generated
 
 
 SYMBOL TABLE INFORMATION
 Symbol-name         Value
 -------------------------
-DIRTINIT            40
-DIRTINIT:LOOPA      6C
-GRASINIT            80
+GRASINIT            94
+LANDINIT            34
+LANDINIT:LOOPS      74
+PROVINIT            C8
+PROVINIT:LOOPCOL    F6
+PROVINIT:LOOPR      10C
 STNEINIT            0
-STNEINIT:LOOPA      2C

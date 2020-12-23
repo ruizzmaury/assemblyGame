@@ -29,10 +29,10 @@ START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
             
             ; GENERATES BASELAND OF STONES
                         
-            JSR      STNEINIT
-            JSR      DIRTINIT
-            JSR      GRASINIT
+            ;JSR      STNEINIT
+            ;JSR      GRASINIT
 
+            JSR LANDINIT          ; LA BUENA
    
            
 
@@ -67,6 +67,7 @@ START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
             INCLUDE "SYSVAR.X68"
             INCLUDE "VAR.X68"
             END    START
+
 
 
 

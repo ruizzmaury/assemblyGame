@@ -15,6 +15,30 @@ RNDINIT
 ; -----------------------------------------------------------------------------
             CLR.B   (RNDINDEX)
             RTS
+            
+            
+; -----------------------------------------------------------------------------
+GETRDIRT
+; PROVIDES A RANDOM NUMBER OF DIRT BLOCKS BETWEEN 6-10
+; INPUT    - NONE
+; OUTPUT   - D0.L RANDOM VALUE (ONLY BYTE)
+; MODIFIES - NONE (ASIDE OF OUTPUT)
+; -----------------------------------------------------------------------------
+            MOVE.L  A0,-(A7)
+            LEA     .RANDIRT, A0
+            CLR.L   D0
+            MOVE.B  (RNDINDEX),D0
+            MOVE.B  (A0,D0.L),D0
+            ADDQ.B  #1,(RNDINDEX)
+            MOVE.L  (A7)+,A0
+            RTS
+
+.RANDIRT    DC.B    6  , 7  , 7  , 8  , 9  , 10  , 10  , 9 
+            DC.B    8  , 7  , 6  , 6  , 7  , 8   , 9   , 9 
+            DC.B    10 , 9  , 8  , 8  , 9  , 10  , 10  , 9 
+            DC.B    8  , 7  , 7  , 6  , 7  , 8   , 9   , 10 
+
+            
 ; -----------------------------------------------------------------------------
 RNDGET
 ; PROVIDES A PSEUDO-RANDOM BYTE
@@ -63,32 +87,7 @@ RNDGET
             DC.B    236, 127, 126, 3  , 207, 45 , 193, 2
             DC.B    148, 91 , 35 , 242, 139, 205, 248, 237
             DC.B    116, 51 , 236, 185, 15 , 213, 221, 6
-; -----------------------------------------------------------------------------
-RNDTOP
-; PROVIDES A PSEUDO-RANDOM BYTE BETWEEN 5 AND 9
-; INPUT    - NONE
-; OUTPUT   - D0.L RANDOM VALUE (ONLY BYTE)
-; MODIFIES - NONE (ASIDE OF OUTPUT)
-; -----------------------------------------------------------------------------
-            MOVE.L  A0,-(A7)
-            LEA     .RNDTOPV,A0
-            CLR.L   D0
-            MOVE.B  (RNDINDEX),D0
-            MOVE.B  (A0,D0.L),D0
-            ADDQ.B  #1,(RNDINDEX)
-            MOVE.L  (A7)+,A0
-            RTS
-
-.RNDTOPV    DC.B    9, 8, 8, 7, 6, 6, 7, 8, 9, 8, 9, 8, 7
-            DC.B    7, 6, 7, 8, 9, 8, 6, 7, 7, 6, 5, 6, 7
-            DC.B    7, 6, 5, 5, 6, 6
-            DS.W    0
-            
-
-
-
-
-*~Font name~Fixedsys~
-*~Font size~9~
+*~Font name~Courier New~
+*~Font size~12~
 *~Tab type~0~
 *~Tab size~4~
