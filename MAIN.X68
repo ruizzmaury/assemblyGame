@@ -15,7 +15,8 @@
             INCLUDE "RANDOM.X68"	; RANDOM NUMBER GENERATOR
             INCLUDE "AGENTLST.X68"	; 
             INCLUDE "BLOCK.X68"	; BLOCK MANAGEMENT	
-            INCLUDE "LAND.X68"              ; LAND CREATION			
+            INCLUDE "LAND.X68"              ; LAND CREATION
+            INCLUDE "PLAYER.X68"              ; PLAYER MANAGEMEN			
 
 ; --- INITIALIZE --------------------------------------------------------------
 
@@ -27,15 +28,14 @@ START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
             
 
             
-            ; GENERATES BASELAND OF STONES
-                        
-            ;JSR      STNEINIT
-            ;JSR      GRASINIT
+            ; GENERATES LAND 
 
-            JSR LANDINIT          ; LA BUENA
-   
+            JSR     LANDINIT
+            
+            ; PLACE PLAYER
+            JSR     PLYRINIT             
            
-
+            
             
             
 
@@ -46,6 +46,9 @@ START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
 
             ; TO DO : ADD YOUR GAME UPDATE HERE
             JSR	 AGLUPD
+            
+            JSR     PLYRUPDX
+            JSR     PLYRUPDY 
 
 ; --- WAIT SYNCH --------------------------------------------------------------
 
@@ -57,7 +60,9 @@ START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
 
             ; TO DO : ADD YOUR GAME PLOT HERE           
             JSR     AGLPLOT
-
+            
+            JSR     PLYRPLOT
+            
             TRAP    #SCRTRAP                ; SHOW GRAPHICS
             BRA     .LOOP                   ; MAIN LOOP
             SIMHALT
@@ -67,6 +72,7 @@ START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
             INCLUDE "SYSVAR.X68"
             INCLUDE "VAR.X68"
             END    START
+
 
 
 

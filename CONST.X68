@@ -4,7 +4,7 @@
 ; HISTORY  : 15/12/2020  -  CREATION
 ; =============================================================================
 
-; ----BLOCK RELATED CONSTANTS--------------------------------------------------
+; ---- BLOCK RELATED CONSTANTS-------------------------------------------------
 
 BLOCSIZE    EQU	40                  ; BLOCK WIDTH	
 
@@ -33,10 +33,10 @@ GRASINTY    EQU     SCRHEIGH-3*BLOCSIZE+BLOCSIZE/2      ; INITIALY DIRT
 GRASFCOL    EQU	 $00008C50         ; FILL GRASS COLOR	
 
 
+; ---- PLAYER RELATED CONSTANTS--------------------------------------------------
 
-
-
-
+PLYRCOL     EQU	 $000000FF          ; PLAYER COLOR 
+PLYSPEED    EQU     8                  ; PLAYER SPEED
 
 
 
