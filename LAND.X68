@@ -85,7 +85,7 @@ LANDINIT
             MOVE.W  #SCRWIDTH/BLOCSIZE, D5  ; NUMBER OF COLUMNS                     
             
             MOVE.W  #BLOCID, D0              ; INITIALIZE BLOCK
-            LEA	BLOCINIT, A1
+            LEA	 BLOCINIT, A1
             LEA     BLOCUPD, A2
             LEA     BLOCPLOT, A3
             MOVE.W  #STNINITY, D2
@@ -117,6 +117,49 @@ LANDINIT
             RTS            
 ;-----------------------------------------------------------                      
 
+
+;-----------------------------------------------------------                      
+LANDCRTE
+; INITIALIZE BASELAND  
+; INPUT	- NONE
+; OUTPUT	- NONE
+; MODIFIES	- NONE	
+;-----------------------------------------------------------
+            MOVEM.L D0-D5, -(A7)	; STACK REGISTER
+            MOVEM.L A1-A3, -(A7)
+            
+            MOVE.W  #SCRWIDTH/BLOCSIZE, D5  ; NUMBER OF COLUMNS 
+            MOVE.W  #BLOCID, D0              ; INITIALIZE BLOCK
+            LEA	 BLOCINIT, A1
+            LEA     BLOCUPD, A2
+            LEA     BLOCPLOT, A3           
+            MOVE.W  #STNINITX, D1             
+                                               
+.LOOPL      
+            MOVE.W  #STNINITY, D2
+            JSR GETRDIRT
+            MOVE.W D0, D4
+            MOVE.L  #STNFCOL, D3     
+            JSR AGLADD
+            SUB.W   #2, D4
+            SUB.W   #BLOCSIZE, D2
+            MOVE.L  #DIRTFCOL, D3 
+.LOOPD      
+            JSR AGLADD
+            SUB.W   #BLOCSIZE, D2
+            DBRA.W  D4, .LOOPD
+            
+            MOVE.L  #GRASFCOL, D3
+            JSR     AGLADD
+            
+            ADD.W   #BLOCSIZE, D1
+            DBRA.W  D5, .LOOPL      
+
+                       
+            MOVEM.L (A7)+, A1-A3
+            MOVEM.L (A7)+, D0-D5 	; RESTORE REGISTERS
+            RTS            
+;-----------------------------------------------------------                      
 
 
 

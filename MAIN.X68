@@ -9,14 +9,14 @@
 
 ; --- CODE INCLUDES -----------------------------------------------------------
 
-            INCLUDE "SYSCONST.X68"          ; SYSTEM CONSTANTS
+            INCLUDE "SYSCONST.X68"          ; SYSTEM CONSTANTS-
             INCLUDE "SYSTEM.X68"            ; SYSTEM CODE
             INCLUDE "CONST.X68"	; GAME CONSTANTS
             INCLUDE "RANDOM.X68"	; RANDOM NUMBER GENERATOR
             INCLUDE "AGENTLST.X68"	; 
             INCLUDE "BLOCK.X68"	; BLOCK MANAGEMENT	
             INCLUDE "LAND.X68"              ; LAND CREATION
-            INCLUDE "PLAYER.X68"              ; PLAYER MANAGEMEN			
+            INCLUDE "PLAYER.X68"              ; PLAYER MANAGEMENT			
 
 ; --- INITIALIZE --------------------------------------------------------------
 
@@ -26,12 +26,12 @@ START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
             ; TO DO : ADD YOUR GAME INITIALIZATION HERE
             JSR	  RNDINIT
             
-
+           
             
             ; GENERATES LAND 
 
-            JSR     LANDINIT
-            
+            ;JSR     LANDINIT
+            JSR     LANDCRTE
             ; PLACE PLAYER
             JSR     PLYRINIT             
            
@@ -46,9 +46,10 @@ START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
 
             ; TO DO : ADD YOUR GAME UPDATE HERE
             JSR	 AGLUPD
-            
-            JSR     PLYRUPDX
-            JSR     PLYRUPDY 
+            JSR     PLAYELX
+            ;JSR     PLYRUPDX               ; WITHOUT BOUNDING 
+            JSR     PLYRUPDY
+            ;JSR     PLAYELY                ; WITHOUT BOUNDING 
 
 ; --- WAIT SYNCH --------------------------------------------------------------
 
@@ -72,6 +73,8 @@ START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
             INCLUDE "SYSVAR.X68"
             INCLUDE "VAR.X68"
             END    START
+
+
 
 
 
