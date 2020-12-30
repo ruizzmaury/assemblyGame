@@ -1,6 +1,6 @@
-00001466 Starting Address
+0000175C Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 21/12/2020 0:15:49
+Created On: 30/12/2020 16:02:30
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      : BLOCK MANAGEMENT
@@ -9,83 +9,135 @@ Created On: 21/12/2020 0:15:49
 00000000                             5  * Description: ALL ABOUT THE BLOCK BEHAVIOR
 00000000                             6  *-----------------------------------------------------------
 00000000                             7  
-00000000= 00000000                   8  COLORB      DC.L    0
-00000004                             9  
-00000004                            10  ;-----------------------------------------------------------
-00000004                            11  BLOCINIT
-00000004                            12  ; INITIALIZE BLOCK
-00000004                            13  ; INPUT     - D1.W  STONE PLACE COORDINATE 
-00000004                            14  ; OUTPUT    - NONE
-00000004                            15  ; MODIFIES  - NONE  
-00000004                            16  ;-----------------------------------------------------------
-00000004                            17                         
-00000004  3081                      18              MOVE.W  D1, (A0)
-00000006  3142 0002                 19               MOVE.W D2, 2(A0)
-0000000A  2143 0004                 20               MOVE.L D3, 4(A0)
-0000000E                            21              
-0000000E                            22              
-0000000E  4E75                      23              RTS
-00000010                            24  
-00000010                            25  
-00000010                            26  ;-----------------------------------------------------------
-00000010                            27  BLOCUPD
-00000010                            28  ; UPDATE BLOCK
-00000010                            29  ; INPUT     - NONE
-00000010                            30  ; OUTPUT    - NONE
-00000010                            31  ; MODIFIES  - NONE  
-00000010                            32  ;-----------------------------------------------------------
-00000010  4E75                      33              RTS
-00000012                            34  
-00000012                            35  
-00000012                            36  
-00000012                            37  ;-----------------------------------------------------------
-00000012                            38  BLOCPLOT
-00000012                            39  ; PLOT BLOCK
-00000012                            40  ; INPUT     - NONE
-00000012                            41  ; OUTPUT    - NONE
-00000012                            42  ; MODIFIES  - NONE  
-00000012                            43  ;-----------------------------------------------------------
-00000012  48E7 F800                 44              MOVEM.L D0-D4, -(A7)            ; STACK REGISTER
-00000016  103C 0050                 45              MOVE.B  #80, D0                 ; SET PEN COLOR TASK
-Line 46 ERROR: Undefined symbol
-0000001A  223C 004DBD16             46              MOVE.L  #BLOCPCOL, D1           ; BLOCK COLOR
-00000020  4E4F                      47              TRAP #15; SET PEN COLOR
-00000022  103C 0051                 48              MOVE.B  #81, D0                 ; SET FILL COLOR TASK
-00000026  2228 0004                 49              MOVE.L  4(A0),D1                ; BLOCK COLOR
-0000002A  4E4F                      50              TRAP #15; SET FILL COLOR
-0000002C                            51              
-0000002C  3210                      52              MOVE.W  (A0),D1                 ; D1:=XCENTER
-0000002E  3428 0002                 53              MOVE.W  2(A0),D2                ; D2:=YCENTER
-00000032  3601                      54              MOVE.W  D1, D3                  ; D3:=XCENTER
-00000034  3802                      55              MOVE.W  D2, D4                  ; D4:=YCENTER
-00000036                            56              
-Line 57 ERROR: Comma expected
-00000036                            57              SUB.W   #BLOCSIZE/2, D1         ; D1:=XLEFT
-Line 58 ERROR: Comma expected
-00000036                            58              SUB.W   #BLOCSIZE/2, D2         ; D2:=YTOP
-Line 59 ERROR: Comma expected
-00000036                            59              ADD.W   #BLOCSIZE/2, D3         ; D3:=XRIGHT
-Line 60 ERROR: Comma expected
-00000036                            60              ADD.W   #BLOCSIZE/2, D4         ; D4:=YBOTTOM
-00000036  103C 0057                 61              MOVE.B  #87, D0
-0000003A  4E4F                      62              TRAP    #15                     ; DRAW BLOCK
-0000003C  4CDF 001F                 63              MOVEM.L (A7)+, D0-D4            ; RESTORE REGISTERS
-00000040  4E75                      64              RTS
-00000042                            65  
-00000042                            66  
-00000042                            67  
-00000042                            68  
-00000042                            69  
-Line 70 WARNING: END directive missing, starting address not set
+00000000                             8  ;-----------------------------------------------------------
+00000000                             9  BLOCINIT
+00000000                            10  ; INITIALIZE BLOCK
+00000000                            11  ; INPUT     - D1.W  X PLACE COORDINATE
+00000000                            12  ;          - D2.W  Y PLACE COORDINATE 
+00000000                            13  ;          - D3.L  BLOCK COLOR
+00000000                            14  ; OUTPUT    - NONE
+00000000                            15  ; MODIFIES  - NONE  
+00000000                            16  ;-----------------------------------------------------------
+00000000                            17                         
+00000000  3081                      18              MOVE.W  D1, (A0)
+00000002  3142 0002                 19               MOVE.W D2, 2(A0)
+00000006  2143 0004                 20               MOVE.L D3, 4(A0)
+0000000A                            21              
+0000000A                            22              
+0000000A  4E75                      23              RTS
+0000000C                            24  
+0000000C                            25  
+0000000C                            26  ;-----------------------------------------------------------
+0000000C                            27  BLOCUPD
+0000000C                            28  ; UPDATE BLOCK
+0000000C                            29  ; INPUT     - NONE
+0000000C                            30  ; OUTPUT    - NONE
+0000000C                            31  ; MODIFIES  - NONE  
+0000000C                            32  ;-----------------------------------------------------------
+0000000C  48E7 F800                 33              MOVEM.L D0-D4, -(A7)            ; STACK REGISTER
+00000010                            34                          
+00000010                            35              ; LEFT BLOCK BOUNDING TO PLAYER
+00000010                            36              
+Line 37 ERROR: Undefined symbol
+00000010  3239 004DBD16             37              MOVE.W  (PLAYERY),D1             ; D1:= PLAYERY BOTTOM SIDE
+Line 38 ERROR: Comma expected
+00000016                            38              ADD.W   #BLOCSIZE/2, D1    
+00000016                            39              
+Line 40 ERROR: Undefined symbol
+00000016  3639 004DBD16             40              MOVE.W  (PLAYERX),D3             ; PLAYERX RIGHT SIDE 
+Line 41 ERROR: Comma expected
+0000001C                            41              ADD.W   #BLOCSIZE/2, D3         
+0000001C                            42              
+0000001C  3028 0002                 43              MOVE.W    2(A0),D0                  ; D0:= BLOCKY TOP SIDE
+Line 44 ERROR: Comma expected
+00000020                            44              SUB.W   #BLOCSIZE/2, D0
+00000020                            45  
+00000020                            46  
+00000020  3410                      47              MOVE.W   (A0),D2                    ; D2:= BLOCKX LEFT SIDE
+Line 48 ERROR: Comma expected
+00000022                            48              SUB.W   #BLOCSIZE/2, D2
+00000022                            49              
+00000022  B041                      50              CMP.W   D1, D0
+00000024  6700 0018                 51              BEQ     .CHECKX
+00000028                            52  
+Line 53 ERROR: Symbol value differs between first and second pass
+00000028  4CDF 001F                 53  .MOVEP      MOVEM.L (A7)+, D0-D4                ; RESTORE REGISTERS
+0000002C  4E75                      54              RTS
+0000002E                            55  
+Line 56 ERROR: Symbol value differs between first and second pass
+0000002E                            56  .CHECKX     CMP.W   D2, D3               
+0000002E  6608                      57              BNE     .MOVEP
+00000030                            58              
+00000030  2838 0000                 59              MOVE.L  $00000000, D4
+00000034  B8A8 0004                 60              CMP.L   4(A0),D4
+00000038                            61  
+00000038                            62              
+00000038                            63              
+00000038                            64              
+00000038                            65  
+00000038                            66  
+00000038                            67              
+00000038                            68  
+00000038                            69              
+00000038                            70  
+00000038                            71  
+00000038                            72              
+00000038                            73  
+00000038                            74  
+00000038                            75  
+00000038                            76  ;-----------------------------------------------------------
+Line 77 ERROR: Symbol value differs between first and second pass
+00000038                            77  BLOCPLOT
+00000038                            78  ; PLOT BLOCK
+00000038                            79  ; INPUT     - NONE
+00000038                            80  ; OUTPUT    - NONE
+00000038                            81  ; MODIFIES  - NONE  
+00000038                            82  ;-----------------------------------------------------------
+00000038  48E7 F800                 83              MOVEM.L D0-D4, -(A7)            ; STACK REGISTER
+0000003C  103C 0050                 84              MOVE.B  #80, D0                 ; SET PEN COLOR TASK
+Line 85 ERROR: Undefined symbol
+00000040  223C 004DBD16             85              MOVE.L  #BLOCPCOL, D1           ; BLOCK COLOR
+00000046  4E4F                      86              TRAP #15; SET PEN COLOR
+00000048  103C 0051                 87              MOVE.B  #81, D0                 ; SET FILL COLOR TASK
+0000004C  2228 0004                 88              MOVE.L  4(A0),D1                ; BLOCK COLOR
+00000050  4E4F                      89              TRAP #15; SET FILL COLOR
+00000052                            90              
+00000052  3210                      91              MOVE.W  (A0),D1                 ; D1:=XCENTER
+00000054  3428 0002                 92              MOVE.W  2(A0),D2                ; D2:=YCENTER
+00000058  3601                      93              MOVE.W  D1, D3                  ; D3:=XCENTER
+0000005A  3802                      94              MOVE.W  D2, D4                  ; D4:=YCENTER
+0000005C                            95              
+Line 96 ERROR: Comma expected
+0000005C                            96              SUB.W   #BLOCSIZE/2, D1         ; D1:=XLEFT
+Line 97 ERROR: Comma expected
+0000005C                            97              SUB.W   #BLOCSIZE/2, D2         ; D2:=YTOP
+Line 98 ERROR: Comma expected
+0000005C                            98              ADD.W   #BLOCSIZE/2, D3         ; D3:=XRIGHT
+Line 99 ERROR: Comma expected
+0000005C                            99              ADD.W   #BLOCSIZE/2, D4         ; D4:=YBOTTOM
+0000005C  103C 0057                100              MOVE.B  #87, D0
+00000060  4E4F                     101              TRAP    #15                     ; DRAW BLOCK
+00000062  4CDF 001F                102              MOVEM.L (A7)+, D0-D4            ; RESTORE REGISTERS
+00000066  4E75                     103              RTS
+00000068                           104  
+00000068                           105  
+00000068                           106  
+00000068                           107  
+00000068                           108  
+00000068                           109  
+00000068                           110  
+00000068                           111  
+Line 112 WARNING: END directive missing, starting address not set
 
-5 errors detected
+14 errors detected
 1 warning generated
 
 
 SYMBOL TABLE INFORMATION
 Symbol-name         Value
 -------------------------
-BLOCINIT            4
-BLOCPLOT            12
-BLOCUPD             10
-COLORB              0
+BLOCINIT            0
+BLOCPLOT            4A
+BLOCUPD             C
+BLOCUPD:CHECKX      3E
+BLOCUPD:MOVEP       38

@@ -30,7 +30,49 @@ BLOCUPD
 ; OUTPUT	- NONE
 ; MODIFIES	- NONE	
 ;-----------------------------------------------------------
-	RTS
+            MOVEM.L D0-D4, -(A7)	; STACK REGISTER
+	            
+            ; LEFT BLOCK BOUNDING TO PLAYER
+            
+            MOVE.W  (PLAYERY),D1             ; D1:= PLAYERY BOTTOM SIDE
+            ADD.W   #BLOCSIZE/2, D1    
+            
+            MOVE.W	  2(A0),D0	    ; D0:= BLOCKY TOP SIDE
+            SUB.W   #BLOCSIZE/2, D0
+
+            CMP.W   D0, D1                  ; PLAYERY (D1) < BLOCKY (D0)
+            BLT     .MOVEPL
+            
+      
+            MOVE.W	(A0),D2	     ; D2:= BLOCKX LEFT SIDE
+            SUB.W   #BLOCSIZE/2, D2
+            
+            MOVE.W  (PLAYERX),D3             ; PLAYERX RIGHT SIDE 
+            ADD.W   #BLOCSIZE/2, D3         
+                           
+            CMP.W   D2, D3                   ; PLAYERX > BLOCKY                 
+            BGE     .CHECKR
+            
+.MOVEPL     MOVEM.L (A7)+, D0-D4 	    ; RESTORE REGISTERS
+            RTS
+
+.CHECKR     
+            MOVE.W	(A0),D2	     ; D2:= BLOCKX LEFT SIDE
+            ADD.W   #BLOCSIZE/2, D2
+            
+            CMP.W   D2, D3                   ; PLAYERX > BLOCKX                 
+            BGT     .MOVEPL
+            
+            
+.BLOCKP     MOVE.W  (A0), D4
+            SUB.W   #BLOCSIZE, D4
+            MOVE.W  D4,(PLAYERX) 
+            BRA     .MOVEPL        
+
+            
+
+
+            
 
 
 
@@ -62,6 +104,7 @@ BLOCPLOT
 	TRAP	#15	; DRAW BLOCK
 	MOVEM.L (A7)+, D0-D4 	; RESTORE REGISTERS
 	RTS
+
 
 
 

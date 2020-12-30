@@ -45,11 +45,14 @@ START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
 .LOOP       TRAP    #KBDTRAP                ; READ KEYBOARD
 
             ; TO DO : ADD YOUR GAME UPDATE HERE
+            
+            ;JSR     PLAYELX
+            JSR     PLYRUPDX               ; WITHOUT BOUNDING 
+            ;JSR     PLYRUPDY
+            JSR     PLAYELY                ; WITHOUT BOUNDING 
+            
             JSR	 AGLUPD
-            JSR     PLAYELX
-            ;JSR     PLYRUPDX               ; WITHOUT BOUNDING 
-            JSR     PLYRUPDY
-            ;JSR     PLAYELY                ; WITHOUT BOUNDING 
+            
 
 ; --- WAIT SYNCH --------------------------------------------------------------
 
@@ -73,6 +76,7 @@ START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
             INCLUDE "SYSVAR.X68"
             INCLUDE "VAR.X68"
             END    START
+
 
 
 

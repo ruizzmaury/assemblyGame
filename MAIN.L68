@@ -1,6 +1,6 @@
-00001716 Starting Address
+00001764 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 28/12/2020 18:17:59
+Created On: 30/12/2020 17:06:11
 
 00000000                             1  ; =============================================================================
 00000000                             2  ; TITLE    : EXAMPLE GAME (MAIN PROGRAM)
@@ -164,8 +164,8 @@ Created On: 28/12/2020 18:17:59
 00001070  123C 0006                160              MOVE.B  #6,D1
 00001074  103C 0020                161              MOVE.B  #32,D0
 00001078  4E4F                     162              TRAP    #15
-0000107A  4239 00001754            163              CLR.B   (SCRINTCT)              ; PREPARE INTERRUPT FLAG
-00001080  4239 00001755            164              CLR.B   (SCRCYCCT)              ; PREPARE CYCLE COUNTER
+0000107A  4239 000017A2            163              CLR.B   (SCRINTCT)              ; PREPARE INTERRUPT FLAG
+00001080  4239 000017A3            164              CLR.B   (SCRCYCCT)              ; PREPARE CYCLE COUNTER
 00001086  027C F8FF                165              ANDI.W  #$F8FF,SR               ; ENABLE INTS
 0000108A  4E75                     166              RTS
 0000108C                           167  
@@ -176,8 +176,8 @@ Created On: 28/12/2020 18:17:59
 0000108C                           172  ; OUTPUT   - NONE
 0000108C                           173  ; MODIFIES - NONE
 0000108C                           174  ; -----------------------------------------------------------------------------
-0000108C  5239 00001754            175              ADDQ.B  #1,(SCRINTCT)           ; UPDATE INT FLAG/COUNTER
-00001092  5239 00001755            176              ADDQ.B  #1,(SCRCYCCT)           ; UPDATE CYCLE COUNTER
+0000108C  5239 000017A2            175              ADDQ.B  #1,(SCRINTCT)           ; UPDATE INT FLAG/COUNTER
+00001092  5239 000017A3            176              ADDQ.B  #1,(SCRCYCCT)           ; UPDATE CYCLE COUNTER
 00001098  4E73                     177              RTE
 0000109A                           178  
 0000109A                           179  ; -----------------------------------------------------------------------------
@@ -208,8 +208,8 @@ Created On: 28/12/2020 18:17:59
 000010B4                           204  ; OUTPUT   - NONE
 000010B4                           205  ; MODIFIES - NONE
 000010B4                           206  ; -----------------------------------------------------------------------------
-000010B4  4239 00001752            207              CLR.B   (KBDVAL)                ; INIT VARS
-000010BA  4239 00001753            208              CLR.B   (KBDEDGE)
+000010B4  4239 000017A0            207              CLR.B   (KBDVAL)                ; INIT VARS
+000010BA  4239 000017A1            208              CLR.B   (KBDEDGE)
 000010C0  21FC 000010CA 0080       209              MOVE.L  #KBDREAD,($80+KBDTRAP*4) ; INSTALL
 000010C8  4E75                     210              RTS
 000010CA                           211  
@@ -231,11 +231,11 @@ Created On: 28/12/2020 18:17:59
 000010DE  223C 28272625            227              MOVE.L  #KBDDOWN<<24+KBDRIGHT<<16+KBDUP<<8+KBDLEFT,D1
 000010E4  4E4F                     228              TRAP    #15
 000010E6  6100 001E                229              BSR     .STORE                  ; STORE KEY UP,DOWN,LEFT AND RIGTH.
-000010EA  1039 00001752            230              MOVE.B  (KBDVAL),D0             ; COMPUTE EDGE.
+000010EA  1039 000017A0            230              MOVE.B  (KBDVAL),D0             ; COMPUTE EDGE.
 000010F0  4600                     231              NOT.B   D0                      ; EDGE=NOT(PREVIOUS) AND CURRENT.
 000010F2  C002                     232              AND.B   D2,D0
-000010F4  13C2 00001752            233              MOVE.B  D2,(KBDVAL)             ; STORE VALUES (PRESS AND EDGE)
-000010FA  13C0 00001753            234              MOVE.B  D0,(KBDEDGE)
+000010F4  13C2 000017A0            233              MOVE.B  D2,(KBDVAL)             ; STORE VALUES (PRESS AND EDGE)
+000010FA  13C0 000017A1            234              MOVE.B  D0,(KBDEDGE)
 00001100  4CDF 000F                235              MOVEM.L (A7)+,D0-D3
 00001104  4E73                     236              RTE
 00001106                           237  
@@ -262,7 +262,7 @@ Created On: 28/12/2020 18:17:59
 00001114                           258  ; MODIFIES - NONE
 00001114                           259  ; -----------------------------------------------------------------------------
 00001114  48E7 8080                260              MOVEM.L D0/A0,-(A7)
-00001118  41F9 00001780            261              LEA     DMMDATA,A0
+00001118  41F9 000017C0            261              LEA     DMMDATA,A0
 0000111E  303C 0207                262              MOVE.W  #DMMBNUM-1,D0
 00001122  30BC 0000                263  .LOOP       MOVE.W  #DMMSYSID,(A0)
 00001126  D1FC 00000040            264              ADD.L   #DMMBSIZE,A0
@@ -278,11 +278,11 @@ Created On: 28/12/2020 18:17:59
 00001136                           274  ; OUTPUT   - A0   : POINTER TO THE DATA OR 0 IF NOT FOUND
 00001136                           275  ; MODIFIES - NONE (ASIDE OF OUTPUT)
 00001136                           276  ; -----------------------------------------------------------------------------
-00001136  41F9 00001780            277              LEA     DMMDATA,A0
+00001136  41F9 000017C0            277              LEA     DMMDATA,A0
 0000113C  4A58                     278  DMMFRLOP    TST.W   (A0)+
 0000113E  6600 0016                279              BNE     DMMFRFND
 00001142  D1FC 0000003E            280              ADD.L   #DMMBSIZE-2,A0
-00001148  B1FC 0000997F            281  DMMFRCOM    CMP.L   #DMMDATA+DMMBSIZE*DMMBNUM-1,A0
+00001148  B1FC 000099BF            281  DMMFRCOM    CMP.L   #DMMDATA+DMMBSIZE*DMMBNUM-1,A0
 0000114E  6DEC                     282              BLT     DMMFRLOP
 00001150  207C 00000000            283              MOVE.L  #0,A0
 00001156  4E75                     284  DMMFRFND    RTS
@@ -311,11 +311,11 @@ Created On: 28/12/2020 18:17:59
 0000116E                           307  ; OUTPUT   - A0   : POINTER TO THE DATA OR 0 IF NOT FOUND
 0000116E                           308  ; MODIFIES - NONE (ASIDE OF OUTPUT)
 0000116E                           309  ; -----------------------------------------------------------------------------
-0000116E  41F9 00001780            310              LEA     DMMDATA,A0
+0000116E  41F9 000017C0            310              LEA     DMMDATA,A0
 00001174  B058                     311  DMMFLOOP    CMP.W   (A0)+,D0
 00001176  6700 0016                312              BEQ     DMMFFND
 0000117A  D1FC 0000003E            313              ADD.L   #DMMBSIZE-2,A0
-00001180  B1FC 0000997F            314  DMMFCOM     CMP.L   #DMMDATA+DMMBSIZE*DMMBNUM-1,A0
+00001180  B1FC 000099BF            314  DMMFCOM     CMP.L   #DMMDATA+DMMBSIZE*DMMBNUM-1,A0
 00001186  6DEC                     315              BLT     DMMFLOOP
 00001188  207C 00000000            316              MOVE.L  #0,A0
 0000118E  4E75                     317  DMMFFND     RTS
@@ -413,805 +413,853 @@ Created On: 28/12/2020 18:17:59
 000011D6                           409  
 000011D6                           410  
 000011D6                           411  
-000011D6                           412  -------------------- end include --------------------
-000011D6                           413              INCLUDE "RANDOM.X68"            ; RANDOM NUMBER GENERATOR
-000011D6                           414  ; =============================================================================
-000011D6                           415  ; TITLE    : PSEUDO-RANDOM NUMBER GENERATOR
-000011D6                           416  ; AUTHOR   : ANTONI BURGUERA
-000011D6                           417  ; COMMENTS : VERY LAZY AND STUPID "ALGORITHM" IMPLEMENTED.
-000011D6                           418  ; HISTORY  : XX-XXX-201X - CREATION
-000011D6                           419  ;            11-OCT-2020 - MINOR CHANGES
-000011D6                           420  ; =============================================================================
-000011D6                           421  
-000011D6                           422  ; -----------------------------------------------------------------------------
-000011D6                           423  RNDINIT
-000011D6                           424  ; INITIALIZES RANDOM NUMBER GENERATOR
-000011D6                           425  ; INPUT    - NONE
-000011D6                           426  ; OUTPUT   - NONE
-000011D6                           427  ; MODIFIES - NONE
-000011D6                           428  ; -----------------------------------------------------------------------------
-000011D6  4239 00009984            429              CLR.B   (RNDINDEX)
-000011DC  4E75                     430              RTS
-000011DE                           431              
-000011DE                           432              
-000011DE                           433  ; -----------------------------------------------------------------------------
-000011DE                           434  GETRDIRT
-000011DE                           435  ; PROVIDES A RANDOM NUMBER OF DIRT BLOCKS BETWEEN 6-10
-000011DE                           436  ; INPUT    - NONE
-000011DE                           437  ; OUTPUT   - D0.L RANDOM VALUE (ONLY BYTE)
-000011DE                           438  ; MODIFIES - NONE (ASIDE OF OUTPUT)
-000011DE                           439  ; -----------------------------------------------------------------------------
-000011DE  2F08                     440              MOVE.L  A0,-(A7)
-000011E0  41F9 000099AE            441              LEA     LANDHEIG,A0
-000011E6  4280                     442              CLR.L   D0
-000011E8  1039 00009984            443              MOVE.B  (RNDINDEX),D0
-000011EE  1030 0800                444              MOVE.B  (A0,D0.L),D0
-000011F2  5239 00009984            445              ADDQ.B  #1,(RNDINDEX)
-000011F8  205F                     446              MOVE.L  (A7)+,A0
-000011FA  4E75                     447              RTS
-000011FC                           448  
-000011FC                           449  
-000011FC                           450              
-000011FC                           451  ; -----------------------------------------------------------------------------
-000011FC                           452  RNDGET
-000011FC                           453  ; PROVIDES A PSEUDO-RANDOM BYTE
-000011FC                           454  ; INPUT    - NONE
-000011FC                           455  ; OUTPUT   - D0.L RANDOM VALUE (ONLY BYTE)
-000011FC                           456  ; MODIFIES - NONE (ASIDE OF OUTPUT)
-000011FC                           457  ; -----------------------------------------------------------------------------
-000011FC  2F08                     458              MOVE.L  A0,-(A7)
-000011FE  41F9 0000121A            459              LEA     .RANDVEC,A0
-00001204  4280                     460              CLR.L   D0
-00001206  1039 00009984            461              MOVE.B  (RNDINDEX),D0
-0000120C  1030 0800                462              MOVE.B  (A0,D0.L),D0
-00001210  5239 00009984            463              ADDQ.B  #1,(RNDINDEX)
-00001216  205F                     464              MOVE.L  (A7)+,A0
-00001218  4E75                     465              RTS
-0000121A                           466  
-0000121A= A2 EE 9A 0C F5 24 ...    467  .RANDVEC    DC.B    162, 238, 154, 12 , 245, 36 , 32 , 103
-00001222= 2A A3 51 26 E0 AC ...    468              DC.B    42 , 163, 81 , 38 , 224, 172, 19 , 69
-0000122A= 75 51 CA FD 33 EB ...    469              DC.B    117, 81 , 202, 253, 51 , 235, 108, 154
-00001232= 60 CC E7 B8 9A EB ...    470              DC.B    96 , 204, 231, 184, 154, 235, 34 , 203
-0000123A= 1D 76 B5 95 B0 89 ...    471              DC.B    29 , 118, 181, 149, 176, 137, 62 , 108
-00001242= 39 15 48 C9 6E CA ...    472              DC.B    57 , 21 , 72 , 201, 110, 202, 159, 41
-0000124A= 43 E7 E2 7C 37 25 ...    473              DC.B    67 , 231, 226, 124, 55 , 37 , 84 , 62
-00001252= E9 94 CE E9 E4 52 ...    474              DC.B    233, 148, 206, 233, 228, 82 , 243, 78
-0000125A= 37 6D 9A 84 A2 28 ...    475              DC.B    55 , 109, 154, 132, 162, 40 , 30 , 39
-00001262= 19 E2 C6 77 80 D4 ...    476              DC.B    25 , 226, 198, 119, 128, 212, 232, 225
-0000126A= 0A 5A 32 67 33 C2 ...    477              DC.B    10 , 90 , 50 , 103, 51 , 194, 222, 40
-00001272= 59 80 DC 0E 57 FC ...    478              DC.B    89 , 128, 220, 14 , 87 , 252, 243, 252
-0000127A= 8A AB BC F7 07 4D ...    479              DC.B    138, 171, 188, 247, 7  , 77 , 29 , 234
-00001282= EF D5 77 6E 1E BB ...    480              DC.B    239, 213, 119, 110, 30 , 187, 131, 23
-0000128A= D6 E0 2A 8F BD 28 ...    481              DC.B    214, 224, 42 , 143, 189, 40 , 212, 130
-00001292= 13 4F 66 EC 0A 64 ...    482              DC.B    19 , 79 , 102, 236, 10 , 100, 122, 188
-0000129A= 56 52 9A 16 9B 90 ...    483              DC.B    86 , 82 , 154, 22 , 155, 144, 7  , 199
-000012A2= 06 8A A4 F7 01 DA ...    484              DC.B    6  , 138, 164, 247, 1  , 218, 166, 82
-000012AA= F2 E7 77 28 B1 76 ...    485              DC.B    242, 231, 119, 40 , 177, 118, 220, 102
-000012B2= A4 42 E3 81 B1 67 ...    486              DC.B    164, 66 , 227, 129, 177, 103, 165, 108
-000012BA= BF CE FA 16 BF 38 ...    487              DC.B    191, 206, 250, 22 , 191, 56 , 30 , 161
-000012C2= D1 8B 50 0C 5F 49 ...    488              DC.B    209, 139, 80 , 12 , 95 , 73 , 168, 56
-000012CA= DE 4C 14 A2 40 DC ...    489              DC.B    222, 76 , 20 , 162, 64 , 220, 93 , 12
-000012D2= B6 9B 0A 38 5D AB ...    490              DC.B    182, 155, 10 , 56 , 93 , 171, 89 , 6
-000012DA= E2 1B DD 75 15 82 ...    491              DC.B    226, 27 , 221, 117, 21 , 130, 101, 18
-000012E2= 8A 26 51 30 9F 47 ...    492              DC.B    138, 38 , 81 , 48 , 159, 71 , 57 , 21
-000012EA= 1E 8A BB 71 C6 6E ...    493              DC.B    30 , 138, 187, 113, 198, 110, 185, 152
-000012F2= 9F 47 E5 34 94 27 ...    494              DC.B    159, 71 , 229, 52 , 148, 39 , 77 , 6
-000012FA= 7D 06 D6 BA 30 0F ...    495              DC.B    125, 6  , 214, 186, 48 , 15 , 212, 22
-00001302= EC 7F 7E 03 CF 2D ...    496              DC.B    236, 127, 126, 3  , 207, 45 , 193, 2
-0000130A= 94 5B 23 F2 8B CD ...    497              DC.B    148, 91 , 35 , 242, 139, 205, 248, 237
-00001312= 74 33 EC B9 0F D5 ...    498              DC.B    116, 51 , 236, 185, 15 , 213, 221, 6
-0000131A                           499  
-0000131A                           500  
-0000131A                           501  -------------------- end include --------------------
-0000131A                           502              INCLUDE "AGENTLST.X68"          ; 
-0000131A                           503  ; =============================================================================
-0000131A                           504  ; TITLE    : AGENT LIST
-0000131A                           505  ; AUTHOR   : ANTONI BURGUERA
-0000131A                           506  ; COMMENTS : EACH AGENT HAS A DATA BLOCK FROM DMM AS FOLLOWS:
-0000131A                           507  ;              +0 - LONG : UPDATE SUBROUTINE POINTER
-0000131A                           508  ;              +4 - LONG : PLOT SUBROUTINE POINTER
-0000131A                           509  ;              +8:END    : DATA (AGENT SPECIFIC)
-0000131A                           510  ; HISTORY  : XX-XXX-201X - CREATION
-0000131A                           511  ;            11-OCT-2020 - MINOR CHANGES
-0000131A                           512  ; =============================================================================
-0000131A                           513  
-0000131A                           514  ; -----------------------------------------------------------------------------
-0000131A                           515  AGLADD
-0000131A                           516  ; CREATES A NEW AGENT
-0000131A                           517  ; INPUT    - A1 - POINTER TO AGENT INIT FUNCTION
-0000131A                           518  ;            A2 - POINTER TO AGENT UPDATE FUNCTION
-0000131A                           519  ;            A3 - POINTER TO AGENT PLOT FUNCTION
-0000131A                           520  ;            D0 - AGENT TYPE (USED AS OWNED BY DMM)
-0000131A                           521  ;            D1 - AGENT INITIALIZATION PARAMETER 1
-0000131A                           522  ;            D2 - AGENT INITIALIZATION PARAMETER 2
-0000131A                           523  ;            D3 - AGENT INITIALIZATION PARAMETER 3
-0000131A                           524  ; OUTPUT   - NONE
-0000131A                           525  ; MODIFIES - NONE
-0000131A                           526  ; -----------------------------------------------------------------------------
-0000131A  2F08                     527              MOVE.L  A0,-(A7)
-0000131C  4EB8 11A6                528              JSR     DMMALLOC
-00001320  B1FC 00000000            529              CMP.L   #0,A0
-00001326  6700 0008                530              BEQ     .END
-0000132A  20CA                     531              MOVE.L  A2,(A0)+
-0000132C  20CB                     532              MOVE.L  A3,(A0)+
-0000132E  4E91                     533              JSR     (A1)
-00001330  205F                     534  .END        MOVE.L  (A7)+,A0
-00001332  4E75                     535              RTS
-00001334                           536  
-00001334                           537  ; -----------------------------------------------------------------------------
-00001334                           538  AGLUPD
-00001334                           539  ; UPDATES THE AGENT LIST. PRIOR TO CALLING THE UPDATE FUNCTIONS, A0 IS SET
-00001334                           540  ; TO THE DATA BLOCK OF THE CORRESPONDING SLOT.
-00001334                           541  ; INPUT    - NONE
-00001334                           542  ; OUTPUT   - NONE
-00001334                           543  ; MODIFIES - NONE
-00001334                           544  ; -----------------------------------------------------------------------------
-00001334  48E7 00C0                545              MOVEM.L A0-A1,-(A7)
-00001338  4EB8 1136                546              JSR     DMMFIRST
-0000133C  B1FC 00000000            547  .LOOP       CMP.L   #0,A0
-00001342  6700 000E                548              BEQ     .END
-00001346  2250                     549              MOVE.L  (A0),A1
-00001348  5088                     550              ADD.L   #8,A0
-0000134A  4E91                     551              JSR     (A1)
-0000134C  4EB8 1158                552              JSR     DMMNEXT
-00001350  60EA                     553              BRA     .LOOP
-00001352  4CDF 0300                554  .END        MOVEM.L (A7)+,A0-A1
-00001356  4E75                     555              RTS
-00001358                           556  
-00001358                           557  ; -----------------------------------------------------------------------------
-00001358                           558  AGLPLOT
-00001358                           559  ; PLOTS THE AGENT LIST. PRIOR TO CALLING THE UPDATE FUNCTIONS, A0 IS SET
-00001358                           560  ; TO THE DATA BLOCK OF THE CORRESPONDING SLOT.
-00001358                           561  ; INPUT    - NONE
-00001358                           562  ; OUTPUT   - NONE
-00001358                           563  ; MODIFIES - NONE
-00001358                           564  ; -----------------------------------------------------------------------------
-00001358  48E7 00C0                565              MOVEM.L A0-A1,-(A7)
-0000135C  4EB8 1136                566              JSR     DMMFIRST
-00001360  B1FC 00000000            567  .LOOP       CMP.L   #0,A0
-00001366  6700 0010                568              BEQ     .END
-0000136A  2268 0004                569              MOVE.L  4(A0),A1
-0000136E  5088                     570              ADD.L   #8,A0
-00001370  4E91                     571              JSR     (A1)
-00001372  4EB8 1158                572              JSR     DMMNEXT
-00001376  60E8                     573              BRA     .LOOP
-00001378  4CDF 0300                574  .END        MOVEM.L (A7)+,A0-A1
-0000137C  4E75                     575              RTS
-0000137E                           576  
-0000137E                           577  ; -----------------------------------------------------------------------------
-0000137E  =000011C0                578  AGLKILL     EQU     DMMFREE
-0000137E                           579  ; KILLS THE AGENT BY RELEASING ITS MEMORY
-0000137E                           580  ; INPUT    - A0 POINTER WITHIN THE AGENT MEMORY
-0000137E                           581  ; OUTPUT   - NONE
-0000137E                           582  ; MODIFIES - NONE
-0000137E                           583  ; NOTE     - IT IS JUST A WRAPPER FOR DMMFREE
-0000137E                           584  ; -----------------------------------------------------------------------------
-0000137E                           585  -------------------- end include --------------------
-0000137E                           586              INCLUDE "BLOCK.X68"             ; BLOCK MANAGEMENT
-0000137E                           587  
-0000137E                           588  ;-----------------------------------------------------------
-0000137E                           589  BLOCINIT
-0000137E                           590  ; INITIALIZE BLOCK
-0000137E                           591  ; INPUT     - D1.W  X PLACE COORDINATE
-0000137E                           592  ;          - D2.W  Y PLACE COORDINATE 
-0000137E                           593  ;          - D3.L  BLOCK COLOR
-0000137E                           594  ; OUTPUT    - NONE
-0000137E                           595  ; MODIFIES  - NONE  
-0000137E                           596  ;-----------------------------------------------------------
-0000137E                           597                         
-0000137E  3081                     598              MOVE.W  D1, (A0)
-00001380  3142 0002                599               MOVE.W D2, 2(A0)
-00001384  2143 0004                600               MOVE.L D3, 4(A0)
-00001388                           601              
-00001388                           602              
-00001388  4E75                     603              RTS
-0000138A                           604  
-0000138A                           605  
-0000138A                           606  ;-----------------------------------------------------------
-0000138A                           607  BLOCUPD
-0000138A                           608  ; UPDATE BLOCK
-0000138A                           609  ; INPUT     - NONE
-0000138A                           610  ; OUTPUT    - NONE
-0000138A                           611  ; MODIFIES  - NONE  
-0000138A                           612  ;-----------------------------------------------------------
-0000138A  4E75                     613              RTS
-0000138C                           614  
-0000138C                           615  
-0000138C                           616  
-0000138C                           617  ;-----------------------------------------------------------
-0000138C                           618  BLOCPLOT
-0000138C                           619  ; PLOT BLOCK
-0000138C                           620  ; INPUT     - NONE
-0000138C                           621  ; OUTPUT    - NONE
-0000138C                           622  ; MODIFIES  - NONE  
-0000138C                           623  ;-----------------------------------------------------------
-0000138C  48E7 F800                624              MOVEM.L D0-D4, -(A7)            ; STACK REGISTER
-00001390  103C 0050                625              MOVE.B  #80, D0                 ; SET PEN COLOR TASK
-00001394  7200                     626              MOVE.L  #BLOCPCOL, D1           ; BLOCK COLOR
-00001396  4E4F                     627              TRAP #15; SET PEN COLOR
-00001398  103C 0051                628              MOVE.B  #81, D0                 ; SET FILL COLOR TASK
-0000139C  2228 0004                629              MOVE.L  4(A0),D1                ; BLOCK COLOR
-000013A0  4E4F                     630              TRAP #15; SET FILL COLOR
-000013A2                           631              
-000013A2  3210                     632              MOVE.W  (A0),D1                 ; D1:=XCENTER
-000013A4  3428 0002                633              MOVE.W  2(A0),D2                ; D2:=YCENTER
-000013A8  3601                     634              MOVE.W  D1, D3                  ; D3:=XCENTER
-000013AA  3802                     635              MOVE.W  D2, D4                  ; D4:=YCENTER
-000013AC                           636              
-000013AC  0441 0014                637              SUB.W   #BLOCSIZE/2, D1         ; D1:=XLEFT
-000013B0  0442 0014                638              SUB.W   #BLOCSIZE/2, D2         ; D2:=YTOP
-000013B4  0643 0014                639              ADD.W   #BLOCSIZE/2, D3         ; D3:=XRIGHT
-000013B8  0644 0014                640              ADD.W   #BLOCSIZE/2, D4         ; D4:=YBOTTOM
-000013BC  103C 0057                641              MOVE.B  #87, D0
-000013C0  4E4F                     642              TRAP    #15                     ; DRAW BLOCK
-000013C2  4CDF 001F                643              MOVEM.L (A7)+, D0-D4            ; RESTORE REGISTERS
-000013C6  4E75                     644              RTS
-000013C8                           645  
-000013C8                           646  
-000013C8                           647  
-000013C8                           648  
-000013C8                           649  
-000013C8                           650  
-000013C8                           651  
-000013C8                           652  
-000013C8                           653  -------------------- end include --------------------
-000013C8                           654              INCLUDE "LAND.X68"              ; LAND CREATION
-000013C8                           655  ;-----------------------------------------------------------
-000013C8                           656  
-000013C8                           657  DIRTINIT
-000013C8                           658  ; CREATE LAND
-000013C8                           659  ; INPUT     - NONE
-000013C8                           660  ; OUTPUT    - NONE
-000013C8                           661  ; MODIFIES  - NONE  
-000013C8                           662  ;-----------------------------------------------------------
-000013C8  48E7 FC00                663              MOVEM.L D0-D5, -(A7)            ; STACK REGISTER
-000013CC  48E7 0070                664              MOVEM.L A1-A3, -(A7)
-000013D0                           665              
-000013D0                           666              
-000013D0  383C 0003                667              MOVE.W  #3, D4  ; NUMBER OF STONE BLOCKS
-000013D4  3A3C 0014                668              MOVE.W  #STNINITX, D5                     
-000013D8                           669              
-000013D8  303C 0001                670              MOVE.W  #BLOCID, D0
-000013DC  43F8 137E                671              LEA     BLOCINIT, A1
-000013E0  45F8 138A                672              LEA     BLOCUPD, A2
-000013E4  47F8 138C                673              LEA     BLOCPLOT, A3
-000013E8  343C 02BC                674              MOVE.W  #STNINITY, D2
-000013EC  263C 00676767            675              MOVE.L  #STNFCOL, D3                           
-000013F2                           676              
-000013F2  3205                     677              MOVE.W  D5, D1                       
-000013F4  4EB8 131A                678  .LOOPCOL    JSR     AGLADD
-000013F8  0442 0028                679              SUB.W   #BLOCSIZE, D2
-000013FC  51CC FFF6                680              DBRA.W  D4, .LOOPCOL
-00001400                           681              
-00001400  4CDF 0E00                682              MOVEM.L (A7)+, A1-A3
-00001404  4CDF 003F                683              MOVEM.L (A7)+, D0-D5            ; RESTORE REGISTERS
-00001408  4E75                     684              RTS
-0000140A                           685  
-0000140A                           686  
-0000140A                           687  
-0000140A                           688  
-0000140A                           689  
-0000140A                           690  ;-----------------------------------------------------------
-0000140A                           691  STNEINIT
-0000140A                           692  ; CREATE BASELAND OF STONES
-0000140A                           693  ; INPUT     - NONE
-0000140A                           694  ; OUTPUT    - NONE
-0000140A                           695  ; MODIFIES  - NONE  
-0000140A                           696  ;-----------------------------------------------------------
-0000140A                           697              
-0000140A  48E7 FC00                698              MOVEM.L D0-D5, -(A7)            ; STACK REGISTER
-0000140E  48E7 0070                699              MOVEM.L A1-A3, -(A7)
-00001412                           700              
-00001412                           701              
-00001412  383C 0020                702              MOVE.W  #SCRWIDTH/BLOCSIZE, D4  ; NUMBER OF STONE BLOCKS
-00001416  3A3C 0014                703              MOVE.W  #STNINITX, D5                     
-0000141A                           704              
-0000141A  303C 0001                705              MOVE.W  #BLOCID, D0
-0000141E  43F8 137E                706              LEA      BLOCINIT, A1
-00001422  45F8 138A                707              LEA     BLOCUPD, A2
-00001426  47F8 138C                708              LEA     BLOCPLOT, A3
-0000142A  343C 02BC                709              MOVE.W  #STNINITY, D2
-0000142E  263C 00676767            710              MOVE.L  #STNFCOL, D3                           
-00001434                           711              
-00001434  3205                     712  .LOOPS      MOVE.W  D5, D1                       
-00001436  4EB8 131A                713              JSR     AGLADD
-0000143A  0645 0028                714              ADD.W   #BLOCSIZE, D5
-0000143E  51CC FFF4                715              DBRA.W  D4, .LOOPS
-00001442                           716              
-00001442  4CDF 0E00                717              MOVEM.L (A7)+, A1-A3
-00001446  4CDF 003F                718              MOVEM.L (A7)+, D0-D5            ; RESTORE REGISTERS
-0000144A  4E75                     719              RTS
-0000144C                           720  
-0000144C                           721              
-0000144C                           722  ;-----------------------------------------------------------                      
-0000144C                           723  LANDINIT
-0000144C                           724  ; INITIALIZE BASELAND  
-0000144C                           725  ; INPUT     - NONE
-0000144C                           726  ; OUTPUT    - NONE
-0000144C                           727  ; MODIFIES  - NONE  
-0000144C                           728  ;-----------------------------------------------------------
-0000144C  48E7 FC00                729              MOVEM.L D0-D5, -(A7)            ; STACK REGISTER
-00001450  48E7 0070                730              MOVEM.L A1-A3, -(A7)
-00001454                           731              
-00001454                           732              
-00001454  3A3C 0020                733              MOVE.W  #SCRWIDTH/BLOCSIZE, D5  ; NUMBER OF COLUMNS                     
-00001458                           734              
-00001458  303C 0001                735              MOVE.W  #BLOCID, D0              ; INITIALIZE BLOCK
-0000145C  43F8 137E                736              LEA      BLOCINIT, A1
-00001460  45F8 138A                737              LEA     BLOCUPD, A2
-00001464  47F8 138C                738              LEA     BLOCPLOT, A3
-00001468  343C 02BC                739              MOVE.W  #STNINITY, D2
-0000146C                           740                                        
-0000146C                           741              
-0000146C  323C 0014                742              MOVE.W  #STNINITX, D1                       
-00001470                           743  .LOOPCOL    
-00001470  263C 00676767            744              MOVE.L  #STNFCOL, D3            ; STONE
-00001476  4EB8 11DE                745              JSR     GETRDIRT
-0000147A  3800                     746              MOVE.W  D0, D4                  ; NUMBER OF DIRT BLOCKS FROM ARRAY OF RANDOM
-0000147C  4EB8 131A                747              JSR     AGLADD
-00001480  0442 0028                748              SUB.W   #BLOCSIZE, D2
-00001484  263C 00002850            749              MOVE.L  #DIRTFCOL, D3
-0000148A                           750              
-0000148A  4EB8 131A                751  .LOOPDIR    JSR     AGLADD 
-0000148E  0442 0028                752              SUB.W   #BLOCSIZE, D2                       
-00001492  51CC FFF6                753              DBRA.W  D4, .LOOPDIR
-00001496                           754              
-00001496  263C 00008C50            755              MOVE.L  #GRASFCOL, D3
-0000149C  4EB8 131A                756              JSR     AGLADD
-000014A0                           757              
-000014A0  0641 0028                758              ADD.W   #BLOCSIZE, D1
-000014A4  343C 02BC                759              MOVE.W  #STNINITY, D2
-000014A8  51CD FFC6                760              DBRA.W  D5, .LOOPCOL
-000014AC                           761  
-000014AC                           762              
-000014AC  4CDF 0E00                763              MOVEM.L (A7)+, A1-A3
-000014B0  4CDF 003F                764              MOVEM.L (A7)+, D0-D5            ; RESTORE REGISTERS
-000014B4  4E75                     765              RTS            
-000014B6                           766  ;-----------------------------------------------------------                      
-000014B6                           767  
-000014B6                           768  
-000014B6                           769  ;-----------------------------------------------------------                      
-000014B6                           770  LANDCRTE
-000014B6                           771  ; INITIALIZE BASELAND  
-000014B6                           772  ; INPUT     - NONE
-000014B6                           773  ; OUTPUT    - NONE
-000014B6                           774  ; MODIFIES  - NONE  
-000014B6                           775  ;-----------------------------------------------------------
-000014B6  48E7 FC00                776              MOVEM.L D0-D5, -(A7)            ; STACK REGISTER
-000014BA  48E7 0070                777              MOVEM.L A1-A3, -(A7)
-000014BE                           778              
-000014BE  3A3C 0020                779              MOVE.W  #SCRWIDTH/BLOCSIZE, D5  ; NUMBER OF COLUMNS 
-000014C2  303C 0001                780              MOVE.W  #BLOCID, D0              ; INITIALIZE BLOCK
-000014C6  43F8 137E                781              LEA      BLOCINIT, A1
-000014CA  45F8 138A                782              LEA     BLOCUPD, A2
-000014CE  47F8 138C                783              LEA     BLOCPLOT, A3           
-000014D2  323C 0014                784              MOVE.W  #STNINITX, D1             
-000014D6                           785                                                 
-000014D6                           786  .LOOPL      
-000014D6  343C 02BC                787              MOVE.W  #STNINITY, D2
-000014DA  4EB8 11DE                788              JSR GETRDIRT
-000014DE  3800                     789              MOVE.W D0, D4
-000014E0  263C 00676767            790              MOVE.L  #STNFCOL, D3     
-000014E6  4EB8 131A                791              JSR AGLADD
-000014EA  5544                     792              SUB.W   #2, D4
-000014EC  0442 0028                793              SUB.W   #BLOCSIZE, D2
-000014F0  263C 00002850            794              MOVE.L  #DIRTFCOL, D3 
-000014F6                           795  .LOOPD      
-000014F6  4EB8 131A                796              JSR AGLADD
-000014FA  0442 0028                797              SUB.W   #BLOCSIZE, D2
-000014FE  51CC FFF6                798              DBRA.W  D4, .LOOPD
-00001502                           799              
-00001502  263C 00008C50            800              MOVE.L  #GRASFCOL, D3
-00001508  4EB8 131A                801              JSR     AGLADD
-0000150C                           802              
-0000150C  0641 0028                803              ADD.W   #BLOCSIZE, D1
-00001510  51CD FFC4                804              DBRA.W  D5, .LOOPL      
-00001514                           805  
-00001514                           806                         
-00001514  4CDF 0E00                807              MOVEM.L (A7)+, A1-A3
-00001518  4CDF 003F                808              MOVEM.L (A7)+, D0-D5            ; RESTORE REGISTERS
-0000151C  4E75                     809              RTS            
-0000151E                           810  ;-----------------------------------------------------------                      
-0000151E                           811  
-0000151E                           812  
-0000151E                           813  
-0000151E                           814  
-0000151E                           815  
-0000151E                           816  
-0000151E                           817  
-0000151E                           818  
-0000151E                           819  
-0000151E                           820  -------------------- end include --------------------
-0000151E                           821              INCLUDE "PLAYER.X68"              ; PLAYER MANAGEMENT
-0000151E                           822  
-0000151E                           823  
-0000151E                           824  ;-----------------------------------------------------------
-0000151E                           825  PLYRINIT
-0000151E                           826  ; INITIALIZE PLAYER
-0000151E                           827  ; INPUT     -   - NONE 
-0000151E                           828  ; OUTPUT    - NONE  
-0000151E                           829  ; MODIFIES  - NONE  
-0000151E                           830  ;-----------------------------------------------------------
-0000151E                           831                         
-0000151E  33FC 0037 00009986       832              MOVE.W  #55,(PLAYERX)
-00001526  33FC 0032 00009988       833                      MOVE.W  #50,(PLAYERY)
-0000152E                           834  
-0000152E  4E75                     835                      RTS
-00001530                           836  
-00001530                           837  
-00001530                           838  ;-----------------------------------------------------------
-00001530                           839  PLYRUPDX
-00001530                           840  ; UPDATE PLAYER
-00001530                           841  ; INPUT         - NONE
-00001530                           842  ; OUTPUT    - NONE
-00001530                           843  ; MODIFIES  - NONE  
-00001530                           844  ;-----------------------------------------------------------
-00001530  0839 0000 00001752       845                      BTST.B  #KBDBITLF,(KBDVAL)      ; LEFT KEY PRESSED?
-00001538  6600 0010                846              BNE     .MOVEL                  ; YES: MOVE LEFT
-0000153C  0839 0002 00001752       847              BTST.B  #KBDBITRT,(KBDVAL)      ; RIGHT KEY PRESSED?
-00001544  6600 001A                848              BNE     .MOVER                  ; YES: MOVE LEFT
-00001548  4E75                     849              RTS
-0000154A  0C79 0014 00009986       850  .MOVEL      CMP.W   #BLOCSIZE/2,(PLAYERX)      ; BELOW LEFT BOUNDARY?
-00001552  6E00 0004                851              BGT     .DOL                    ; NO: MOVE
-00001556  4E75                     852              RTS                             ; YES: END
-00001558  5179 00009986            853  .DOL        SUB.W   #PLYSPEED,(PLAYERX)        ; MOVE LEFT
-0000155E  4E75                     854              RTS
-00001560  0C79 04EB 00009986       855  .MOVER      CMP.W   #SCRWIDTH-1-BLOCSIZE/2,(PLAYERX) ; HIGHER THAN RIGHT BOUNDARY?
-00001568  6D00 0004                856              BLT     .DOR                    ; NO: MOVE
-0000156C  4E75                     857              RTS                             ; YES: END
-0000156E  5079 00009986            858  .DOR        ADD.W   #PLYSPEED,(PLAYERX)        ; MOVE RIGHT
-00001574  4E75                     859              RTS
-00001576                           860  
-00001576                           861              
-00001576                           862  
-00001576                           863  
-00001576                           864  
-00001576                           865  
-00001576                           866  
-00001576                           867  ;-----------------------------------------------------------
-00001576                           868  PLAYELX
-00001576                           869  ; UPDATE PLAYER
-00001576                           870  ; INPUT         - NONE
-00001576                           871  ; OUTPUT    - NONE
-00001576                           872  ; MODIFIES  - NONE  
-00001576                           873  ;-----------------------------------------------------------
-00001576  0839 0000 00001752       874                      BTST.B  #KBDBITLF,(KBDVAL)      ; LEFT KEY PRESSED?
-0000157E  6600 0010                875              BNE     .MOVEL                  ; YES: MOVE LEFT
-00001582  0839 0002 00001752       876              BTST.B  #KBDBITRT,(KBDVAL)      ; RIGHT KEY PRESSED?
-0000158A  6600 001A                877              BNE     .MOVER                  ; YES: MOVE LEFT
-0000158E  4E75                     878              RTS
-00001590  0C79 0014 00009986       879  .MOVEL      CMP.W   #BLOCSIZE/2,(PLAYERX)      ; BELOW LEFT BOUNDARY?
-00001598  6E00 0004                880              BGT     .DOL                    ; NO: MOVE
-0000159C  4E75                     881              RTS                             ; YES: END
-0000159E  5179 00009986            882  .DOL        SUB.W   #PLYSPEED,(PLAYERX)        ; MOVE LEFT
-000015A4  4E75                     883              RTS
-000015A6                           884  
-000015A6                           885  
-000015A6                           886  
-000015A6                           887  
-000015A6                           888  .MOVER      
-000015A6  48E7 0E80                889              MOVEM.L D4-D6/A0, -(A7)         ; STACK REGISTER
-000015AA                           890              
-000015AA  0C79 04EB 00009986       891              CMP.W   #SCRWIDTH-1-BLOCSIZE/2,(PLAYERX) ; HIGHER THAN RIGHT BOUNDARY?
-000015B2  6E00 0056                892              BGT     .END                    ; YES: STOP
-000015B6                           893              
-000015B6                           894              
-000015B6  3A39 00009986            895              MOVE.W  (PLAYERX),D5
-000015BC  0445 0014                896              SUB.W   #BLOCSIZE/2, D5
-000015C0  8AFC 0028                897              DIVU.W  #BLOCSIZE,  D5  ; SEGMENT OF SCREEN PLAYER LOCATED 
-000015C4                           898       
-000015C4                           899              
-000015C4  3C05                     900              MOVE.W  D5, D6      ; COPY SEGMENT OF SCREEN PLAYER LOCATED IN D6
-000015C6                           901                         
-000015C6  41F9 000099AE            902              LEA LANDHEIG, A0
-000015CC  D0C5                     903              ADDA.W  D5, A0
-000015CE                           904                             
-000015CE                           905                
-000015CE  1A10                     906              MOVE.B  (A0),D5         ; NUMBER OF BLOCKS - 1 IN COLUMN 
-000015D0                           907                                      ; OF THE SCREEN SEGMENT WHERE IS 
-000015D0                           908                                      ; LOCATED THE PLAYER
-000015D0                           909                                      ; RIGHT NOW 
-000015D0  5205                     910              ADD.B   #1, D5          ; ADD 1 TO GET THE REAL NUMBER OF BLOCKS
-000015D2                           911                          
-000015D2                           912              
-000015D2  5246                     913              ADD.W   #1, D6          ; ACCESSING THE NUMBER OF BLOCKS OF THE NEXT COLUMN
-000015D4  41F9 000099AE            914              LEA LANDHEIG, A0
-000015DA  D0C6                     915              ADDA.W  D6, A0
-000015DC                           916  
-000015DC  1C10                     917              MOVE.B  (A0),D6         ; NUMBER OF BLOCKS - 1 IN COLUMN 
-000015DE                           918                                      ; OF THE NEXT SCREEN SEGMENT WHERE IS 
-000015DE                           919                                      ; LOCATED THE PLAYER
-000015DE                           920                                      ; RIGHT NOW 
-000015DE                           921  
-000015DE                           922                
-000015DE  5206                     923              ADD.B   #1, D6          ; ADD 1 TO GET THE REAL NUMBER OF BLOCKS
-000015E0                           924              
-000015E0  BC45                     925              CMP.W   D5, D6          ; NEXT COLUMN IS HIGHER THAN THE ACTUAL COLUMN?
-000015E2  6F00 0020                926              BLE .DOR
-000015E6                           927              
-000015E6  CCFC 0028                928              MULU.W  #BLOCSIZE, D6   
-000015EA  383C 02D0                929              MOVE.W  #SCRHEIGH, D4   
-000015EE  9846                     930              SUB.W   D6, D4          
-000015F0  0444 0014                931              SUB.W   #BLOCSIZE/2, D4  
-000015F4  5B44                     932              SUB.W   #5, D4          ; GETTING THE EXACT HEIGHT OF THE CORRESPONDENT COLUMN
-000015F6                           933  
-000015F6  B879 00009988            934              CMP.W   (PLAYERY),D4   ; TOP OF COLUMN HIGHER THAN PLAYERY?
-000015FC  6E00 0006                935              BGT     .DOR           ; YES: MOVE
-00001600                           936                            
-00001600  6000 0008                937              BRA .END               ; NO: END
+000011D6                           412  
+000011D6                           413  
+000011D6                           414  -------------------- end include --------------------
+000011D6                           415              INCLUDE "RANDOM.X68"            ; RANDOM NUMBER GENERATOR
+000011D6                           416  ; =============================================================================
+000011D6                           417  ; TITLE    : PSEUDO-RANDOM NUMBER GENERATOR
+000011D6                           418  ; AUTHOR   : ANTONI BURGUERA
+000011D6                           419  ; COMMENTS : VERY LAZY AND STUPID "ALGORITHM" IMPLEMENTED.
+000011D6                           420  ; HISTORY  : XX-XXX-201X - CREATION
+000011D6                           421  ;            11-OCT-2020 - MINOR CHANGES
+000011D6                           422  ; =============================================================================
+000011D6                           423  
+000011D6                           424  ; -----------------------------------------------------------------------------
+000011D6                           425  RNDINIT
+000011D6                           426  ; INITIALIZES RANDOM NUMBER GENERATOR
+000011D6                           427  ; INPUT    - NONE
+000011D6                           428  ; OUTPUT   - NONE
+000011D6                           429  ; MODIFIES - NONE
+000011D6                           430  ; -----------------------------------------------------------------------------
+000011D6  4239 000099C4            431              CLR.B   (RNDINDEX)
+000011DC  4E75                     432              RTS
+000011DE                           433              
+000011DE                           434              
+000011DE                           435  ; -----------------------------------------------------------------------------
+000011DE                           436  GETRDIRT
+000011DE                           437  ; PROVIDES A RANDOM NUMBER OF DIRT BLOCKS BETWEEN 6-10
+000011DE                           438  ; INPUT    - NONE
+000011DE                           439  ; OUTPUT   - D0.L RANDOM VALUE (ONLY BYTE)
+000011DE                           440  ; MODIFIES - NONE (ASIDE OF OUTPUT)
+000011DE                           441  ; -----------------------------------------------------------------------------
+000011DE  2F08                     442              MOVE.L  A0,-(A7)
+000011E0  41F9 000099EE            443              LEA     LANDHEIG,A0
+000011E6  4280                     444              CLR.L   D0
+000011E8  1039 000099C4            445              MOVE.B  (RNDINDEX),D0
+000011EE  1030 0800                446              MOVE.B  (A0,D0.L),D0
+000011F2  5239 000099C4            447              ADDQ.B  #1,(RNDINDEX)
+000011F8  205F                     448              MOVE.L  (A7)+,A0
+000011FA  4E75                     449              RTS
+000011FC                           450  
+000011FC                           451  
+000011FC                           452              
+000011FC                           453  ; -----------------------------------------------------------------------------
+000011FC                           454  RNDGET
+000011FC                           455  ; PROVIDES A PSEUDO-RANDOM BYTE
+000011FC                           456  ; INPUT    - NONE
+000011FC                           457  ; OUTPUT   - D0.L RANDOM VALUE (ONLY BYTE)
+000011FC                           458  ; MODIFIES - NONE (ASIDE OF OUTPUT)
+000011FC                           459  ; -----------------------------------------------------------------------------
+000011FC  2F08                     460              MOVE.L  A0,-(A7)
+000011FE  41F9 0000121A            461              LEA     .RANDVEC,A0
+00001204  4280                     462              CLR.L   D0
+00001206  1039 000099C4            463              MOVE.B  (RNDINDEX),D0
+0000120C  1030 0800                464              MOVE.B  (A0,D0.L),D0
+00001210  5239 000099C4            465              ADDQ.B  #1,(RNDINDEX)
+00001216  205F                     466              MOVE.L  (A7)+,A0
+00001218  4E75                     467              RTS
+0000121A                           468  
+0000121A= A2 EE 9A 0C F5 24 ...    469  .RANDVEC    DC.B    162, 238, 154, 12 , 245, 36 , 32 , 103
+00001222= 2A A3 51 26 E0 AC ...    470              DC.B    42 , 163, 81 , 38 , 224, 172, 19 , 69
+0000122A= 75 51 CA FD 33 EB ...    471              DC.B    117, 81 , 202, 253, 51 , 235, 108, 154
+00001232= 60 CC E7 B8 9A EB ...    472              DC.B    96 , 204, 231, 184, 154, 235, 34 , 203
+0000123A= 1D 76 B5 95 B0 89 ...    473              DC.B    29 , 118, 181, 149, 176, 137, 62 , 108
+00001242= 39 15 48 C9 6E CA ...    474              DC.B    57 , 21 , 72 , 201, 110, 202, 159, 41
+0000124A= 43 E7 E2 7C 37 25 ...    475              DC.B    67 , 231, 226, 124, 55 , 37 , 84 , 62
+00001252= E9 94 CE E9 E4 52 ...    476              DC.B    233, 148, 206, 233, 228, 82 , 243, 78
+0000125A= 37 6D 9A 84 A2 28 ...    477              DC.B    55 , 109, 154, 132, 162, 40 , 30 , 39
+00001262= 19 E2 C6 77 80 D4 ...    478              DC.B    25 , 226, 198, 119, 128, 212, 232, 225
+0000126A= 0A 5A 32 67 33 C2 ...    479              DC.B    10 , 90 , 50 , 103, 51 , 194, 222, 40
+00001272= 59 80 DC 0E 57 FC ...    480              DC.B    89 , 128, 220, 14 , 87 , 252, 243, 252
+0000127A= 8A AB BC F7 07 4D ...    481              DC.B    138, 171, 188, 247, 7  , 77 , 29 , 234
+00001282= EF D5 77 6E 1E BB ...    482              DC.B    239, 213, 119, 110, 30 , 187, 131, 23
+0000128A= D6 E0 2A 8F BD 28 ...    483              DC.B    214, 224, 42 , 143, 189, 40 , 212, 130
+00001292= 13 4F 66 EC 0A 64 ...    484              DC.B    19 , 79 , 102, 236, 10 , 100, 122, 188
+0000129A= 56 52 9A 16 9B 90 ...    485              DC.B    86 , 82 , 154, 22 , 155, 144, 7  , 199
+000012A2= 06 8A A4 F7 01 DA ...    486              DC.B    6  , 138, 164, 247, 1  , 218, 166, 82
+000012AA= F2 E7 77 28 B1 76 ...    487              DC.B    242, 231, 119, 40 , 177, 118, 220, 102
+000012B2= A4 42 E3 81 B1 67 ...    488              DC.B    164, 66 , 227, 129, 177, 103, 165, 108
+000012BA= BF CE FA 16 BF 38 ...    489              DC.B    191, 206, 250, 22 , 191, 56 , 30 , 161
+000012C2= D1 8B 50 0C 5F 49 ...    490              DC.B    209, 139, 80 , 12 , 95 , 73 , 168, 56
+000012CA= DE 4C 14 A2 40 DC ...    491              DC.B    222, 76 , 20 , 162, 64 , 220, 93 , 12
+000012D2= B6 9B 0A 38 5D AB ...    492              DC.B    182, 155, 10 , 56 , 93 , 171, 89 , 6
+000012DA= E2 1B DD 75 15 82 ...    493              DC.B    226, 27 , 221, 117, 21 , 130, 101, 18
+000012E2= 8A 26 51 30 9F 47 ...    494              DC.B    138, 38 , 81 , 48 , 159, 71 , 57 , 21
+000012EA= 1E 8A BB 71 C6 6E ...    495              DC.B    30 , 138, 187, 113, 198, 110, 185, 152
+000012F2= 9F 47 E5 34 94 27 ...    496              DC.B    159, 71 , 229, 52 , 148, 39 , 77 , 6
+000012FA= 7D 06 D6 BA 30 0F ...    497              DC.B    125, 6  , 214, 186, 48 , 15 , 212, 22
+00001302= EC 7F 7E 03 CF 2D ...    498              DC.B    236, 127, 126, 3  , 207, 45 , 193, 2
+0000130A= 94 5B 23 F2 8B CD ...    499              DC.B    148, 91 , 35 , 242, 139, 205, 248, 237
+00001312= 74 33 EC B9 0F D5 ...    500              DC.B    116, 51 , 236, 185, 15 , 213, 221, 6
+0000131A                           501  
+0000131A                           502  
+0000131A                           503  -------------------- end include --------------------
+0000131A                           504              INCLUDE "AGENTLST.X68"          ; 
+0000131A                           505  ; =============================================================================
+0000131A                           506  ; TITLE    : AGENT LIST
+0000131A                           507  ; AUTHOR   : ANTONI BURGUERA
+0000131A                           508  ; COMMENTS : EACH AGENT HAS A DATA BLOCK FROM DMM AS FOLLOWS:
+0000131A                           509  ;              +0 - LONG : UPDATE SUBROUTINE POINTER
+0000131A                           510  ;              +4 - LONG : PLOT SUBROUTINE POINTER
+0000131A                           511  ;              +8:END    : DATA (AGENT SPECIFIC)
+0000131A                           512  ; HISTORY  : XX-XXX-201X - CREATION
+0000131A                           513  ;            11-OCT-2020 - MINOR CHANGES
+0000131A                           514  ; =============================================================================
+0000131A                           515  
+0000131A                           516  ; -----------------------------------------------------------------------------
+0000131A                           517  AGLADD
+0000131A                           518  ; CREATES A NEW AGENT
+0000131A                           519  ; INPUT    - A1 - POINTER TO AGENT INIT FUNCTION
+0000131A                           520  ;            A2 - POINTER TO AGENT UPDATE FUNCTION
+0000131A                           521  ;            A3 - POINTER TO AGENT PLOT FUNCTION
+0000131A                           522  ;            D0 - AGENT TYPE (USED AS OWNED BY DMM)
+0000131A                           523  ;            D1 - AGENT INITIALIZATION PARAMETER 1
+0000131A                           524  ;            D2 - AGENT INITIALIZATION PARAMETER 2
+0000131A                           525  ;            D3 - AGENT INITIALIZATION PARAMETER 3
+0000131A                           526  ; OUTPUT   - NONE
+0000131A                           527  ; MODIFIES - NONE
+0000131A                           528  ; -----------------------------------------------------------------------------
+0000131A  2F08                     529              MOVE.L  A0,-(A7)
+0000131C  4EB8 11A6                530              JSR     DMMALLOC
+00001320  B1FC 00000000            531              CMP.L   #0,A0
+00001326  6700 0008                532              BEQ     .END
+0000132A  20CA                     533              MOVE.L  A2,(A0)+
+0000132C  20CB                     534              MOVE.L  A3,(A0)+
+0000132E  4E91                     535              JSR     (A1)
+00001330  205F                     536  .END        MOVE.L  (A7)+,A0
+00001332  4E75                     537              RTS
+00001334                           538  
+00001334                           539  ; -----------------------------------------------------------------------------
+00001334                           540  AGLUPD
+00001334                           541  ; UPDATES THE AGENT LIST. PRIOR TO CALLING THE UPDATE FUNCTIONS, A0 IS SET
+00001334                           542  ; TO THE DATA BLOCK OF THE CORRESPONDING SLOT.
+00001334                           543  ; INPUT    - NONE
+00001334                           544  ; OUTPUT   - NONE
+00001334                           545  ; MODIFIES - NONE
+00001334                           546  ; -----------------------------------------------------------------------------
+00001334  48E7 00C0                547              MOVEM.L A0-A1,-(A7)
+00001338  4EB8 1136                548              JSR     DMMFIRST
+0000133C  B1FC 00000000            549  .LOOP       CMP.L   #0,A0
+00001342  6700 000E                550              BEQ     .END
+00001346  2250                     551              MOVE.L  (A0),A1
+00001348  5088                     552              ADD.L   #8,A0
+0000134A  4E91                     553              JSR     (A1)
+0000134C  4EB8 1158                554              JSR     DMMNEXT
+00001350  60EA                     555              BRA     .LOOP
+00001352  4CDF 0300                556  .END        MOVEM.L (A7)+,A0-A1
+00001356  4E75                     557              RTS
+00001358                           558  
+00001358                           559  ; -----------------------------------------------------------------------------
+00001358                           560  AGLPLOT
+00001358                           561  ; PLOTS THE AGENT LIST. PRIOR TO CALLING THE UPDATE FUNCTIONS, A0 IS SET
+00001358                           562  ; TO THE DATA BLOCK OF THE CORRESPONDING SLOT.
+00001358                           563  ; INPUT    - NONE
+00001358                           564  ; OUTPUT   - NONE
+00001358                           565  ; MODIFIES - NONE
+00001358                           566  ; -----------------------------------------------------------------------------
+00001358  48E7 00C0                567              MOVEM.L A0-A1,-(A7)
+0000135C  4EB8 1136                568              JSR     DMMFIRST
+00001360  B1FC 00000000            569  .LOOP       CMP.L   #0,A0
+00001366  6700 0010                570              BEQ     .END
+0000136A  2268 0004                571              MOVE.L  4(A0),A1
+0000136E  5088                     572              ADD.L   #8,A0
+00001370  4E91                     573              JSR     (A1)
+00001372  4EB8 1158                574              JSR     DMMNEXT
+00001376  60E8                     575              BRA     .LOOP
+00001378  4CDF 0300                576  .END        MOVEM.L (A7)+,A0-A1
+0000137C  4E75                     577              RTS
+0000137E                           578  
+0000137E                           579  ; -----------------------------------------------------------------------------
+0000137E  =000011C0                580  AGLKILL     EQU     DMMFREE
+0000137E                           581  ; KILLS THE AGENT BY RELEASING ITS MEMORY
+0000137E                           582  ; INPUT    - A0 POINTER WITHIN THE AGENT MEMORY
+0000137E                           583  ; OUTPUT   - NONE
+0000137E                           584  ; MODIFIES - NONE
+0000137E                           585  ; NOTE     - IT IS JUST A WRAPPER FOR DMMFREE
+0000137E                           586  ; -----------------------------------------------------------------------------
+0000137E                           587  -------------------- end include --------------------
+0000137E                           588              INCLUDE "BLOCK.X68"             ; BLOCK MANAGEMENT
+0000137E                           589  
+0000137E                           590  ;-----------------------------------------------------------
+0000137E                           591  BLOCINIT
+0000137E                           592  ; INITIALIZE BLOCK
+0000137E                           593  ; INPUT     - D1.W  X PLACE COORDINATE
+0000137E                           594  ;          - D2.W  Y PLACE COORDINATE 
+0000137E                           595  ;          - D3.L  BLOCK COLOR
+0000137E                           596  ; OUTPUT    - NONE
+0000137E                           597  ; MODIFIES  - NONE  
+0000137E                           598  ;-----------------------------------------------------------
+0000137E                           599                         
+0000137E  3081                     600              MOVE.W  D1, (A0)
+00001380  3142 0002                601               MOVE.W D2, 2(A0)
+00001384  2143 0004                602               MOVE.L D3, 4(A0)
+00001388                           603              
+00001388                           604              
+00001388  4E75                     605              RTS
+0000138A                           606  
+0000138A                           607  
+0000138A                           608  ;-----------------------------------------------------------
+0000138A                           609  BLOCUPD
+0000138A                           610  ; UPDATE BLOCK
+0000138A                           611  ; INPUT     - NONE
+0000138A                           612  ; OUTPUT    - NONE
+0000138A                           613  ; MODIFIES  - NONE  
+0000138A                           614  ;-----------------------------------------------------------
+0000138A  48E7 F800                615              MOVEM.L D0-D4, -(A7)            ; STACK REGISTER
+0000138E                           616                          
+0000138E                           617              ; LEFT BLOCK BOUNDING TO PLAYER
+0000138E                           618              
+0000138E  3239 000099C8            619              MOVE.W  (PLAYERY),D1             ; D1:= PLAYERY BOTTOM SIDE
+00001394  0641 0014                620              ADD.W   #BLOCSIZE/2, D1    
+00001398                           621              
+00001398  3028 0002                622              MOVE.W    2(A0),D0                  ; D0:= BLOCKY TOP SIDE
+0000139C  0440 0014                623              SUB.W   #BLOCSIZE/2, D0
+000013A0                           624  
+000013A0  B240                     625              CMP.W   D0, D1                  ; PLAYERY (D1) < BLOCKY (D0)
+000013A2  6D00 0018                626              BLT     .MOVEPL
+000013A6                           627              
+000013A6                           628        
+000013A6  3410                     629              MOVE.W  (A0),D2                      ; D2:= BLOCKX LEFT SIDE
+000013A8  0442 0014                630              SUB.W   #BLOCSIZE/2, D2
+000013AC                           631              
+000013AC  3639 000099C6            632              MOVE.W  (PLAYERX),D3             ; PLAYERX RIGHT SIDE 
+000013B2  0643 0014                633              ADD.W   #BLOCSIZE/2, D3         
+000013B6                           634                             
+000013B6  B642                     635              CMP.W   D2, D3                   ; PLAYERX > BLOCKY                 
+000013B8  6C00 0008                636              BGE     .CHECKR
+000013BC                           637              
+000013BC  4CDF 001F                638  .MOVEPL     MOVEM.L (A7)+, D0-D4                ; RESTORE REGISTERS
+000013C0  4E75                     639              RTS
+000013C2                           640  
+000013C2                           641  .CHECKR     
+000013C2  3410                     642              MOVE.W  (A0),D2                      ; D2:= BLOCKX LEFT SIDE
+000013C4  0642 0014                643              ADD.W   #BLOCSIZE/2, D2
+000013C8                           644              
+000013C8  B642                     645              CMP.W   D2, D3                   ; PLAYERX > BLOCKX                 
+000013CA  6EF0                     646              BGT     .MOVEPL
+000013CC                           647              
+000013CC                           648              
+000013CC  3810                     649  .BLOCKP     MOVE.W  (A0), D4
+000013CE  0444 0028                650              SUB.W   #BLOCSIZE, D4
+000013D2  33C4 000099C6            651              MOVE.W  D4,(PLAYERX) 
+000013D8  60E2                     652              BRA     .MOVEPL        
+000013DA                           653  
+000013DA                           654              
+000013DA                           655  
+000013DA                           656  
+000013DA                           657              
+000013DA                           658  
+000013DA                           659  
+000013DA                           660  
+000013DA                           661  ;-----------------------------------------------------------
+000013DA                           662  BLOCPLOT
+000013DA                           663  ; PLOT BLOCK
+000013DA                           664  ; INPUT     - NONE
+000013DA                           665  ; OUTPUT    - NONE
+000013DA                           666  ; MODIFIES  - NONE  
+000013DA                           667  ;-----------------------------------------------------------
+000013DA  48E7 F800                668              MOVEM.L D0-D4, -(A7)            ; STACK REGISTER
+000013DE  103C 0050                669              MOVE.B  #80, D0                 ; SET PEN COLOR TASK
+000013E2  7200                     670              MOVE.L  #BLOCPCOL, D1           ; BLOCK COLOR
+000013E4  4E4F                     671              TRAP #15; SET PEN COLOR
+000013E6  103C 0051                672              MOVE.B  #81, D0                 ; SET FILL COLOR TASK
+000013EA  2228 0004                673              MOVE.L  4(A0),D1                ; BLOCK COLOR
+000013EE  4E4F                     674              TRAP #15; SET FILL COLOR
+000013F0                           675              
+000013F0  3210                     676              MOVE.W  (A0),D1                 ; D1:=XCENTER
+000013F2  3428 0002                677              MOVE.W  2(A0),D2                ; D2:=YCENTER
+000013F6  3601                     678              MOVE.W  D1, D3                  ; D3:=XCENTER
+000013F8  3802                     679              MOVE.W  D2, D4                  ; D4:=YCENTER
+000013FA                           680              
+000013FA  0441 0014                681              SUB.W   #BLOCSIZE/2, D1         ; D1:=XLEFT
+000013FE  0442 0014                682              SUB.W   #BLOCSIZE/2, D2         ; D2:=YTOP
+00001402  0643 0014                683              ADD.W   #BLOCSIZE/2, D3         ; D3:=XRIGHT
+00001406  0644 0014                684              ADD.W   #BLOCSIZE/2, D4         ; D4:=YBOTTOM
+0000140A  103C 0057                685              MOVE.B  #87, D0
+0000140E  4E4F                     686              TRAP    #15                     ; DRAW BLOCK
+00001410  4CDF 001F                687              MOVEM.L (A7)+, D0-D4            ; RESTORE REGISTERS
+00001414  4E75                     688              RTS
+00001416                           689  
+00001416                           690  
+00001416                           691  
+00001416                           692  
+00001416                           693  
+00001416                           694  
+00001416                           695  
+00001416                           696  
+00001416                           697  
+00001416                           698  -------------------- end include --------------------
+00001416                           699              INCLUDE "LAND.X68"              ; LAND CREATION
+00001416                           700  ;-----------------------------------------------------------
+00001416                           701  
+00001416                           702  DIRTINIT
+00001416                           703  ; CREATE LAND
+00001416                           704  ; INPUT     - NONE
+00001416                           705  ; OUTPUT    - NONE
+00001416                           706  ; MODIFIES  - NONE  
+00001416                           707  ;-----------------------------------------------------------
+00001416  48E7 FC00                708              MOVEM.L D0-D5, -(A7)            ; STACK REGISTER
+0000141A  48E7 0070                709              MOVEM.L A1-A3, -(A7)
+0000141E                           710              
+0000141E                           711              
+0000141E  383C 0003                712              MOVE.W  #3, D4  ; NUMBER OF STONE BLOCKS
+00001422  3A3C 0014                713              MOVE.W  #STNINITX, D5                     
+00001426                           714              
+00001426  303C 0001                715              MOVE.W  #BLOCID, D0
+0000142A  43F8 137E                716              LEA     BLOCINIT, A1
+0000142E  45F8 138A                717              LEA     BLOCUPD, A2
+00001432  47F8 13DA                718              LEA     BLOCPLOT, A3
+00001436  343C 02BC                719              MOVE.W  #STNINITY, D2
+0000143A  263C 00676767            720              MOVE.L  #STNFCOL, D3                           
+00001440                           721              
+00001440  3205                     722              MOVE.W  D5, D1                       
+00001442  4EB8 131A                723  .LOOPCOL    JSR     AGLADD
+00001446  0442 0028                724              SUB.W   #BLOCSIZE, D2
+0000144A  51CC FFF6                725              DBRA.W  D4, .LOOPCOL
+0000144E                           726              
+0000144E  4CDF 0E00                727              MOVEM.L (A7)+, A1-A3
+00001452  4CDF 003F                728              MOVEM.L (A7)+, D0-D5            ; RESTORE REGISTERS
+00001456  4E75                     729              RTS
+00001458                           730  
+00001458                           731  
+00001458                           732  
+00001458                           733  
+00001458                           734  
+00001458                           735  ;-----------------------------------------------------------
+00001458                           736  STNEINIT
+00001458                           737  ; CREATE BASELAND OF STONES
+00001458                           738  ; INPUT     - NONE
+00001458                           739  ; OUTPUT    - NONE
+00001458                           740  ; MODIFIES  - NONE  
+00001458                           741  ;-----------------------------------------------------------
+00001458                           742              
+00001458  48E7 FC00                743              MOVEM.L D0-D5, -(A7)            ; STACK REGISTER
+0000145C  48E7 0070                744              MOVEM.L A1-A3, -(A7)
+00001460                           745              
+00001460                           746              
+00001460  383C 0020                747              MOVE.W  #SCRWIDTH/BLOCSIZE, D4  ; NUMBER OF STONE BLOCKS
+00001464  3A3C 0014                748              MOVE.W  #STNINITX, D5                     
+00001468                           749              
+00001468  303C 0001                750              MOVE.W  #BLOCID, D0
+0000146C  43F8 137E                751              LEA      BLOCINIT, A1
+00001470  45F8 138A                752              LEA     BLOCUPD, A2
+00001474  47F8 13DA                753              LEA     BLOCPLOT, A3
+00001478  343C 02BC                754              MOVE.W  #STNINITY, D2
+0000147C  263C 00676767            755              MOVE.L  #STNFCOL, D3                           
+00001482                           756              
+00001482  3205                     757  .LOOPS      MOVE.W  D5, D1                       
+00001484  4EB8 131A                758              JSR     AGLADD
+00001488  0645 0028                759              ADD.W   #BLOCSIZE, D5
+0000148C  51CC FFF4                760              DBRA.W  D4, .LOOPS
+00001490                           761              
+00001490  4CDF 0E00                762              MOVEM.L (A7)+, A1-A3
+00001494  4CDF 003F                763              MOVEM.L (A7)+, D0-D5            ; RESTORE REGISTERS
+00001498  4E75                     764              RTS
+0000149A                           765  
+0000149A                           766              
+0000149A                           767  ;-----------------------------------------------------------                      
+0000149A                           768  LANDINIT
+0000149A                           769  ; INITIALIZE BASELAND  
+0000149A                           770  ; INPUT     - NONE
+0000149A                           771  ; OUTPUT    - NONE
+0000149A                           772  ; MODIFIES  - NONE  
+0000149A                           773  ;-----------------------------------------------------------
+0000149A  48E7 FC00                774              MOVEM.L D0-D5, -(A7)            ; STACK REGISTER
+0000149E  48E7 0070                775              MOVEM.L A1-A3, -(A7)
+000014A2                           776              
+000014A2                           777              
+000014A2  3A3C 0020                778              MOVE.W  #SCRWIDTH/BLOCSIZE, D5  ; NUMBER OF COLUMNS                     
+000014A6                           779              
+000014A6  303C 0001                780              MOVE.W  #BLOCID, D0              ; INITIALIZE BLOCK
+000014AA  43F8 137E                781              LEA      BLOCINIT, A1
+000014AE  45F8 138A                782              LEA     BLOCUPD, A2
+000014B2  47F8 13DA                783              LEA     BLOCPLOT, A3
+000014B6  343C 02BC                784              MOVE.W  #STNINITY, D2
+000014BA                           785                                        
+000014BA                           786              
+000014BA  323C 0014                787              MOVE.W  #STNINITX, D1                       
+000014BE                           788  .LOOPCOL    
+000014BE  263C 00676767            789              MOVE.L  #STNFCOL, D3            ; STONE
+000014C4  4EB8 11DE                790              JSR     GETRDIRT
+000014C8  3800                     791              MOVE.W  D0, D4                  ; NUMBER OF DIRT BLOCKS FROM ARRAY OF RANDOM
+000014CA  4EB8 131A                792              JSR     AGLADD
+000014CE  0442 0028                793              SUB.W   #BLOCSIZE, D2
+000014D2  263C 00002850            794              MOVE.L  #DIRTFCOL, D3
+000014D8                           795              
+000014D8  4EB8 131A                796  .LOOPDIR    JSR     AGLADD 
+000014DC  0442 0028                797              SUB.W   #BLOCSIZE, D2                       
+000014E0  51CC FFF6                798              DBRA.W  D4, .LOOPDIR
+000014E4                           799              
+000014E4  263C 00008C50            800              MOVE.L  #GRASFCOL, D3
+000014EA  4EB8 131A                801              JSR     AGLADD
+000014EE                           802              
+000014EE  0641 0028                803              ADD.W   #BLOCSIZE, D1
+000014F2  343C 02BC                804              MOVE.W  #STNINITY, D2
+000014F6  51CD FFC6                805              DBRA.W  D5, .LOOPCOL
+000014FA                           806  
+000014FA                           807              
+000014FA  4CDF 0E00                808              MOVEM.L (A7)+, A1-A3
+000014FE  4CDF 003F                809              MOVEM.L (A7)+, D0-D5            ; RESTORE REGISTERS
+00001502  4E75                     810              RTS            
+00001504                           811  ;-----------------------------------------------------------                      
+00001504                           812  
+00001504                           813  
+00001504                           814  ;-----------------------------------------------------------                      
+00001504                           815  LANDCRTE
+00001504                           816  ; INITIALIZE BASELAND  
+00001504                           817  ; INPUT     - NONE
+00001504                           818  ; OUTPUT    - NONE
+00001504                           819  ; MODIFIES  - NONE  
+00001504                           820  ;-----------------------------------------------------------
+00001504  48E7 FC00                821              MOVEM.L D0-D5, -(A7)            ; STACK REGISTER
+00001508  48E7 0070                822              MOVEM.L A1-A3, -(A7)
+0000150C                           823              
+0000150C  3A3C 0020                824              MOVE.W  #SCRWIDTH/BLOCSIZE, D5  ; NUMBER OF COLUMNS 
+00001510  303C 0001                825              MOVE.W  #BLOCID, D0              ; INITIALIZE BLOCK
+00001514  43F8 137E                826              LEA      BLOCINIT, A1
+00001518  45F8 138A                827              LEA     BLOCUPD, A2
+0000151C  47F8 13DA                828              LEA     BLOCPLOT, A3           
+00001520  323C 0014                829              MOVE.W  #STNINITX, D1             
+00001524                           830                                                 
+00001524                           831  .LOOPL      
+00001524  343C 02BC                832              MOVE.W  #STNINITY, D2
+00001528  4EB8 11DE                833              JSR GETRDIRT
+0000152C  3800                     834              MOVE.W D0, D4
+0000152E  263C 00676767            835              MOVE.L  #STNFCOL, D3     
+00001534  4EB8 131A                836              JSR AGLADD
+00001538  5544                     837              SUB.W   #2, D4
+0000153A  0442 0028                838              SUB.W   #BLOCSIZE, D2
+0000153E  263C 00002850            839              MOVE.L  #DIRTFCOL, D3 
+00001544                           840  .LOOPD      
+00001544  4EB8 131A                841              JSR AGLADD
+00001548  0442 0028                842              SUB.W   #BLOCSIZE, D2
+0000154C  51CC FFF6                843              DBRA.W  D4, .LOOPD
+00001550                           844              
+00001550  263C 00008C50            845              MOVE.L  #GRASFCOL, D3
+00001556  4EB8 131A                846              JSR     AGLADD
+0000155A                           847              
+0000155A  0641 0028                848              ADD.W   #BLOCSIZE, D1
+0000155E  51CD FFC4                849              DBRA.W  D5, .LOOPL      
+00001562                           850  
+00001562                           851                         
+00001562  4CDF 0E00                852              MOVEM.L (A7)+, A1-A3
+00001566  4CDF 003F                853              MOVEM.L (A7)+, D0-D5            ; RESTORE REGISTERS
+0000156A  4E75                     854              RTS            
+0000156C                           855  ;-----------------------------------------------------------                      
+0000156C                           856  
+0000156C                           857  
+0000156C                           858  
+0000156C                           859  
+0000156C                           860  
+0000156C                           861  
+0000156C                           862  
+0000156C                           863  
+0000156C                           864  
+0000156C                           865  -------------------- end include --------------------
+0000156C                           866              INCLUDE "PLAYER.X68"              ; PLAYER MANAGEMENT
+0000156C                           867  
+0000156C                           868  
+0000156C                           869  ;-----------------------------------------------------------
+0000156C                           870  PLYRINIT
+0000156C                           871  ; INITIALIZE PLAYER
+0000156C                           872  ; INPUT     -   - NONE 
+0000156C                           873  ; OUTPUT    - NONE  
+0000156C                           874  ; MODIFIES  - NONE  
+0000156C                           875  ;-----------------------------------------------------------
+0000156C                           876                         
+0000156C  33FC 0037 000099C6       877              MOVE.W  #55,(PLAYERX)
+00001574  33FC 0032 000099C8       878                      MOVE.W  #50,(PLAYERY)
+0000157C                           879  
+0000157C  4E75                     880                      RTS
+0000157E                           881  
+0000157E                           882  
+0000157E                           883  ;-----------------------------------------------------------
+0000157E                           884  PLYRUPDX
+0000157E                           885  ; UPDATE PLAYER
+0000157E                           886  ; INPUT         - NONE
+0000157E                           887  ; OUTPUT    - NONE
+0000157E                           888  ; MODIFIES  - NONE  
+0000157E                           889  ;-----------------------------------------------------------
+0000157E  0839 0000 000017A0       890                      BTST.B  #KBDBITLF,(KBDVAL)      ; LEFT KEY PRESSED?
+00001586  6600 0010                891              BNE     .MOVEL                  ; YES: MOVE LEFT
+0000158A  0839 0002 000017A0       892              BTST.B  #KBDBITRT,(KBDVAL)      ; RIGHT KEY PRESSED?
+00001592  6600 001A                893              BNE     .MOVER                  ; YES: MOVE LEFT
+00001596  4E75                     894              RTS
+00001598  0C79 0014 000099C6       895  .MOVEL      CMP.W   #BLOCSIZE/2,(PLAYERX)      ; BELOW LEFT BOUNDARY?
+000015A0  6E00 0004                896              BGT     .DOL                    ; NO: MOVE
+000015A4  4E75                     897              RTS                             ; YES: END
+000015A6  5179 000099C6            898  .DOL        SUB.W   #PLYSPEED,(PLAYERX)        ; MOVE LEFT
+000015AC  4E75                     899              RTS
+000015AE  0C79 04EB 000099C6       900  .MOVER      CMP.W   #SCRWIDTH-1-BLOCSIZE/2,(PLAYERX) ; HIGHER THAN RIGHT BOUNDARY?
+000015B6  6D00 0004                901              BLT     .DOR                    ; NO: MOVE
+000015BA  4E75                     902              RTS                             ; YES: END
+000015BC  5079 000099C6            903  .DOR        ADD.W   #PLYSPEED,(PLAYERX)        ; MOVE RIGHT
+000015C2  4E75                     904              RTS
+000015C4                           905  
+000015C4                           906              
+000015C4                           907  
+000015C4                           908  
+000015C4                           909  
+000015C4                           910  
+000015C4                           911  
+000015C4                           912  ;-----------------------------------------------------------
+000015C4                           913  PLAYELX
+000015C4                           914  ; UPDATE PLAYER
+000015C4                           915  ; INPUT         - NONE
+000015C4                           916  ; OUTPUT    - NONE
+000015C4                           917  ; MODIFIES  - NONE  
+000015C4                           918  ;-----------------------------------------------------------
+000015C4  0839 0000 000017A0       919                      BTST.B  #KBDBITLF,(KBDVAL)      ; LEFT KEY PRESSED?
+000015CC  6600 0010                920              BNE     .MOVEL                  ; YES: MOVE LEFT
+000015D0  0839 0002 000017A0       921              BTST.B  #KBDBITRT,(KBDVAL)      ; RIGHT KEY PRESSED?
+000015D8  6600 001A                922              BNE     .MOVER                  ; YES: MOVE LEFT
+000015DC  4E75                     923              RTS
+000015DE  0C79 0014 000099C6       924  .MOVEL      CMP.W   #BLOCSIZE/2,(PLAYERX)      ; BELOW LEFT BOUNDARY?
+000015E6  6E00 0004                925              BGT     .DOL                    ; NO: MOVE
+000015EA  4E75                     926              RTS                             ; YES: END
+000015EC  5179 000099C6            927  .DOL        SUB.W   #PLYSPEED,(PLAYERX)        ; MOVE LEFT
+000015F2  4E75                     928              RTS
+000015F4                           929  
+000015F4                           930  
+000015F4                           931  
+000015F4                           932  
+000015F4                           933  .MOVER      
+000015F4  48E7 0E80                934              MOVEM.L D4-D6/A0, -(A7)         ; STACK REGISTER
+000015F8                           935              
+000015F8  0C79 04EB 000099C6       936              CMP.W   #SCRWIDTH-1-BLOCSIZE/2,(PLAYERX) ; HIGHER THAN RIGHT BOUNDARY?
+00001600  6E00 0056                937              BGT     .END                    ; YES: STOP
 00001604                           938              
-00001604                           939  
-00001604  5079 00009986            940  .DOR        ADD.W   #PLYSPEED,(PLAYERX)        ; MOVE RIGHT
-0000160A                           941  .END        
-0000160A  4CDF 0170                942              MOVEM.L (A7)+, D4-D6/A0         ; RESTORE REGISTERS
-0000160E  4E75                     943              RTS
-00001610                           944  
-00001610                           945  
-00001610                           946  
-00001610                           947  
-00001610                           948  
-00001610                           949  
-00001610                           950  ;-----------------------------------------------------------
-00001610                           951  PLAYELY
-00001610                           952  ; UPDATE PLAYER
-00001610                           953  ; INPUT         - NONE
-00001610                           954  ; OUTPUT    - NONE
-00001610                           955  ; MODIFIES  - NONE  
-00001610                           956  ;-----------------------------------------------------------
-00001610                           957                      
-00001610  0839 0001 00001752       958              BTST.B  #KBDBITUP,(KBDVAL)      ; UP KEY PRESSED?
-00001618  6600 0010                959              BNE     .MOVEU                  ; YES: MOVE UP
-0000161C  0839 0003 00001752       960              BTST.B  #KBDBITDN,(KBDVAL)      ; DOWN KEY PRESSED?
-00001624  6600 001A                961              BNE     .MOVED                  ; YES: MOVE DOWN
-00001628  4E75                     962              RTS
-0000162A                           963              
-0000162A                           964        
-0000162A                           965              
-0000162A  0C79 0014 00009988       966  .MOVEU      CMP.W   #BLOCSIZE/2,(PLAYERY)      ; ABOVE UP BOUNDARY?
-00001632  6E00 0004                967              BGT     .DOU                    ; NO: MOVE
-00001636  4E75                     968              RTS                             ; YES: END
-00001638  5179 00009988            969  .DOU        SUB.W   #PLYSPEED,(PLAYERY)        ; MOVE UP
-0000163E  4E75                     970              RTS
-00001640  0C79 02BC 00009988       971  .MOVED      CMP.W   #SCRHEIGH-BLOCSIZE/2,(PLAYERY) ; HIGHER THAN DOWN BOUNDARY?
-00001648  6D00 0004                972              BLT     .DOD                    ; NO: MOVE
-0000164C  4E75                     973              RTS                             ; YES: END
-0000164E  5079 00009988            974  .DOD        ADD.W   #PLYSPEED,(PLAYERY)        ; MOVE DOWN
-00001654  4E75                     975              RTS
-00001656                           976  
-00001656                           977  
-00001656                           978  
-00001656                           979  ;-----------------------------------------------------------
-00001656                           980  
-00001656                           981  PLYRUPDY
-00001656                           982  ; UPDATE PLAYER
-00001656                           983  ; INPUT         - NONE
-00001656                           984  ; OUTPUT    - NONE
-00001656                           985  ; MODIFIES  - NONE  
-00001656                           986  ;-----------------------------------------------------------
-00001656                           987        
-00001656                           988                      
-00001656  0839 0001 00001752       989              BTST.B  #KBDBITUP,(KBDVAL)      ; UP KEY PRESSED?
-0000165E  6600 0010                990              BNE     .MOVEU                  ; YES: MOVE UP
-00001662  0839 0003 00001752       991              BTST.B  #KBDBITDN,(KBDVAL)      ; DOWN KEY PRESSED?            
-0000166A  6600 001A                992              BNE     .MOVED                  ; YES: MOVE DOWN
-0000166E  4E75                     993              RTS
-00001670                           994              
-00001670                           995        
-00001670                           996              
-00001670  0C79 0014 00009988       997  .MOVEU      CMP.W   #BLOCSIZE/2,(PLAYERY)      ; ABOVE UP BOUNDARY?
-00001678  6E00 0004                998              BGT     .DOU                    ; NO: MOVE
-0000167C  4E75                     999              RTS                             ; YES: END
-0000167E  5179 00009988           1000  .DOU        SUB.W   #PLYSPEED,(PLAYERY)        ; MOVE UP
-00001684  4E75                    1001              RTS
-00001686                          1002  .MOVED      
-00001686  3A39 00009986           1003              MOVE.W  (PLAYERX),D5
-0000168C  8AFC 0028               1004              DIVU.W  #BLOCSIZE,  D5
-00001690                          1005                         
-00001690  41F9 000099AE           1006              LEA LANDHEIG, A0
-00001696  D0C5                    1007              ADDA.W  D5, A0
-00001698                          1008                                     
-00001698                          1009                
-00001698  1A10                    1010              MOVE.B  (A0),D5         ; NUMBER OF BLOCKS - 1 IN COLUMN 
-0000169A                          1011                                      ; OF THE SCREEN SEGMENT WHERE IS 
-0000169A                          1012                                      ; LOCATED THE PLAYER
-0000169A                          1013                                      ; RIGHT NOW 
-0000169A                          1014                 
-0000169A                          1015              
-0000169A  5205                    1016              ADD.B   #1, D5          ; ADD 1 TO GET THE REAL NUMBER OF BLOCKS
-0000169C  CAFC 0028               1017              MULU.W  #BLOCSIZE, D5   
-000016A0  383C 02D0               1018              MOVE.W  #SCRHEIGH, D4   
-000016A4  9845                    1019              SUB.W   D5, D4          
-000016A6  0444 0014               1020              SUB.W   #BLOCSIZE/2, D4  
-000016AA  5B44                    1021              SUB.W   #5, D4          ; GETTING THE EXACT HEIGHT OF THE CORRESPONDENT COLUMN 
-000016AC                          1022              
-000016AC  B879 00009988           1023              CMP.W   (PLAYERY),D4   ; LOWER THAN TOP OF COLUMN BLOCKS?
-000016B2  6E00 0012               1024              BGT     .DOD           ; YES: MOVE
-000016B6  4E75                    1025              RTS                    ; NO: END
-000016B8                          1026                          
-000016B8  0C79 02BC 00009988      1027              CMP.W   #SCRHEIGH-BLOCSIZE/2,(PLAYERY) ; HIGHER THAN DOWN BOUNDARY?
-000016C0  6D00 0004               1028              BLT     .DOD                    ; NO: MOVE
-000016C4  4E75                    1029              RTS                             ; YES: END
-000016C6  5079 00009988           1030  .DOD        ADD.W   #PLYSPEED,(PLAYERY)        ; MOVE DOWN
-000016CC  4E75                    1031              RTS
-000016CE                          1032  
-000016CE                          1033  
-000016CE                          1034  ;-----------------------------------------------------------
-000016CE                          1035  
-000016CE                          1036  
-000016CE                          1037  ;------------------------------------------------------------------------------------------------------
-000016CE                          1038  
-000016CE                          1039  
-000016CE                          1040  PLYRPLOT
-000016CE                          1041  ; PLOT PLAYER
-000016CE                          1042  ; INPUT     - NONE
-000016CE                          1043  ; OUTPUT    - NONE
-000016CE                          1044  ; MODIFIES  - NONE  
-000016CE                          1045  ;-----------------------------------------------------------
-000016CE  48E7 F800               1046                      MOVEM.L D0-D4, -(A7)    ; STACK REGISTER
-000016D2  103C 0050               1047                      MOVE.B                  #80, D0; SET PEN COLOR TASK
-000016D6  223C 000000FF           1048                      MOVE.L                  #PLYRCOL, D1; PLAYER COLOR
-000016DC  4E4F                    1049                      TRAP #15                ; SET PEN COLOR
-000016DE  103C 0051               1050                      MOVE.B                  #81, D0; SET FILL COLOR TASK
-000016E2  223C 000000FF           1051                      MOVE.L                  #PLYRCOL,D1; BLOCK COLOR
-000016E8  4E4F                    1052                      TRAP #15                ; SET FILL COLOR
-000016EA                          1053              
-000016EA  3239 00009986           1054                      MOVE.W                  (PLAYERX),D1; D1:=XCENTER
-000016F0  3439 00009988           1055                      MOVE.W                  (PLAYERY),D2; D2:=YCENTER
-000016F6  3601                    1056                      MOVE.W                  D1, D3; D3:=XCENTER
-000016F8  3802                    1057                      MOVE.W                  D2, D4; D4:=YCENTER
-000016FA                          1058              
-000016FA  0441 0014               1059                      SUB.W                   #BLOCSIZE/2, D1; D1:=XLEFT
-000016FE  0442 0014               1060                      SUB.W                   #BLOCSIZE/2, D2; D2:=YTOP
-00001702  0643 0014               1061                      ADD.W                   #BLOCSIZE/2, D3; D3:=XRIGHT
-00001706  0644 0014               1062                      ADD.W                   #BLOCSIZE/2, D4; D4:=YBOTTOM
-0000170A  103C 0057               1063                      MOVE.B                  #87, D0
-0000170E  4E4F                    1064                      TRAP                    #15; DRAW PLAYER
-00001710  4CDF 001F               1065                      MOVEM.L (A7)+, D0-D4    ; RESTORE REGISTERS
-00001714                          1066                      
-00001714  4E75                    1067                      RTS
-00001716                          1068  
-00001716                          1069  
-00001716                          1070  
-00001716                          1071  
-00001716                          1072  
-00001716                          1073  
-00001716                          1074  
-00001716                          1075  
-00001716                          1076  
-00001716                          1077  
-00001716                          1078  -------------------- end include --------------------
-00001716                          1079  
-00001716                          1080  ; --- INITIALIZE --------------------------------------------------------------
-00001716                          1081  
-00001716  4EB8 1000               1082  START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
-0000171A                          1083               
-0000171A                          1084  
-0000171A                          1085              ; TO DO : ADD YOUR GAME INITIALIZATION HERE
-0000171A  4EB8 11D6               1086              JSR       RNDINIT
-0000171E                          1087              
-0000171E                          1088             
-0000171E                          1089              
-0000171E                          1090              ; GENERATES LAND 
-0000171E                          1091  
-0000171E                          1092              ;JSR     LANDINIT
-0000171E  4EB8 14B6               1093              JSR     LANDCRTE
-00001722                          1094              ; PLACE PLAYER
-00001722  4EB8 151E               1095              JSR     PLYRINIT             
-00001726                          1096             
-00001726                          1097              
-00001726                          1098              
-00001726                          1099              
-00001726                          1100  
-00001726                          1101  
-00001726                          1102  ; --- UPDATE ------------------------------------------------------------------
-00001726                          1103  
-00001726  4E40                    1104  .LOOP       TRAP    #KBDTRAP                ; READ KEYBOARD
-00001728                          1105  
-00001728                          1106              ; TO DO : ADD YOUR GAME UPDATE HERE
-00001728  4EB8 1334               1107              JSR      AGLUPD
-0000172C  4EB8 1576               1108              JSR     PLAYELX
-00001730                          1109              ;JSR     PLYRUPDX               ; WITHOUT BOUNDING 
-00001730  4EB8 1656               1110              JSR     PLYRUPDY
-00001734                          1111              ;JSR     PLAYELY                ; WITHOUT BOUNDING 
-00001734                          1112  
-00001734                          1113  ; --- WAIT SYNCH --------------------------------------------------------------
-00001734                          1114  
-00001734  4A39 00001754           1115  .WINT       TST.B   (SCRINTCT)              ; WAIT FOR INTERRUPT
-0000173A  67F8                    1116              BEQ     .WINT
-0000173C  4239 00001754           1117              CLR.B   (SCRINTCT)
-00001742                          1118  
-00001742                          1119  ; --- PLOT --------------------------------------------------------------------
-00001742                          1120  
-00001742                          1121              ; TO DO : ADD YOUR GAME PLOT HERE           
-00001742  4EB8 1358               1122              JSR     AGLPLOT
-00001746                          1123              
-00001746  4EB8 16CE               1124              JSR     PLYRPLOT
-0000174A                          1125              
-0000174A  4E41                    1126              TRAP    #SCRTRAP                ; SHOW GRAPHICS
-0000174C  60D8                    1127              BRA     .LOOP                   ; MAIN LOOP
-0000174E  FFFF FFFF               1128              SIMHALT
-00001752                          1129  
-00001752                          1130  ; --- VARIABLES ---------------------------------------------------------------
-00001752                          1131  
-00001752                          1132              INCLUDE "SYSVAR.X68"
-00001752                          1133  ; =============================================================================
-00001752                          1134  ; TITLE    : SYSTEM VARIABLES
-00001752                          1135  ; AUTHOR   : ANTONI BURGUERA
-00001752                          1136  ; COMMENTS : NOTE THAT ALL THESE VARS ARE USED TO SHARE DATA FROM SYSTEM TO
-00001752                          1137  ;            USER. THUS THEY MUST NOT BE IN PROTECTED MEMORY.
-00001752                          1138  ;            NOTE THAT USING DMMDATA IN SUCH WAY IS A BAD IDEA, AS USER
-00001752                          1139  ;            APPLICATIONS CAN ALSO FREE OR CHANGE OWNERSHIP. NONETHELESS, FOR
-00001752                          1140  ;            THE SAKE OF THIS EXAMPLE THIS IS GOOD ENOUGH.
-00001752                          1141  ; HISTORY  : XX-XXX-201X - CREATION
-00001752                          1142  ;            11-OCT-2020 - MINOR CHANGES
-00001752                          1143  ; =============================================================================
-00001752                          1144  
-00001752                          1145  ; --- KEYBOARD RELATED VARIABLES ----------------------------------------------
-00001752                          1146  
-00001752                          1147  KBDVAL      DS.B    1                       ; KEY PRESSED=1
-00001753                          1148  KBDEDGE     DS.B    1                       ; KEY CHANGED=1
-00001754                          1149  
-00001754                          1150              DS.W    0
-00001754                          1151  
-00001754                          1152  ; --- SCREEN RELATED VARIABLES ------------------------------------------------
-00001754                          1153  
-00001754                          1154  SCRINTCT    DS.B    1                       ; INTERRUPT COUNTER/FLAG
-00001755                          1155  SCRCYCCT    DS.B    1                       ; CYCLE COUNTER
-00001756                          1156              DS.W    0
-00001756                          1157  
-00001756                          1158  ; --- DYNAMIC MEMORY VARIABLES ------------------------------------------------
-00001756                          1159  
-00001780                          1160              ORG     (*+DMMBSIZE-1)&-DMMBSIZE ; ALIGN TO DMMBSIZE
-00001780                          1161  DMMDATA     DS.B    DMMBSIZE*DMMBNUM        ; DYNAMIC MEMORY ALLOCATION SPACE
-00009980                          1162              DS.W    0                       ; JUST IN CASE (SIZE IS POW OF TWO)
-00009980                          1163  -------------------- end include --------------------
-00009980                          1164              INCLUDE "VAR.X68"
-00009980                          1165  ; =============================================================================
-00009980                          1166  ; TITLE    : GAME VARIABLES
-00009980                          1167  ; AUTHOR   : MAURICI RUIZ
-00009980                          1168  ; HISTORY  : 15/12/2020  - CREATION
-00009980                          1169  ; =============================================================================
-00009980                          1170  
-00009980                          1171  
-00009980                          1172  ;---- BLOCK RELATED VARIABLES -------------------------------------------------
-00009980                          1173  
-00009980                          1174  BLOCKX          DS.W    1                   ; BLOCK X COORDINATE (XCENTER)
-00009982                          1175  BLOCKY          DS.W    1                   ; BLOCK Y COORDINATE (XCENTER)
-00009984                          1176  
-00009984                          1177  
-00009984                          1178  ; --- RANDOM NUMBER GENERATOR VARIABLES ---------------------------------------
-00009984                          1179  
-00009984                          1180  RNDINDEX    DS.B        1                   ; RANDOM INDEX
-00009986                          1181                      DS.W                        0
-00009986                          1182                      
-00009986                          1183  ; --- PLAYER RELATED VARIABLES ------------------------------------------------
-00009986                          1184  
-00009986                          1185  PLAYERX     DS.W    1                       ; PAD X COORDINATE (XCENTER)
-00009988                          1186  PLAYERY     DS.W    1                       ; PAD X COORDINATE (XCENTER)
-0000998A                          1187  
-0000998A                          1188  PLYERSEG    DS.W    1                       ; SCREEN SEGMENT WHERE IS LOCATED THE PLAYER
-0000998C                          1189  
-0000998C                          1190  TOPOFSEG    DS.W    1                       ; NUMBER OF BLOCKS IN COLUMN UNDER PLAYER
-0000998E                          1191  
-0000998E                          1192  
-0000998E                          1193  ; --- LAND RELATED VARIABLES --------------------------------------------------
-0000998E                          1194  
-0000998E= 06 07 07 08 09 0A ...   1195  RANDIRT     DC.B    6  , 7  , 7  , 8  , 9  , 10  , 10  , 9 
-00009996= 08 07 06 06 07 08 ...   1196              DC.B    8  , 7  , 6  , 6  , 7  , 8   , 9   , 9 
-0000999E= 0A 09 08 08 09 0A ...   1197              DC.B    10 , 9  , 8  , 8  , 9  , 10  , 10  , 9 
-000099A6= 08 07 07 06 07 08 ...   1198              DC.B    8  , 7  , 7  , 6  , 7  , 8   , 9   , 10
-000099AE                          1199              DS.W    0 
-000099AE                          1200  
-000099AE                          1201  
-000099AE= 08 08 09 0A 0B 0C ...   1202  LANDHEIG    DC.B    8  ,  8 ,  9 , 10  , 11  , 12  , 12  , 11 
-000099B6= 0A 09 08 08 09 0A ...   1203              DC.B    10 ,  9 ,  8 ,  8  ,  9  , 10  , 11  , 11 
-000099BE= 0C 0B 0A 0A 0B 0C ...   1204              DC.B    12 , 11 , 10 , 10  , 11  , 12  , 12  , 11 
-000099C6= 0A 09 09 08 09 0A ...   1205              DC.B    10 ,  9 ,  9 ,  8  ,  9  , 10  , 11  , 12
-000099CE                          1206              DS.W    0 
-000099CE                          1207  
-000099CE                          1208  
-000099CE                          1209  -------------------- end include --------------------
-000099CE                          1210              END    START
+00001604                           939              
+00001604  3A39 000099C6            940              MOVE.W  (PLAYERX),D5
+0000160A  0445 0014                941              SUB.W   #BLOCSIZE/2, D5
+0000160E  8AFC 0028                942              DIVU.W  #BLOCSIZE,  D5  ; SEGMENT OF SCREEN PLAYER LOCATED 
+00001612                           943       
+00001612                           944              
+00001612  3C05                     945              MOVE.W  D5, D6      ; COPY SEGMENT OF SCREEN PLAYER LOCATED IN D6
+00001614                           946                         
+00001614  41F9 000099EE            947              LEA LANDHEIG, A0
+0000161A  D0C5                     948              ADDA.W  D5, A0
+0000161C                           949                             
+0000161C                           950                
+0000161C  1A10                     951              MOVE.B  (A0),D5         ; NUMBER OF BLOCKS - 1 IN COLUMN 
+0000161E                           952                                      ; OF THE SCREEN SEGMENT WHERE IS 
+0000161E                           953                                      ; LOCATED THE PLAYER
+0000161E                           954                                      ; RIGHT NOW 
+0000161E  5205                     955              ADD.B   #1, D5          ; ADD 1 TO GET THE REAL NUMBER OF BLOCKS
+00001620                           956                          
+00001620                           957              
+00001620  5246                     958              ADD.W   #1, D6          ; ACCESSING THE NUMBER OF BLOCKS OF THE NEXT COLUMN
+00001622  41F9 000099EE            959              LEA LANDHEIG, A0
+00001628  D0C6                     960              ADDA.W  D6, A0
+0000162A                           961  
+0000162A  1C10                     962              MOVE.B  (A0),D6         ; NUMBER OF BLOCKS - 1 IN COLUMN 
+0000162C                           963                                      ; OF THE NEXT SCREEN SEGMENT WHERE IS 
+0000162C                           964                                      ; LOCATED THE PLAYER
+0000162C                           965                                      ; RIGHT NOW 
+0000162C                           966  
+0000162C                           967                
+0000162C  5206                     968              ADD.B   #1, D6          ; ADD 1 TO GET THE REAL NUMBER OF BLOCKS
+0000162E                           969              
+0000162E  BC45                     970              CMP.W   D5, D6          ; NEXT COLUMN IS HIGHER THAN THE ACTUAL COLUMN?
+00001630  6F00 0020                971              BLE .DOR
+00001634                           972              
+00001634  CCFC 0028                973              MULU.W  #BLOCSIZE, D6   
+00001638  383C 02D0                974              MOVE.W  #SCRHEIGH, D4   
+0000163C  9846                     975              SUB.W   D6, D4          
+0000163E  0444 0014                976              SUB.W   #BLOCSIZE/2, D4  
+00001642  5B44                     977              SUB.W   #5, D4          ; GETTING THE EXACT HEIGHT OF THE CORRESPONDENT COLUMN
+00001644                           978  
+00001644  B879 000099C8            979              CMP.W   (PLAYERY),D4   ; TOP OF COLUMN HIGHER THAN PLAYERY?
+0000164A  6E00 0006                980              BGT     .DOR           ; YES: MOVE
+0000164E                           981                            
+0000164E  6000 0008                982              BRA .END               ; NO: END
+00001652                           983              
+00001652                           984  
+00001652  5079 000099C6            985  .DOR        ADD.W   #PLYSPEED,(PLAYERX)        ; MOVE RIGHT
+00001658                           986  .END        
+00001658  4CDF 0170                987              MOVEM.L (A7)+, D4-D6/A0         ; RESTORE REGISTERS
+0000165C  4E75                     988              RTS
+0000165E                           989  
+0000165E                           990  
+0000165E                           991  
+0000165E                           992  
+0000165E                           993  
+0000165E                           994  
+0000165E                           995  ;-----------------------------------------------------------
+0000165E                           996  PLAYELY
+0000165E                           997  ; UPDATE PLAYER
+0000165E                           998  ; INPUT         - NONE
+0000165E                           999  ; OUTPUT    - NONE
+0000165E                          1000  ; MODIFIES  - NONE  
+0000165E                          1001  ;-----------------------------------------------------------
+0000165E                          1002                      
+0000165E  0839 0001 000017A0      1003              BTST.B  #KBDBITUP,(KBDVAL)      ; UP KEY PRESSED?
+00001666  6600 0010               1004              BNE     .MOVEU                  ; YES: MOVE UP
+0000166A  0839 0003 000017A0      1005              BTST.B  #KBDBITDN,(KBDVAL)      ; DOWN KEY PRESSED?
+00001672  6600 001A               1006              BNE     .MOVED                  ; YES: MOVE DOWN
+00001676  4E75                    1007              RTS
+00001678                          1008              
+00001678                          1009        
+00001678                          1010              
+00001678  0C79 0014 000099C8      1011  .MOVEU      CMP.W   #BLOCSIZE/2,(PLAYERY)      ; ABOVE UP BOUNDARY?
+00001680  6E00 0004               1012              BGT     .DOU                    ; NO: MOVE
+00001684  4E75                    1013              RTS                             ; YES: END
+00001686  5179 000099C8           1014  .DOU        SUB.W   #PLYSPEED,(PLAYERY)        ; MOVE UP
+0000168C  4E75                    1015              RTS
+0000168E  0C79 02BC 000099C8      1016  .MOVED      CMP.W   #SCRHEIGH-BLOCSIZE/2,(PLAYERY) ; HIGHER THAN DOWN BOUNDARY?
+00001696  6D00 0004               1017              BLT     .DOD                    ; NO: MOVE
+0000169A  4E75                    1018              RTS                             ; YES: END
+0000169C  5079 000099C8           1019  .DOD        ADD.W   #PLYSPEED,(PLAYERY)        ; MOVE DOWN
+000016A2  4E75                    1020              RTS
+000016A4                          1021  
+000016A4                          1022  
+000016A4                          1023  
+000016A4                          1024  ;-----------------------------------------------------------
+000016A4                          1025  
+000016A4                          1026  PLYRUPDY
+000016A4                          1027  ; UPDATE PLAYER
+000016A4                          1028  ; INPUT         - NONE
+000016A4                          1029  ; OUTPUT    - NONE
+000016A4                          1030  ; MODIFIES  - NONE  
+000016A4                          1031  ;-----------------------------------------------------------
+000016A4                          1032        
+000016A4                          1033                      
+000016A4  0839 0001 000017A0      1034              BTST.B  #KBDBITUP,(KBDVAL)      ; UP KEY PRESSED?
+000016AC  6600 0010               1035              BNE     .MOVEU                  ; YES: MOVE UP
+000016B0  0839 0003 000017A0      1036              BTST.B  #KBDBITDN,(KBDVAL)      ; DOWN KEY PRESSED?            
+000016B8  6600 001A               1037              BNE     .MOVED                  ; YES: MOVE DOWN
+000016BC  4E75                    1038              RTS
+000016BE                          1039              
+000016BE                          1040        
+000016BE                          1041              
+000016BE  0C79 0014 000099C8      1042  .MOVEU      CMP.W   #BLOCSIZE/2,(PLAYERY)      ; ABOVE UP BOUNDARY?
+000016C6  6E00 0004               1043              BGT     .DOU                    ; NO: MOVE
+000016CA  4E75                    1044              RTS                             ; YES: END
+000016CC  5179 000099C8           1045  .DOU        SUB.W   #PLYSPEED,(PLAYERY)        ; MOVE UP
+000016D2  4E75                    1046              RTS
+000016D4                          1047  .MOVED      
+000016D4  3A39 000099C6           1048              MOVE.W  (PLAYERX),D5
+000016DA  8AFC 0028               1049              DIVU.W  #BLOCSIZE,  D5
+000016DE                          1050                         
+000016DE  41F9 000099EE           1051              LEA LANDHEIG, A0
+000016E4  D0C5                    1052              ADDA.W  D5, A0
+000016E6                          1053                                     
+000016E6                          1054                
+000016E6  1A10                    1055              MOVE.B  (A0),D5         ; NUMBER OF BLOCKS - 1 IN COLUMN 
+000016E8                          1056                                      ; OF THE SCREEN SEGMENT WHERE IS 
+000016E8                          1057                                      ; LOCATED THE PLAYER
+000016E8                          1058                                      ; RIGHT NOW 
+000016E8                          1059                 
+000016E8                          1060              
+000016E8  5205                    1061              ADD.B   #1, D5          ; ADD 1 TO GET THE REAL NUMBER OF BLOCKS
+000016EA  CAFC 0028               1062              MULU.W  #BLOCSIZE, D5   
+000016EE  383C 02D0               1063              MOVE.W  #SCRHEIGH, D4   
+000016F2  9845                    1064              SUB.W   D5, D4          
+000016F4  0444 0014               1065              SUB.W   #BLOCSIZE/2, D4  
+000016F8  5B44                    1066              SUB.W   #5, D4          ; GETTING THE EXACT HEIGHT OF THE CORRESPONDENT COLUMN 
+000016FA                          1067              
+000016FA  B879 000099C8           1068              CMP.W   (PLAYERY),D4   ; LOWER THAN TOP OF COLUMN BLOCKS?
+00001700  6E00 0012               1069              BGT     .DOD           ; YES: MOVE
+00001704  4E75                    1070              RTS                    ; NO: END
+00001706                          1071                          
+00001706  0C79 02BC 000099C8      1072              CMP.W   #SCRHEIGH-BLOCSIZE/2,(PLAYERY) ; HIGHER THAN DOWN BOUNDARY?
+0000170E  6D00 0004               1073              BLT     .DOD                    ; NO: MOVE
+00001712  4E75                    1074              RTS                             ; YES: END
+00001714  5079 000099C8           1075  .DOD        ADD.W   #PLYSPEED,(PLAYERY)        ; MOVE DOWN
+0000171A  4E75                    1076              RTS
+0000171C                          1077  
+0000171C                          1078  
+0000171C                          1079  ;-----------------------------------------------------------
+0000171C                          1080  
+0000171C                          1081  
+0000171C                          1082  ;------------------------------------------------------------------------------------------------------
+0000171C                          1083  
+0000171C                          1084  
+0000171C                          1085  PLYRPLOT
+0000171C                          1086  ; PLOT PLAYER
+0000171C                          1087  ; INPUT     - NONE
+0000171C                          1088  ; OUTPUT    - NONE
+0000171C                          1089  ; MODIFIES  - NONE  
+0000171C                          1090  ;-----------------------------------------------------------
+0000171C  48E7 F800               1091                      MOVEM.L D0-D4, -(A7)    ; STACK REGISTER
+00001720  103C 0050               1092                      MOVE.B                  #80, D0; SET PEN COLOR TASK
+00001724  223C 000000FF           1093                      MOVE.L                  #PLYRCOL, D1; PLAYER COLOR
+0000172A  4E4F                    1094                      TRAP #15                ; SET PEN COLOR
+0000172C  103C 0051               1095                      MOVE.B                  #81, D0; SET FILL COLOR TASK
+00001730  223C 000000FF           1096                      MOVE.L                  #PLYRCOL,D1; BLOCK COLOR
+00001736  4E4F                    1097                      TRAP #15                ; SET FILL COLOR
+00001738                          1098              
+00001738  3239 000099C6           1099                      MOVE.W                  (PLAYERX),D1; D1:=XCENTER
+0000173E  3439 000099C8           1100                      MOVE.W                  (PLAYERY),D2; D2:=YCENTER
+00001744  3601                    1101                      MOVE.W                  D1, D3; D3:=XCENTER
+00001746  3802                    1102                      MOVE.W                  D2, D4; D4:=YCENTER
+00001748                          1103              
+00001748  0441 0014               1104                      SUB.W                   #BLOCSIZE/2, D1; D1:=XLEFT
+0000174C  0442 0014               1105                      SUB.W                   #BLOCSIZE/2, D2; D2:=YTOP
+00001750  0643 0014               1106                      ADD.W                   #BLOCSIZE/2, D3; D3:=XRIGHT
+00001754  0644 0014               1107                      ADD.W                   #BLOCSIZE/2, D4; D4:=YBOTTOM
+00001758  103C 0057               1108                      MOVE.B                  #87, D0
+0000175C  4E4F                    1109                      TRAP                    #15; DRAW PLAYER
+0000175E  4CDF 001F               1110                      MOVEM.L (A7)+, D0-D4    ; RESTORE REGISTERS
+00001762                          1111                      
+00001762  4E75                    1112                      RTS
+00001764                          1113  
+00001764                          1114  
+00001764                          1115  
+00001764                          1116  
+00001764                          1117  
+00001764                          1118  
+00001764                          1119  
+00001764                          1120  
+00001764                          1121  
+00001764                          1122  
+00001764                          1123  -------------------- end include --------------------
+00001764                          1124  
+00001764                          1125  ; --- INITIALIZE --------------------------------------------------------------
+00001764                          1126  
+00001764  4EB8 1000               1127  START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
+00001768                          1128               
+00001768                          1129  
+00001768                          1130              ; TO DO : ADD YOUR GAME INITIALIZATION HERE
+00001768  4EB8 11D6               1131              JSR       RNDINIT
+0000176C                          1132              
+0000176C                          1133             
+0000176C                          1134              
+0000176C                          1135              ; GENERATES LAND 
+0000176C                          1136  
+0000176C                          1137              ;JSR     LANDINIT
+0000176C  4EB8 1504               1138              JSR     LANDCRTE
+00001770                          1139              ; PLACE PLAYER
+00001770  4EB8 156C               1140              JSR     PLYRINIT             
+00001774                          1141             
+00001774                          1142              
+00001774                          1143              
+00001774                          1144              
+00001774                          1145  
+00001774                          1146  
+00001774                          1147  ; --- UPDATE ------------------------------------------------------------------
+00001774                          1148  
+00001774  4E40                    1149  .LOOP       TRAP    #KBDTRAP                ; READ KEYBOARD
+00001776                          1150  
+00001776                          1151              ; TO DO : ADD YOUR GAME UPDATE HERE
+00001776                          1152              
+00001776                          1153              ;JSR     PLAYELX
+00001776  4EB8 157E               1154              JSR     PLYRUPDX               ; WITHOUT BOUNDING 
+0000177A                          1155              ;JSR     PLYRUPDY
+0000177A  4EB8 165E               1156              JSR     PLAYELY                ; WITHOUT BOUNDING 
+0000177E                          1157              
+0000177E  4EB8 1334               1158              JSR      AGLUPD
+00001782                          1159              
+00001782                          1160  
+00001782                          1161  ; --- WAIT SYNCH --------------------------------------------------------------
+00001782                          1162  
+00001782  4A39 000017A2           1163  .WINT       TST.B   (SCRINTCT)              ; WAIT FOR INTERRUPT
+00001788  67F8                    1164              BEQ     .WINT
+0000178A  4239 000017A2           1165              CLR.B   (SCRINTCT)
+00001790                          1166  
+00001790                          1167  ; --- PLOT --------------------------------------------------------------------
+00001790                          1168  
+00001790                          1169              ; TO DO : ADD YOUR GAME PLOT HERE           
+00001790  4EB8 1358               1170              JSR     AGLPLOT
+00001794                          1171              
+00001794  4EB8 171C               1172              JSR     PLYRPLOT
+00001798                          1173              
+00001798  4E41                    1174              TRAP    #SCRTRAP                ; SHOW GRAPHICS
+0000179A  60D8                    1175              BRA     .LOOP                   ; MAIN LOOP
+0000179C  FFFF FFFF               1176              SIMHALT
+000017A0                          1177  
+000017A0                          1178  ; --- VARIABLES ---------------------------------------------------------------
+000017A0                          1179  
+000017A0                          1180              INCLUDE "SYSVAR.X68"
+000017A0                          1181  ; =============================================================================
+000017A0                          1182  ; TITLE    : SYSTEM VARIABLES
+000017A0                          1183  ; AUTHOR   : ANTONI BURGUERA
+000017A0                          1184  ; COMMENTS : NOTE THAT ALL THESE VARS ARE USED TO SHARE DATA FROM SYSTEM TO
+000017A0                          1185  ;            USER. THUS THEY MUST NOT BE IN PROTECTED MEMORY.
+000017A0                          1186  ;            NOTE THAT USING DMMDATA IN SUCH WAY IS A BAD IDEA, AS USER
+000017A0                          1187  ;            APPLICATIONS CAN ALSO FREE OR CHANGE OWNERSHIP. NONETHELESS, FOR
+000017A0                          1188  ;            THE SAKE OF THIS EXAMPLE THIS IS GOOD ENOUGH.
+000017A0                          1189  ; HISTORY  : XX-XXX-201X - CREATION
+000017A0                          1190  ;            11-OCT-2020 - MINOR CHANGES
+000017A0                          1191  ; =============================================================================
+000017A0                          1192  
+000017A0                          1193  ; --- KEYBOARD RELATED VARIABLES ----------------------------------------------
+000017A0                          1194  
+000017A0                          1195  KBDVAL      DS.B    1                       ; KEY PRESSED=1
+000017A1                          1196  KBDEDGE     DS.B    1                       ; KEY CHANGED=1
+000017A2                          1197  
+000017A2                          1198              DS.W    0
+000017A2                          1199  
+000017A2                          1200  ; --- SCREEN RELATED VARIABLES ------------------------------------------------
+000017A2                          1201  
+000017A2                          1202  SCRINTCT    DS.B    1                       ; INTERRUPT COUNTER/FLAG
+000017A3                          1203  SCRCYCCT    DS.B    1                       ; CYCLE COUNTER
+000017A4                          1204              DS.W    0
+000017A4                          1205  
+000017A4                          1206  ; --- DYNAMIC MEMORY VARIABLES ------------------------------------------------
+000017A4                          1207  
+000017C0                          1208              ORG     (*+DMMBSIZE-1)&-DMMBSIZE ; ALIGN TO DMMBSIZE
+000017C0                          1209  DMMDATA     DS.B    DMMBSIZE*DMMBNUM        ; DYNAMIC MEMORY ALLOCATION SPACE
+000099C0                          1210              DS.W    0                       ; JUST IN CASE (SIZE IS POW OF TWO)
+000099C0                          1211  -------------------- end include --------------------
+000099C0                          1212              INCLUDE "VAR.X68"
+000099C0                          1213  ; =============================================================================
+000099C0                          1214  ; TITLE    : GAME VARIABLES
+000099C0                          1215  ; AUTHOR   : MAURICI RUIZ
+000099C0                          1216  ; HISTORY  : 15/12/2020  - CREATION
+000099C0                          1217  ; =============================================================================
+000099C0                          1218  
+000099C0                          1219  
+000099C0                          1220  ;---- BLOCK RELATED VARIABLES -------------------------------------------------
+000099C0                          1221  
+000099C0                          1222  BLOCKX          DS.W    1                   ; BLOCK X COORDINATE (XCENTER)
+000099C2                          1223  BLOCKY          DS.W    1                   ; BLOCK Y COORDINATE (XCENTER)
+000099C4                          1224  
+000099C4                          1225  
+000099C4                          1226  ; --- RANDOM NUMBER GENERATOR VARIABLES ---------------------------------------
+000099C4                          1227  
+000099C4                          1228  RNDINDEX    DS.B        1                   ; RANDOM INDEX
+000099C6                          1229                      DS.W                        0
+000099C6                          1230                      
+000099C6                          1231  ; --- PLAYER RELATED VARIABLES ------------------------------------------------
+000099C6                          1232  
+000099C6                          1233  PLAYERX     DS.W    1                       ; PAD X COORDINATE (XCENTER)
+000099C8                          1234  PLAYERY     DS.W    1                       ; PAD X COORDINATE (XCENTER)
+000099CA                          1235  
+000099CA                          1236  PLYERSEG    DS.W    1                       ; SCREEN SEGMENT WHERE IS LOCATED THE PLAYER
+000099CC                          1237  
+000099CC                          1238  TOPOFSEG    DS.W    1                       ; NUMBER OF BLOCKS IN COLUMN UNDER PLAYER
+000099CE                          1239  
+000099CE                          1240  
+000099CE                          1241  ; --- LAND RELATED VARIABLES --------------------------------------------------
+000099CE                          1242  
+000099CE= 06 07 07 08 09 0A ...   1243  RANDIRT     DC.B    6  , 7  , 7  , 8  , 9  , 10  , 10  , 9 
+000099D6= 08 07 06 06 07 08 ...   1244              DC.B    8  , 7  , 6  , 6  , 7  , 8   , 9   , 9 
+000099DE= 0A 09 08 08 09 0A ...   1245              DC.B    10 , 9  , 8  , 8  , 9  , 10  , 10  , 9 
+000099E6= 08 07 07 06 07 08 ...   1246              DC.B    8  , 7  , 7  , 6  , 7  , 8   , 9   , 10
+000099EE                          1247              DS.W    0 
+000099EE                          1248  
+000099EE                          1249  
+000099EE= 08 08 09 0A 0B 0C ...   1250  LANDHEIG    DC.B    8  ,  8 ,  9 , 10  , 11  , 12  , 12  , 11 
+000099F6= 0A 09 08 08 09 0A ...   1251              DC.B    10 ,  9 ,  8 ,  8  ,  9  , 10  , 11  , 11 
+000099FE= 0C 0B 0A 0A 0B 0C ...   1252              DC.B    12 , 11 , 10 , 10  , 11  , 12  , 12  , 11 
+00009A06= 0A 09 09 08 09 0A ...   1253              DC.B    10 ,  9 ,  9 ,  8  ,  9  , 10  , 11  , 12
+00009A0E                          1254              DS.W    0 
+00009A0E                          1255  
+00009A0E                          1256  
+00009A0E                          1257  -------------------- end include --------------------
+00009A0E                          1258              END    START
 
 No errors detected
 No warnings generated
@@ -1231,20 +1279,23 @@ AGLUPD:END          1352
 AGLUPD:LOOP         133C
 BLOCID              1
 BLOCINIT            137E
-BLOCKX              9980
-BLOCKY              9982
+BLOCKX              99C0
+BLOCKY              99C2
 BLOCPCOL            0
-BLOCPLOT            138C
+BLOCPLOT            13DA
 BLOCSIZE            28
 BLOCUPD             138A
+BLOCUPD:BLOCKP      13CC
+BLOCUPD:CHECKR      13C2
+BLOCUPD:MOVEPL      13BC
 DIRTFCOL            2850
-DIRTINIT            13C8
-DIRTINIT:LOOPCOL    13F4
+DIRTINIT            1416
+DIRTINIT:LOOPCOL    1442
 DMMALLOC            11A6
 DMMALLOC:END        11BE
 DMMBNUM             208
 DMMBSIZE            40
-DMMDATA             1780
+DMMDATA             17C0
 DMMFCOM             1180
 DMMFFND             118E
 DMMFIRST            1136
@@ -1282,7 +1333,7 @@ KBDCHRSH            10
 KBDCHRSP            20
 KBDCHRUP            26
 KBDDOWN             28
-KBDEDGE             1753
+KBDEDGE             17A1
 KBDFIRE1            20
 KBDFIRE2            4D
 KBDFIRE3            10
@@ -1303,67 +1354,67 @@ KBDREAD:STORE       1106
 KBDRIGHT            27
 KBDTRAP             0
 KBDUP               26
-KBDVAL              1752
-LANDCRTE            14B6
-LANDCRTE:LOOPD      14F6
-LANDCRTE:LOOPL      14D6
-LANDHEIG            99AE
-LANDINIT            144C
-LANDINIT:LOOPCOL    1470
-LANDINIT:LOOPDIR    148A
+KBDVAL              17A0
+LANDCRTE            1504
+LANDCRTE:LOOPD      1544
+LANDCRTE:LOOPL      1524
+LANDHEIG            99EE
+LANDINIT            149A
+LANDINIT:LOOPCOL    14BE
+LANDINIT:LOOPDIR    14D8
 NCOLBLKS            12
 NROWBLKS            20
 NUMSTN              12
-PLAYELX             1576
-PLAYELX:DOL         159E
-PLAYELX:DOR         1604
-PLAYELX:END         160A
-PLAYELX:MOVEL       1590
-PLAYELX:MOVER       15A6
-PLAYELY             1610
-PLAYELY:DOD         164E
-PLAYELY:DOU         1638
-PLAYELY:MOVED       1640
-PLAYELY:MOVEU       162A
-PLAYERX             9986
-PLAYERY             9988
-PLYERSEG            998A
+PLAYELX             15C4
+PLAYELX:DOL         15EC
+PLAYELX:DOR         1652
+PLAYELX:END         1658
+PLAYELX:MOVEL       15DE
+PLAYELX:MOVER       15F4
+PLAYELY             165E
+PLAYELY:DOD         169C
+PLAYELY:DOU         1686
+PLAYELY:MOVED       168E
+PLAYELY:MOVEU       1678
+PLAYERX             99C6
+PLAYERY             99C8
+PLYERSEG            99CA
 PLYRCOL             FF
-PLYRINIT            151E
-PLYRPLOT            16CE
-PLYRUPDX            1530
-PLYRUPDX:DOL        1558
-PLYRUPDX:DOR        156E
-PLYRUPDX:MOVEL      154A
-PLYRUPDX:MOVER      1560
-PLYRUPDY            1656
-PLYRUPDY:DOD        16C6
-PLYRUPDY:DOU        167E
-PLYRUPDY:MOVED      1686
-PLYRUPDY:MOVEU      1670
+PLYRINIT            156C
+PLYRPLOT            171C
+PLYRUPDX            157E
+PLYRUPDX:DOL        15A6
+PLYRUPDX:DOR        15BC
+PLYRUPDX:MOVEL      1598
+PLYRUPDX:MOVER      15AE
+PLYRUPDY            16A4
+PLYRUPDY:DOD        1714
+PLYRUPDY:DOU        16CC
+PLYRUPDY:MOVED      16D4
+PLYRUPDY:MOVEU      16BE
 PLYSPEED            8
-RANDIRT             998E
+RANDIRT             99CE
 RNDGET              11FC
 RNDGET:RANDVEC      121A
-RNDINDEX            9984
+RNDINDEX            99C4
 RNDINIT             11D6
-SCRCYCCT            1755
+SCRCYCCT            17A3
 SCRHEIGH            2D0
 SCRINIT             101C
-SCRINTCT            1754
+SCRINTCT            17A2
 SCRIRQ              1
 SCRISR              108C
 SCRTIM              14
 SCRTRAP             1
 SCRUPD              109A
 SCRWIDTH            500
-START               1716
-START:LOOP          1726
-START:WINT          1734
-STNEINIT            140A
-STNEINIT:LOOPS      1434
+START               1764
+START:LOOP          1774
+START:WINT          1782
+STNEINIT            1458
+STNEINIT:LOOPS      1482
 STNFCOL             676767
 STNINITX            14
 STNINITY            2BC
 SYSINIT             1000
-TOPOFSEG            998C
+TOPOFSEG            99CC
