@@ -15,9 +15,9 @@ BLOCINIT
 ; MODIFIES	- NONE	
 ;-----------------------------------------------------------
                        
-            MOVE.W	D1, (A0)
-	 MOVE.W	D2, 2(A0)
-	 MOVE.L	D3, 4(A0)
+           MOVE.W	D1, (A0)
+	MOVE.W	D2, 2(A0)
+	MOVE.L	D3, 4(A0)
 	
 	
 	RTS
@@ -31,49 +31,77 @@ BLOCUPD
 ; MODIFIES	- NONE	
 ;-----------------------------------------------------------
             MOVEM.L D0-D4, -(A7)	; STACK REGISTER
-	            
-            ; LEFT BLOCK BOUNDING TO PLAYER
             
-            MOVE.W  (PLAYERY),D1             ; D1:= PLAYERY BOTTOM SIDE
-            ADD.W   #BLOCSIZE/2, D1    
+            CLR D0
+            CLR D1
+          
+            ; CHECK BOTTOM'S PLAYER WITH TOP'S BLOCK
+            MOVE.W  (PLAYERY),D0            
+            ADD.W   #BLOCSIZE/2, D0         ; BOTTOM OF PLAYER
             
-            MOVE.W	  2(A0),D0	    ; D0:= BLOCKY TOP SIDE
-            SUB.W   #BLOCSIZE/2, D0
+            MOVE.W  2(A0),D1
+            SUB.W   #BLOCSIZE/2, D1         ; TOP OF BLOCK
 
-            CMP.W   D0, D1                  ; PLAYERY (D1) < BLOCKY (D0)
-            BLT     .MOVEPL
+            CMP.W   D1, D0
+            BGE     .CHKPRHT
+            BRA     .END
             
-      
-            MOVE.W	(A0),D2	     ; D2:= BLOCKX LEFT SIDE
-            SUB.W   #BLOCSIZE/2, D2
+.CHKPRHT    
+            ; CHECK RIGHT'S PLAYER WITH LEFT'S BLOCK
+            MOVE.W  (PLAYERX),D0            
+            ADD.W   #BLOCSIZE/2, D0         ; RIGHT OF PLAYER
             
-            MOVE.W  (PLAYERX),D3             ; PLAYERX RIGHT SIDE 
-            ADD.W   #BLOCSIZE/2, D3         
-                           
-            CMP.W   D2, D3                   ; PLAYERX > BLOCKY                 
-            BGE     .CHECKR
+            MOVE.W  (A0),D1                 ; BLOCKX 
             
-.MOVEPL     MOVEM.L (A7)+, D0-D4 	    ; RESTORE REGISTERS
+            CMP.W   D1, D0
+            BLT     .CHKPINL
+            
+            ;SUB.W   #BLOCSIZE/2, D1         ; LEFT OF BLOCK
+
+            
+            
+
+            
+            ; CHECK LEFT'S PLAYER WITH RIGHT'S BLOCK
+            
+.CHKPLFT    SUB.W   #BLOCSIZE, D0           ; LEFT OF PLAYER
+                        
+            CMP.W   D1, D0
+            BGT     .CHKPINR
+            
+            BRA .END
+            
+            
+.CHKPINL    
+            SUB.W #BLOCSIZE/2, D1               ; LEFT SIDE OF BLOCK 
+                                            
+            CMP.W   D1, D0
+            BGE     .BLOCKL
+            
+            ADD.W   #BLOCSIZE/2, D1           ; BLOCKX            
+            BRA .CHKPLFT
+            
+
+.CHKPINR      
+            ADD.W #BLOCSIZE/2, D1           ; THE RIGHT SIDE OF THE BLOCK
+            CMP.W   D1, D0
+            BLT     .BLOCKR
+           
+.END        MOVEM.L (A7)+, D0-D4
             RTS
-
-.CHECKR     
-            MOVE.W	(A0),D2	     ; D2:= BLOCKX LEFT SIDE
-            ADD.W   #BLOCSIZE/2, D2
-            
-            CMP.W   D2, D3                   ; PLAYERX > BLOCKX                 
-            BGT     .MOVEPL
             
             
-.BLOCKP     MOVE.W  (A0), D4
+.BLOCKL     
+            MOVE.W (A0),D4
             SUB.W   #BLOCSIZE, D4
-            MOVE.W  D4,(PLAYERX) 
-            BRA     .MOVEPL        
+            MOVE.W D4, (PLAYERX)
+            BRA .END
 
-            
-
-
-            
-
+.BLOCKR     
+            MOVE.W (A0),D4
+            ADD.W   #BLOCSIZE, D4
+            MOVE.W D4, (PLAYERX)
+            BRA .END   
 
 
 ;-----------------------------------------------------------
