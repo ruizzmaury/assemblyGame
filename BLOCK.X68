@@ -86,8 +86,36 @@ BLOCUPD
             ADD.W #BLOCSIZE/2, D1           ; THE RIGHT SIDE OF THE BLOCK
             CMP.W   D1, D0
             BLT     .BLOCKR
+            BRA .END
            
-.END        MOVEM.L (A7)+, D0-D4
+            
+.END        ; CHECK BOTTOM'S PLAYER WITH TOP'S BLOCK
+
+            CLR D0
+            CLR D1
+          
+            ; CHECK BOTTOM'S PLAYER WITH TOP'S BLOCK
+            MOVE.W  (PLAYERY),D0            
+            ADD.W   #BLOCSIZE/2, D0         ; BOTTOM OF PLAYER
+            
+            MOVE.W  2(A0),D1
+            SUB.W   #BLOCSIZE/2, D1         ; TOP OF BLOCK
+
+            CMP.W   D1, D0
+            BLT     .ENDF
+
+
+            MOVE.W  (PLAYERX),D0            
+            ADD.W   #BLOCSIZE/2, D0         ; RIGHT OF PLAYER
+            
+            MOVE.W  (A0),D1
+            SUB.W   #BLOCSIZE/2, D1         ; LEFT OF BLOCK
+            
+            CMP.W   D1, D0
+            BGT     .CHKPINT
+     
+            
+.ENDF       MOVEM.L (A7)+, D0-D4
             RTS
             
             
@@ -101,7 +129,26 @@ BLOCUPD
             MOVE.W (A0),D4
             ADD.W   #BLOCSIZE, D4
             MOVE.W D4, (PLAYERX)
-            BRA .END   
+            BRA .END 
+
+.BLOCKT     
+            MOVE.W  2(A0),D4
+            SUB.W   #BLOCSIZE, D4
+            MOVE.W D4, (PLAYERY)
+            BRA .ENDF  
+
+
+.CHKPINT    
+            ADD.W   #BLOCSIZE, D1           ; RIGHT SIDE OF BLOCK
+            CMP.W   D1, D0
+            BLT     .BLOCKT
+            
+            SUB.W   #BLOCSIZE, D0           ; LEFT OF PLAYER
+            CMP.W   D1, D0
+            BLT     .BLOCKT
+            
+            BRA .ENDF     
+            
 
 
 ;-----------------------------------------------------------
