@@ -19,11 +19,9 @@ RNDINDEX	DS.B	    1	; RANDOM INDEX
 ; --- PLAYER RELATED VARIABLES ------------------------------------------------
 
 PLAYERX     DS.W    1                       ; PAD X COORDINATE (XCENTER)
-PLAYERY     DS.W    1                       ; PAD X COORDINATE (XCENTER)
+PLAYERY     DS.W    1                       ; PAD X COORDINATE (YCENTER)
 
-PLYERSEG    DS.W    1                       ; SCREEN SEGMENT WHERE IS LOCATED THE PLAYER
-
-TOPOFSEG    DS.W    1                       ; NUMBER OF BLOCKS IN COLUMN UNDER PLAYER
+PLYERORI    DS.W    1                       ; PLAYER ORIENTATION
 
 
 ; --- LAND RELATED VARIABLES --------------------------------------------------
@@ -35,11 +33,14 @@ RANDIRT     DC.B    6  , 7  , 7  , 8  , 9  , 10  , 10  , 9
             DS.W    0 
 
 
-LANDHEIG    DC.B    8  ,  8 ,  9 , 10  , 11  , 12  , 12  , 11 
-            DC.B    10 ,  9 ,  8 ,  8  ,  9  , 10  , 11  , 11 
-            DC.B    12 , 11 , 10 , 10  , 11  , 12  , 12  , 11 
-            DC.B    10 ,  9 ,  9 ,  8  ,  9  , 10  , 11  , 12
+LANDHEIG    DC.B    10  ,  10 ,  11 ,  12  ,  13  , 14  , 14  , 13 
+            DC.B    12  ,  11 ,  10 ,  10  ,  11  , 12  , 13  , 13 
+            DC.B    14  ,  13 ,  12 ,  12  ,  13  , 14  , 14  , 13 
+            DC.B    12  ,  11 ,  11 ,  10  ,  11  , 12  , 11  , 10
             DS.W    0 
+
+
+
 
 
 *~Font name~Courier New~

@@ -35,9 +35,34 @@ GRASFCOL    EQU	 $00008C50         ; FILL GRASS COLOR
 
 ; ---- PLAYER RELATED CONSTANTS--------------------------------------------------
 
-PLYRCOL     EQU	 $000000FF          ; PLAYER COLOR 
+PLYRCOL     EQU	 $000000FF          ; PLAYER COLOR
+ORIPCOL     EQU	 $00FFEC00          ; ORIENTATION PLAYER COLOR 
 PLYSPEED    EQU     8                  ; PLAYER SPEED
 
+; --- EXPLOSION RELATED CONSTANTS ---------------------------------------------
+
+EXPGORE     EQU     10                      ; NUMBER OF BLOOD DROPS
+
+
+
+; --- AGENT DATABLOCK OFFSETS -------------------------------------------------
+
+; OFFSETS TO AGENT VARIABLES
+
+AGNFRAOF    EQU     0                       ; BASE FRAME
+AGNPOXOF    EQU     2                       ; X COORD
+AGNPOYOF    EQU     4                       ; Y COORD
+AGNSPYOF    EQU     8                       ; Y SPEED
+
+; OFFSETS TO AGENT COMMANDS
+
+AGNMOTOF    EQU     12                      ; DESIRED MOTION
+
+; OFFSET TO AGENT PARAMETERS
+
+AGNTYPOF    EQU     13                      ; TYPE
+AGNFRMOF    EQU     14                      ; FRAMES FOR LEFT AND RIGHT
+AGNSPXOF    EQU     18                      ; X SPEED
 
 
 

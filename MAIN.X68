@@ -45,11 +45,14 @@ START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
 .LOOP       TRAP    #KBDTRAP                ; READ KEYBOARD
 
             ; TO DO : ADD YOUR GAME UPDATE HERE
+            ; SEPARATED SUBRUTINES ALLOW PLAYER TO MOVE 
+            ; DIAGONALLY
+            JSR     PLYRUPDX               
+            JSR     PLYRUPDY
             
-            ;JSR     PLAYELX
-            JSR     PLYRUPDX               ; WITHOUT BOUNDING 
-            ;JSR     PLYRUPDY
-            JSR     PLAYELY                ; WITHOUT BOUNDING 
+            ; ONE SUBRUTINE JUST ALLOWING PLAYER TO MOVE
+            ; IN ONE DIRECTION AT ONCE
+            ; JSR     PLYRUPD               
             
             JSR	 AGLUPD
             
@@ -76,6 +79,9 @@ START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
             INCLUDE "SYSVAR.X68"
             INCLUDE "VAR.X68"
             END    START
+
+
+
 
 
 

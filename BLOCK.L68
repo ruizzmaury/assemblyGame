@@ -1,6 +1,6 @@
-00001794 Starting Address
+00001990 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 30/12/2020 20:27:54
+Created On: 04/01/2021 4:12:31
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      : BLOCK MANAGEMENT
@@ -38,140 +38,369 @@ Created On: 30/12/2020 20:27:54
 00000010                            34              
 00000010  4240                      35              CLR D0
 00000012  4241                      36              CLR D1
-00000014                            37            
-00000014                            38              ; CHECK BOTTOM'S PLAYER WITH TOP'S BLOCK
-Line 39 ERROR: Undefined symbol
-00000014  3039 004DBD16             39              MOVE.W  (PLAYERY),D0            
-Line 40 ERROR: Comma expected
-0000001A                            40              ADD.W   #BLOCSIZE/2, D0         ; BOTTOM OF PLAYER
-0000001A                            41              
-0000001A  3228 0002                 42              MOVE.W  2(A0),D1
-Line 43 ERROR: Comma expected
-0000001E                            43              SUB.W   #BLOCSIZE/2, D1         ; TOP OF BLOCK
-0000001E                            44  
-0000001E  B041                      45              CMP.W   D1, D0
-00000020  6C00 000E                 46              BGE     .CHKPRHT
-00000024  6000 0044                 47              BRA     .END
-00000028                            48              
-Line 49 ERROR: Symbol value differs between first and second pass
-00000028                            49  .CHKPRHT    
-00000028                            50              ; CHECK RIGHT'S PLAYER WITH LEFT'S BLOCK
-Line 51 ERROR: Undefined symbol
-00000028  3039 004DBD16             51              MOVE.W  (PLAYERX),D0            
+00000014                            37              
+00000014  4EB9 00000140             38              JSR     BREAKBLOC
+0000001A                            39            
+0000001A                            40              ; CHECK BOTTOM'S PLAYER WITH TOP'S BLOCK
+Line 41 ERROR: Undefined symbol
+0000001A  3039 004DBD16             41              MOVE.W  (PLAYERY),D0            
+Line 42 ERROR: Comma expected
+00000020                            42              ADD.W   #BLOCSIZE/2, D0         ; BOTTOM OF PLAYER
+00000020                            43              
+00000020  3228 0002                 44              MOVE.W  2(A0),D1
+Line 45 ERROR: Comma expected
+00000024                            45              SUB.W   #BLOCSIZE/2, D1         ; TOP OF BLOCK
+00000024                            46  
+00000024  B041                      47              CMP.W   D1, D0
+00000026  6E00 000E                 48              BGT     .CHKB
+0000002A  6000 008E                 49              BRA     .END
+0000002E                            50              
+Line 51 ERROR: Symbol value differs between first and second pass
+0000002E                            51  .CHKB       SUB.W  #BLOCSIZE, D0            ; TOP OF PLAYER             
 Line 52 ERROR: Comma expected
-0000002E                            52              ADD.W   #BLOCSIZE/2, D0         ; RIGHT OF PLAYER
-0000002E                            53              
-0000002E  3210                      54              MOVE.W  (A0),D1                 ; BLOCKX 
-00000030                            55              
-00000030  B041                      56              CMP.W   D1, D0
-00000032  6D00 001C                 57              BLT     .CHKPINL
-00000036                            58              
-00000036                            59              ;SUB.W   #BLOCSIZE/2, D1         ; LEFT OF BLOCK
-00000036                            60  
-00000036                            61              
-00000036                            62              
-00000036                            63  
-00000036                            64              
-00000036                            65              ; CHECK LEFT'S PLAYER WITH RIGHT'S BLOCK
-00000036                            66              
-Line 67 ERROR: Symbol value differs between first and second pass
-00000036                            67  .CHKPLFT    SUB.W   #BLOCSIZE, D0           ; LEFT OF PLAYER
-00000036                            68                          
-00000036  B041                      69              CMP.W   D1, D0
-00000038  6E00 0026                 70              BGT     .CHKPINR
-0000003C                            71              
-0000003C  6000 002C                 72              BRA .END
-00000040                            73              
-00000040                            74              
-Line 75 ERROR: Symbol value differs between first and second pass
-00000040                            75  .CHKPINL    
-Line 76 ERROR: Comma expected
-00000040                            76              SUB.W #BLOCSIZE/2, D1               ; LEFT SIDE OF BLOCK 
-00000040                            77                                              
-00000040  B041                      78              CMP.W   D1, D0
-00000042  6C00 002C                 79              BGE     .BLOCKL
-00000046                            80              
-Line 81 ERROR: Comma expected
-00000046                            81              ADD.W   #BLOCSIZE/2, D1           ; BLOCKX            
-00000046  60FA                      82              BRA .CHKPLFT
-00000048                            83              
-00000048                            84  
-Line 85 ERROR: Symbol value differs between first and second pass
-00000048                            85  .CHKPINR      
-Line 86 ERROR: Comma expected
-00000048                            86              ADD.W #BLOCSIZE/2, D1           ; THE RIGHT SIDE OF THE BLOCK
-00000048  B041                      87              CMP.W   D1, D0
-0000004A  6D00 0032                 88              BLT     .BLOCKR
-0000004E                            89             
-Line 90 ERROR: Symbol value differs between first and second pass
-0000004E  4CDF 001F                 90  .END        MOVEM.L (A7)+, D0-D4
-00000052  4E75                      91              RTS
-00000054                            92              
-00000054                            93              
-Line 94 ERROR: Symbol value differs between first and second pass
-00000054                            94  .BLOCKL     
-00000054  3810                      95              MOVE.W (A0),D4
-Line 96 ERROR: Undefined symbol
-00000056  0444 BD16                 96              SUB.W   #BLOCSIZE, D4
-Line 97 ERROR: Undefined symbol
-0000005A  33C4 005455B8             97              MOVE.W D4, (PLAYERX)
-00000060  6008                      98              BRA .END
-00000062                            99  
+0000002E                            52              ADD.W  #BLOCSIZE-8, D1            ; BOTTOM OF BLOCK
+0000002E                            53  
+0000002E  B041                      54              CMP.W  D1, D0
+00000030  6D00 004A                 55              BLT    .CHKPRHT 
+00000034                            56              
+00000034                            57              ; CHECK IF PLAYER COLLISION WITH BOTTOM OF BLOCK
+00000034                            58              
+00000034                            59                          
+Line 60 ERROR: Undefined symbol
+00000034  3039 004DBD16             60              MOVE.W  (PLAYERX),D0
+0000003A  3210                      61              MOVE.W  (A0),D1
+0000003C  0441 000A                 62              SUB.W   #10, D1
+00000040  B041                      63              CMP.W   D1, D0
+00000042  6D00 00A8                 64              BLT     .ENDF
+00000046  0641 0014                 65              ADD.W   #20, D1
+0000004A  B041                      66              CMP.W   D1, D0
+0000004C  6E00 009E                 67              BGT     .ENDF
+Line 68 ERROR: Undefined symbol
+00000050  3039 004DBD16             68              MOVE.W  (PLAYERY), D0
+Line 69 ERROR: Comma expected
+00000056                            69              SUB.W   #BLOCSIZE/2, D0         ; TOP OF PLAYER
+00000056  3228 0002                 70              MOVE.W  2(A0), D1
+Line 71 ERROR: Comma expected
+0000005A                            71              ADD.W   #BLOCSIZE/2, D1         ; BOT OF BLOCK
+0000005A  B041                      72              CMP.W   D1, D0
+0000005C  6F00 00C0                 73              BLE     .BLOCKB
+00000060                            74              
+00000060                            75              
+00000060  6000 008A                 76              BRA     .ENDF
+00000064                            77                       
+00000064                            78              
+Line 79 ERROR: Symbol value differs between first and second pass
+00000064                            79  .CHKPRHT    
+00000064                            80              ; CHECK RIGHT'S PLAYER WITH LEFT'S BLOCK
+Line 81 ERROR: Undefined symbol
+00000064  3039 004DBD16             81              MOVE.W  (PLAYERX),D0            
+Line 82 ERROR: Comma expected
+0000006A                            82              ADD.W   #BLOCSIZE/2, D0         ; RIGHT OF PLAYER
+0000006A                            83              
+0000006A  3210                      84              MOVE.W  (A0),D1                 ; BLOCKX 
+0000006C                            85              
+0000006C  B041                      86              CMP.W   D1, D0
+0000006E  6D00 002C                 87              BLT     .CHKPINL
+00000072                            88              
+00000072                            89              
+00000072                            90              ; CHECK LEFT'S PLAYER WITH RIGHT'S BLOCK
+00000072                            91              
+Line 92 ERROR: Symbol value differs between first and second pass
+00000072                            92  .CHKPLFT    SUB.W   #BLOCSIZE, D0           ; LEFT OF PLAYER
+00000072                            93                          
+00000072  B041                      94              CMP.W   D1, D0
+00000074  6E00 0036                 95              BGT     .CHKPINR
+00000078                            96              
+00000078  6000 0040                 97              BRA .END
+0000007C                            98              
+0000007C                            99              
 Line 100 ERROR: Symbol value differs between first and second pass
-00000062                           100  .BLOCKR     
-00000062  3810                     101              MOVE.W (A0),D4
-Line 102 ERROR: Undefined symbol
-00000064  0644 BD16                102              ADD.W   #BLOCSIZE, D4
-Line 103 ERROR: Undefined symbol
-00000068  33C4 005455B8            103              MOVE.W D4, (PLAYERX)
-0000006E  60FA                     104              BRA .END   
-00000070                           105  
-00000070                           106  
-00000070                           107  ;-----------------------------------------------------------
-Line 108 ERROR: Symbol value differs between first and second pass
-00000070                           108  BLOCPLOT
-00000070                           109  ; PLOT BLOCK
-00000070                           110  ; INPUT     - NONE
-00000070                           111  ; OUTPUT    - NONE
-00000070                           112  ; MODIFIES  - NONE  
-00000070                           113  ;-----------------------------------------------------------
-00000070  48E7 F800                114              MOVEM.L D0-D4, -(A7)            ; STACK REGISTER
-00000074  103C 0050                115              MOVE.B  #80, D0                 ; SET PEN COLOR TASK
-Line 116 ERROR: Undefined symbol
-00000078  223C 004DBD16            116              MOVE.L  #BLOCPCOL, D1           ; BLOCK COLOR
-0000007E  4E4F                     117              TRAP #15; SET PEN COLOR
-00000080  103C 0051                118              MOVE.B  #81, D0                 ; SET FILL COLOR TASK
-00000084  2228 0004                119              MOVE.L  4(A0),D1                ; BLOCK COLOR
-00000088  4E4F                     120              TRAP #15; SET FILL COLOR
-0000008A                           121              
-0000008A  3210                     122              MOVE.W  (A0),D1                 ; D1:=XCENTER
-0000008C  3428 0002                123              MOVE.W  2(A0),D2                ; D2:=YCENTER
-00000090  3601                     124              MOVE.W  D1, D3                  ; D3:=XCENTER
-00000092  3802                     125              MOVE.W  D2, D4                  ; D4:=YCENTER
-00000094                           126              
+0000007C                           100  .CHKPINL    
+Line 101 ERROR: Comma expected
+0000007C                           101              SUB.W #BLOCSIZE/2, D1               ; LEFT SIDE OF BLOCK 
+0000007C                           102                                              
+0000007C  B041                     103              CMP.W   D1, D0
+0000007E  6C00 0072                104              BGE     .BLOCKL
+00000082                           105              
+Line 106 ERROR: Comma expected
+00000082                           106              ADD.W   #BLOCSIZE/2, D1           ; BLOCKX            
+00000082  600A                     107              BRA .CHKPLFT
+00000084                           108              
+00000084                           109  
+Line 110 ERROR: Symbol value differs between first and second pass
+00000084                           110  .CHKPINR      
+Line 111 ERROR: Comma expected
+00000084                           111              ADD.W #BLOCSIZE/2, D1           ; THE RIGHT SIDE OF THE BLOCK
+00000084  B041                     112              CMP.W   D1, D0
+00000086  6D00 0078                113              BLT     .BLOCKR
+0000008A  6000 002E                114              BRA .END
+0000008E                           115             
+0000008E                           116              
+Line 117 ERROR: Symbol value differs between first and second pass
+0000008E                           117  .END        ; CHECK BOTTOM'S PLAYER WITH TOP'S BLOCK
+0000008E                           118  
+0000008E  4240                     119              CLR D0
+00000090  4241                     120              CLR D1
+00000092                           121            
+00000092                           122              ; CHECK BOTTOM'S PLAYER WITH TOP'S BLOCK
+Line 123 ERROR: Undefined symbol
+00000092  3039 004DBD16            123              MOVE.W  (PLAYERY),D0            
+Line 124 ERROR: Comma expected
+00000098                           124              ADD.W   #BLOCSIZE/2, D0         ; BOTTOM OF PLAYER
+00000098                           125              
+00000098  3228 0002                126              MOVE.W  2(A0),D1
 Line 127 ERROR: Comma expected
-00000094                           127              SUB.W   #BLOCSIZE/2, D1         ; D1:=XLEFT
-Line 128 ERROR: Comma expected
-00000094                           128              SUB.W   #BLOCSIZE/2, D2         ; D2:=YTOP
-Line 129 ERROR: Comma expected
-00000094                           129              ADD.W   #BLOCSIZE/2, D3         ; D3:=XRIGHT
-Line 130 ERROR: Comma expected
-00000094                           130              ADD.W   #BLOCSIZE/2, D4         ; D4:=YBOTTOM
-00000094  103C 0057                131              MOVE.B  #87, D0
-00000098  4E4F                     132              TRAP    #15                     ; DRAW BLOCK
-0000009A  4CDF 001F                133              MOVEM.L (A7)+, D0-D4            ; RESTORE REGISTERS
-0000009E  4E75                     134              RTS
-000000A0                           135  
-000000A0                           136  
-000000A0                           137  
-000000A0                           138  
-000000A0                           139  
-000000A0                           140  
-000000A0                           141  
-000000A0                           142  
-Line 143 WARNING: END directive missing, starting address not set
+0000009C                           127              SUB.W   #BLOCSIZE/2, D1         ; TOP OF BLOCK
+0000009C                           128  
+0000009C  B041                     129              CMP.W   D1, D0
+0000009E  6F00 004C                130              BLE     .ENDF
+000000A2                           131  
+000000A2                           132  
+Line 133 ERROR: Undefined symbol
+000000A2  3039 004DBD16            133              MOVE.W  (PLAYERX),D0            
+Line 134 ERROR: Comma expected
+000000A8                           134              ADD.W   #BLOCSIZE/2, D0         ; RIGHT OF PLAYER
+000000A8                           135              
+000000A8  3210                     136              MOVE.W  (A0),D1
+Line 137 ERROR: Comma expected
+000000AA                           137              SUB.W   #BLOCSIZE/2, D1         ; LEFT OF BLOCK
+000000AA                           138              
+000000AA  B041                     139              CMP.W   D1, D0
+000000AC  6E00 0080                140              BGT     .CHKPINT
+000000B0                           141       
+000000B0                           142              
+Line 143 ERROR: Symbol value differs between first and second pass
+000000B0  4CDF 001F                143  .ENDF       MOVEM.L (A7)+, D0-D4
+000000B4  4E75                     144              RTS
+000000B6                           145              
+000000B6                           146              
+Line 147 ERROR: Symbol value differs between first and second pass
+000000B6                           147  .BLOCKL     
+000000B6  3810                     148              MOVE.W (A0),D4
+Line 149 ERROR: Undefined symbol
+000000B8  0444 BD16                149              SUB.W   #BLOCSIZE, D4
+Line 150 ERROR: Undefined symbol
+000000BC  33C4 005455B8            150              MOVE.W D4, (PLAYERX)
+000000C2  60F6                     151              BRA .END
+000000C4                           152  
+Line 153 ERROR: Symbol value differs between first and second pass
+000000C4                           153  .BLOCKR     
+000000C4  3810                     154              MOVE.W (A0),D4
+Line 155 ERROR: Undefined symbol
+000000C6  0644 BD16                155              ADD.W   #BLOCSIZE, D4
+Line 156 ERROR: Undefined symbol
+000000CA  33C4 005455B8            156              MOVE.W D4, (PLAYERX)
+000000D0  60E8                     157              BRA .END 
+000000D2                           158  
+Line 159 ERROR: Symbol value differs between first and second pass
+000000D2                           159  .BLOCKT     
+000000D2  3828 0002                160              MOVE.W  2(A0),D4
+Line 161 ERROR: Undefined symbol
+000000D6  0444 BD16                161              SUB.W   #BLOCSIZE, D4
+Line 162 ERROR: Undefined symbol
+000000DA  33C4 005455B8            162              MOVE.W D4, (PLAYERY)
+000000E0                           163              
+000000E0  600A                     164              BRA .ENDF  
+000000E2                           165  
+000000E2                           166  
+Line 167 ERROR: Symbol value differs between first and second pass
+000000E2                           167  .BLOCKB     
+000000E2  3828 0002                168              MOVE.W  2(A0),D4
+Line 169 ERROR: Undefined symbol
+000000E6  0644 BD16                169              ADD.W   #BLOCSIZE, D4
+Line 170 ERROR: Undefined symbol
+000000EA  33C4 005455B8            170              MOVE.W D4, (PLAYERY)
+000000F0                           171              
+000000F0  60FA                     172              BRA .ENDF 
+000000F2                           173  
+000000F2                           174  
+Line 175 ERROR: Symbol value differs between first and second pass
+000000F2                           175  .CHKPINT    
+Line 176 ERROR: Undefined symbol
+000000F2  0641 BD16                176              ADD.W   #BLOCSIZE, D1           ; RIGHT SIDE OF BLOCK
+000000F6  B041                     177              CMP.W   D1, D0
+000000F8  6D14                     178              BLT     .BLOCKT
+000000FA                           179              
+Line 180 ERROR: Undefined symbol
+000000FA  0440 BD16                180              SUB.W   #BLOCSIZE, D0           ; LEFT OF PLAYER
+000000FE  B041                     181              CMP.W   D1, D0
+00000100  6D0C                     182              BLT     .BLOCKT
+00000102                           183              
+00000102  60E8                     184              BRA .ENDF     
+00000104                           185              
+00000104                           186  
+00000104                           187  ;-----------------------------------------------------------
+Line 188 ERROR: Symbol value differs between first and second pass
+00000104                           188  BREAKBLOC
+00000104                           189  ; BREAK BLOCK IN FRONT OF PLAYER WHEN SPACEKEY IS PRESSED
+00000104                           190  ; INPUT     - NONE
+00000104                           191  ; OUTPUT    - NONE
+00000104                           192  ; MODIFIES  - NONE  
+00000104                           193  ;-----------------------------------------------------------
+00000104  48E7 F800                194              MOVEM.L D0-D4, -(A7)            ; STACK REGISTER
+00000108                           195              
+Line 196 ERROR: Undefined symbol
+00000108  0839 0016 005455C8       196              BTST.B  #KBDCHRMK,(KBDVAL)      ; M KEY PRESSED?
+00000110  6600 0042                197              BNE     .BREAK                  ; YES: BREAK?
+00000114  6000 0118                198              BRA     .END
+00000118                           199              
+00000118                           200              
+Line 201 ERROR: Symbol value differs between first and second pass
+00000118                           201  .BREAK      
+Line 202 ERROR: Undefined symbol
+00000118  0C79 0002 005455CC       202              CMP.W   #2, (PLYERORI)          ; ORIPLAYER LEFT OR RIGHT?
+00000120  6D00 0056                203              BLT     .RORL                   ; YES: JUMP
+00000124                           204                                              ; NO : THEN BOT OR TOP
+Line 205 ERROR: Symbol value differs between first and second pass
+00000124                           205  .BORT       MOVE.W  (PLAYERX),D0            
+00000124  3210                     206              MOVE.W  (A0),D1
+00000126  0441 000A                207              SUB.W   #10, D1
+0000012A  343C 0002                208              MOVE.W  #2, D2
+0000012E  363C 0003                209              MOVE.W  #3, D3
+00000132                           210  
+00000132  6000 005A                211              BRA     .CHKZNE
+00000136                           212              
+Line 213 ERROR: Symbol value differs between first and second pass
+00000136                           213  .RORL       MOVE.W  (PLAYERY),D0            
+00000136  3228 0002                214              MOVE.W  2(A0),D1
+0000013A  0441 000A                215              SUB.W   #10, D1
+0000013E  343C 0000                216              MOVE.W  #0, D2
+00000142  363C 0001                217              MOVE.W  #1, D3
+00000146                           218              
+00000146                           219                                              ; SIMILAR IN OPPOSITE CASE WITH Y
+Line 220 ERROR: Symbol value differs between first and second pass
+00000146                           220  .CHKZNE     CMP.W   D1, D0                  ; PLAYERX > BLOCKX-10?
+00000146  6D00 00E6                221              BLT     .END                    ; NO: JUMP
+0000014A  0641 0014                222              ADD.W   #20, D1                 
+0000014E  B041                     223              CMP.W   D1, D0                  ; PLAYERX < BLOCKX +10 ?
+00000150  6E00 00DC                224              BGT     .END                    ; NO: JUMP
+00000154                           225                                      
+00000154                           226              
+00000154                           227              
+Line 228 ERROR: Undefined symbol
+00000154  0C79 0001 005455C8       228              CMP.W   #1, (PLYERORI)          ; ORIPLAYER == 1? 
+0000015C  6700 0074                229              BEQ     .ORIONE                ; YES: JUMP TO PLAYER ORI TOP
+00000160                           230              
+Line 231 ERROR: Undefined symbol
+00000160  0C79 0000 005455C8       231              CMP.W   #0, (PLYERORI)          ; ORIPLAYER == 1? 
+00000168  6700 0096                232              BEQ     .ORIZERO                ; NO: JUMP TO PLAYER ORI TOP
+0000016C                           233              
+Line 234 ERROR: Undefined symbol
+0000016C  0C79 0003 005455C8       234              CMP.W   #3, (PLYERORI)          ; ORIPLAYER == 1? 
+00000174  6700 0068                235              BEQ     .ORITRI                ; NO: JUMP TO PLAYER ORI TOP
+00000178                           236              
+Line 237 ERROR: Undefined symbol
+00000178  0C79 0002 005455C8       237              CMP.W   #2, (PLYERORI)          ; ORIPLAYER == 1? 
+00000180  6700 008A                238              BEQ     .ORITWO
+00000184  6000 00A8                239              BRA     .END
+00000188                           240                                                             
+Line 241 ERROR: Symbol value differs between first and second pass
+00000188                           241  .ORIONE    MOVE.W  (PLAYERX),D0
+00000188  3210                     242              MOVE.W  (A0),D1
+0000018A  6000 005C                243              BRA     .ONECHK
+0000018E                           244              
+0000018E                           245              
+Line 246 ERROR: Symbol value differs between first and second pass
+0000018E                           246  .ORITRI     MOVE.W  (PLAYERY),D0
+0000018E  3228 0002                247              MOVE.W  2(A0),D1
+00000192                           248              
+Line 249 ERROR: Symbol value differs between first and second pass
+00000192                           249  .ONECHK    ADD.W   #BLOCSIZE+5, D1
+00000192                           250              
+00000192  B041                     251              CMP.W   D1, D0                  ; PX/PY < BX/BY-BLOCSIZE-5
+00000194  6E00 0098                252              BGT     .END                    ; NO: JUMP
+00000198  0441 0019                253              SUB.W   #25, D1
+0000019C  B041                     254              CMP.W   D1, D0
+0000019E  6D00 008E                255              BLT     .END
+000001A2  6000 0090                256              BRA     .KILLB
+000001A6                           257              
+000001A6                           258  
+Line 259 ERROR: Symbol value differs between first and second pass
+000001A6                           259  .ORIZERO     MOVE.W  (PLAYERX),D0
+000001A6  3210                     260              MOVE.W  (A0),D1
+000001A8  6000 006C                261              BRA     .ZEROCHK
+000001AC                           262              
+000001AC                           263              
+Line 264 ERROR: Symbol value differs between first and second pass
+000001AC                           264  .ORITWO     MOVE.W  (PLAYERY),D0
+000001AC  3228 0002                265              MOVE.W  2(A0),D1            
+000001B0                           266              
+000001B0                           267  
+Line 268 ERROR: Symbol value differs between first and second pass
+000001B0                           268  .ZEROCHK     SUB.W   #BLOCSIZE+5, D1
+000001B0                           269              
+000001B0  B041                     270              CMP.W   D1, D0                  ; PX/PY > BX/BY-BLOCSIZE-5
+000001B2  6D00 007A                271              BLT     .END                    ; NO: JUMP
+000001B6  0641 0019                272              ADD.W   #25, D1
+000001BA  B041                     273              CMP.W   D1, D0
+000001BC  6E00 0070                274              BGT     .END
+000001C0  6000 0072                275              BRA     .KILLB
+000001C4                           276              
+000001C4                           277                                                  
+000001C4                           278                                           
+Line 279 ERROR: Symbol value differs between first and second pass
+000001C4  4CDF 001F                279  .END        MOVEM.L (A7)+, D0-D4            ; RESTORE REGISTERS
+000001C8  4E75                     280              RTS
+000001CA                           281  
+000001CA                           282  
+Line 283 ERROR: Symbol value differs between first and second pass
+000001CA                           283  .KILLB        
+Line 284 ERROR: Undefined symbol
+000001CA  4EB9 004DBD16            284              JSR     AGLKILL
+000001D0  605C                     285              BRA     .END  
+000001D2                           286  
+000001D2                           287  ;-----------------------------------------------------------
+Line 288 ERROR: Symbol value differs between first and second pass
+000001D2                           288  BLOCPLOT
+000001D2                           289  ; PLOT BLOCK
+000001D2                           290  ; INPUT     - NONE
+000001D2                           291  ; OUTPUT    - NONE
+000001D2                           292  ; MODIFIES  - NONE  
+000001D2                           293  ;-----------------------------------------------------------
+000001D2  48E7 F800                294              MOVEM.L D0-D4, -(A7)            ; STACK REGISTER
+000001D6  103C 0050                295              MOVE.B  #80, D0                 ; SET PEN COLOR TASK
+Line 296 ERROR: Undefined symbol
+000001DA  223C 004DBD16            296              MOVE.L  #BLOCPCOL, D1           ; BLOCK COLOR
+000001E0  4E4F                     297              TRAP #15; SET PEN COLOR
+000001E2  103C 0051                298              MOVE.B  #81, D0                 ; SET FILL COLOR TASK
+000001E6  2228 0004                299              MOVE.L  4(A0),D1                ; BLOCK COLOR
+000001EA  4E4F                     300              TRAP #15; SET FILL COLOR
+000001EC                           301              
+000001EC  3210                     302              MOVE.W  (A0),D1                 ; D1:=XCENTER
+000001EE  3428 0002                303              MOVE.W  2(A0),D2                ; D2:=YCENTER
+000001F2  3601                     304              MOVE.W  D1, D3                  ; D3:=XCENTER
+000001F4  3802                     305              MOVE.W  D2, D4                  ; D4:=YCENTER
+000001F6                           306              
+Line 307 ERROR: Comma expected
+000001F6                           307              SUB.W   #BLOCSIZE/2, D1         ; D1:=XLEFT
+Line 308 ERROR: Comma expected
+000001F6                           308              SUB.W   #BLOCSIZE/2, D2         ; D2:=YTOP
+Line 309 ERROR: Comma expected
+000001F6                           309              ADD.W   #BLOCSIZE/2, D3         ; D3:=XRIGHT
+Line 310 ERROR: Comma expected
+000001F6                           310              ADD.W   #BLOCSIZE/2, D4         ; D4:=YBOTTOM
+000001F6  103C 0057                311              MOVE.B  #87, D0
+000001FA  4E4F                     312              TRAP    #15                     ; DRAW BLOCK
+000001FC                           313              
+000001FC                           314              
+000001FC                           315              
+000001FC                           316              
+000001FC  4CDF 001F                317              MOVEM.L (A7)+, D0-D4            ; RESTORE REGISTERS
+00000200  4E75                     318              RTS
+00000202                           319  
+00000202                           320  
+00000202                           321  
+00000202                           322  
+00000202                           323  
+00000202                           324  
+00000202                           325  
+00000202                           326  
+00000202                           327  
+00000202                           328  
+00000202                           329  
+Line 330 WARNING: END directive missing, starting address not set
 
-25 errors detected
+67 errors detected
 1 warning generated
 
 
@@ -179,12 +408,30 @@ SYMBOL TABLE INFORMATION
 Symbol-name         Value
 -------------------------
 BLOCINIT            0
-BLOCPLOT            8C
+BLOCPLOT            23C
 BLOCUPD             C
-BLOCUPD:BLOCKL      70
-BLOCUPD:BLOCKR      7E
-BLOCUPD:CHKPINL     50
-BLOCUPD:CHKPINR     60
-BLOCUPD:CHKPLFT     42
-BLOCUPD:CHKPRHT     30
-BLOCUPD:END         6A
+BLOCUPD:BLOCKB      11E
+BLOCUPD:BLOCKL      F2
+BLOCUPD:BLOCKR      100
+BLOCUPD:BLOCKT      10E
+BLOCUPD:CHKB        36
+BLOCUPD:CHKPINL     9C
+BLOCUPD:CHKPINR     AC
+BLOCUPD:CHKPINT     12E
+BLOCUPD:CHKPLFT     8E
+BLOCUPD:CHKPRHT     7C
+BLOCUPD:END         BA
+BLOCUPD:ENDF        EC
+BREAKBLOC           140
+BREAKBLOC:BORT      160
+BREAKBLOC:BREAK     154
+BREAKBLOC:CHKZNE    18E
+BREAKBLOC:END       22E
+BREAKBLOC:KILLB     234
+BREAKBLOC:ONECHK    1E8
+BREAKBLOC:ORIONE    1D2
+BREAKBLOC:ORITRI    1DE
+BREAKBLOC:ORITWO    20C
+BREAKBLOC:ORIZERO   200
+BREAKBLOC:RORL      178
+BREAKBLOC:ZEROCHK   216
