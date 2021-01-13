@@ -1,0 +1,78 @@
+00001918 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 12/01/2021 23:43:47
+
+00000000                             1  ; =============================================================================
+00000000                             2  ; TITLE    : GAME VARIABLES
+00000000                             3  ; AUTHOR   : MAURICI RUIZ
+00000000                             4  ; HISTORY  : 15/12/2020  - CREATION
+00000000                             5  ; =============================================================================
+00000000                             6  
+00000000                             7  
+00000000                             8  ;---- BLOCK RELATED VARIABLES -------------------------------------------------
+00000000                             9  
+00000000                            10  BLOCKX      DS.W        1   ; BLOCK X COORDINATE (XCENTER)
+00000002                            11  BLOCKY      DS.W        1   ; BLOCK Y COORDINATE (XCENTER)
+00000004                            12  
+00000004                            13  
+00000004                            14  ; --- RANDOM NUMBER GENERATOR VARIABLES ---------------------------------------
+00000004                            15  
+00000004                            16  RNDINDEX    DS.B        1   ; RANDOM INDEX
+00000006                            17              DS.W        0
+00000006                            18              
+00000006                            19  ; --- DIAMOND RELATED VARIABLES --------------------------------------------------
+00000006                            20  
+00000006= 00C8 01C2 0320 0...       21  DMNDPOSX     DC.W    200  , 450  , 800  , 8  , 9  , 10  , 10  , 9   
+00000016= 0140 01C2 0258 0...       22  DMNDPOSY     DC.W    320  , 450  , 600  , 520 , 360  , 400  , 390  , 500 
+00000026                            23              
+00000026                            24  ; --- PLAYER RELATED VARIABLES ------------------------------------------------
+00000026                            25  
+00000026                            26  PLAYERX     DS.W    1                       ; PAD X COORDINATE (XCENTER)
+00000028                            27  PLAYERY     DS.W    1                       ; PAD X COORDINATE (YCENTER)
+0000002A                            28  
+0000002A                            29  PLYERORI    DS.W    1                       ; PLAYER ORIENTATION
+0000002C                            30  
+0000002C                            31  
+0000002C                            32  ; --- LAND RELATED VARIABLES --------------------------------------------------
+0000002C                            33  
+0000002C= 06 07 07 08 09 0A ...     34  RANDIRT     DC.B    6  , 7  , 7  , 8  , 9  , 10  , 10  , 9 
+00000034= 08 07 06 06 07 08 ...     35              DC.B    8  , 7  , 6  , 6  , 7  , 8   , 9   , 9 
+0000003C= 0A 09 08 08 09 0A ...     36              DC.B    10 , 9  , 8  , 8  , 9  , 10  , 10  , 9 
+00000044= 08 07 07 06 07 08 ...     37              DC.B    8  , 7  , 7  , 6  , 7  , 8   , 9   , 10
+0000004C                            38              DS.W    0 
+0000004C                            39  
+0000004C                            40  
+0000004C= 0A 0A 0B 0C 0D 0E ...     41  LANDHEIG    DC.B    10  ,  10 ,  11 ,  12  ,  13  , 14  , 14  , 13 
+00000054= 0C 0B 0A 0A 0B 0C ...     42              DC.B    12  ,  11 ,  10 ,  10  ,  11  , 12  , 13  , 13 
+0000005C= 0E 0D 0C 0C 0D 0E ...     43              DC.B    14  ,  13 ,  12 ,  12  ,  13  , 14  , 14  , 13 
+00000064= 0C 0B 0B 0A 0B 0C ...     44              DC.B    12  ,  11 ,  11 ,  10  ,  11  , 12  , 11  , 10
+0000006C                            45              DS.W    0 
+0000006C                            46              
+0000006C                            47  
+0000006C                            48              
+0000006C                            49              
+0000006C                            50  
+0000006C                            51  
+0000006C                            52  
+0000006C                            53  
+0000006C                            54  
+0000006C                            55  
+Line 56 WARNING: END directive missing, starting address not set
+
+No errors detected
+1 warning generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+BLOCKX              0
+BLOCKY              2
+DMNDPOSX            6
+DMNDPOSY            16
+LANDHEIG            4C
+PLAYERX             26
+PLAYERY             28
+PLYERORI            2A
+RANDIRT             2C
+RNDINDEX            4

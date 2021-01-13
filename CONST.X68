@@ -37,7 +37,15 @@ GRASFCOL    EQU	 $00008C50         ; FILL GRASS COLOR
 
 PLYRCOL     EQU	 $000000FF          ; PLAYER COLOR
 ORIPCOL     EQU	 $00FFEC00          ; ORIENTATION PLAYER COLOR 
-PLYSPEED    EQU     8                  ; PLAYER SPEED
+PLYSPEED    EQU     16                  ; PLAYER SPEED
+
+
+
+; ---- DIAMOND RELATED CONSTANTS--------------------------------------------------
+DMNDID      EQU	 2                      ; DIAMOND IDENTIFIER
+DMNDCOL     EQU	 $00FFFF99          ; DIAMOND COLOR          
+
+
 
 ; --- EXPLOSION RELATED CONSTANTS ---------------------------------------------
 
@@ -63,6 +71,9 @@ AGNMOTOF    EQU     12                      ; DESIRED MOTION
 AGNTYPOF    EQU     13                      ; TYPE
 AGNFRMOF    EQU     14                      ; FRAMES FOR LEFT AND RIGHT
 AGNSPXOF    EQU     18                      ; X SPEED
+
+
+
 
 
 

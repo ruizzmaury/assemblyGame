@@ -1,0 +1,104 @@
+00001928 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 13/01/2021 1:02:28
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      : BLOCK MANAGEMENT
+00000000                             3  * Written by : MAURICI RUIZ PLAZA
+00000000                             4  * Date       : 15/12/2020
+00000000                             5  * Description: ALL ABOUT THE BLOCK BEHAVIOR
+00000000                             6  *-----------------------------------------------------------
+00000000                             7  
+00000000                             8  ;-----------------------------------------------------------
+00000000                             9  DMNDINIT
+00000000                            10  ; INITIALIZE BLOCK
+00000000                            11  ; INPUT - D1.W  X PLACE COORDINATE
+00000000                            12  ;          - D2.W  Y PLACE COORDINATE 
+00000000                            13  ;          - D3.L  BLOCK COLOR
+00000000                            14  ; OUTPUT    - NONE
+00000000                            15  ; MODIFIES  - NONE  
+00000000                            16  ;-----------------------------------------------------------
+00000000                            17                         
+00000000  3281                      18              MOVE.W  D1, (A1)
+00000002  3342 0002                 19              MOVE.W  D2, 2(A1)
+00000006                            20              
+00000006                            21      
+00000006                            22      
+00000006  4E75                      23              RTS
+00000008                            24  
+00000008                            25  
+00000008                            26  ;-----------------------------------------------------------
+00000008                            27  DMNDUPD
+00000008                            28  ; UPDATE BLOCK
+00000008                            29  ; INPUT - NONE
+00000008                            30  ; OUTPUT    - NONE
+00000008                            31  ; MODIFIES  - NONE  
+00000008                            32  ;-----------------------------------------------------------
+00000008  4E75                      33                        RTS
+0000000A                            34  
+0000000A                            35  
+0000000A                            36  
+0000000A                            37  ;-----------------------------------------------------------
+0000000A                            38  DMNDPLOT
+0000000A                            39  ; PLOT BLOCK
+0000000A                            40  ; INPUT - NONE
+0000000A                            41  ; OUTPUT    - NONE
+0000000A                            42  ; MODIFIES  - NONE  
+0000000A                            43  ;-----------------------------------------------------------
+0000000A  48E7 F800                 44      MOVEM.L D0-D4, -(A7)    ; STACK REGISTER
+0000000E  103C 0050                 45      MOVE.B  #80, D0 ; SET PEN COLOR TASK
+Line 46 ERROR: Undefined symbol
+00000012  223C 004DBD16             46      MOVE.L  #DMNDCOL, D1    ; BLOCK COLOR
+00000018  4E4F                      47      TRAP #15    ; SET PEN COLOR
+0000001A  103C 0051                 48      MOVE.B  #81, D0 ; SET FILL COLOR TASK
+Line 49 ERROR: Undefined symbol
+0000001E  223C 004DBD16             49      MOVE.L  #DMNDCOL,D1 ; BLOCK COLOR
+00000024  4E4F                      50      TRAP #15    ; SET FILL COLOR
+00000026                            51      
+00000026  3211                      52      MOVE.W  (A1),D1 ; D1:=XCENTER
+00000028  3429 0002                 53      MOVE.W  2(A1),D2    ; D2:=YCENTER
+0000002C  3601                      54      MOVE.W  D1, D3  ; D3:=XCENTER
+0000002E  3802                      55      MOVE.W  D2, D4  ; D4:=YCENTER
+00000030                            56      
+Line 57 ERROR: Comma expected
+00000030                            57      SUB.W   #BLOCSIZE/2, D1 ; D1:=XLEFT
+Line 58 ERROR: Comma expected
+00000030                            58      SUB.W   #BLOCSIZE/2, D2 ; D2:=YTOP
+Line 59 ERROR: Comma expected
+00000030                            59      ADD.W   #BLOCSIZE/2, D3 ; D3:=XRIGHT
+Line 60 ERROR: Comma expected
+00000030                            60      ADD.W   #BLOCSIZE/2, D4 ; D4:=YBOTTOM
+00000030  103C 0058                 61      MOVE.B  #88, D0
+00000034  4E4F                      62      TRAP    #15 ; DRAW BLOCK
+00000036                            63      
+00000036                            64      
+00000036                            65      
+00000036                            66      
+00000036  4CDF 001F                 67      MOVEM.L (A7)+, D0-D4    ; RESTORE REGISTERS
+0000003A  4E75                      68      RTS
+0000003C                            69  
+0000003C                            70  
+0000003C                            71  
+0000003C                            72  
+0000003C                            73  
+0000003C                            74  
+0000003C                            75  
+0000003C                            76  
+0000003C                            77  
+0000003C                            78  
+0000003C                            79  
+0000003C                            80  
+0000003C                            81  
+0000003C                            82  
+Line 83 WARNING: END directive missing, starting address not set
+
+6 errors detected
+1 warning generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+DMNDINIT            0
+DMNDPLOT            A
+DMNDUPD             8

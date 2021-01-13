@@ -232,10 +232,117 @@ PLYRPLOT
 	        RTS
 
 
+;-------------- PLAYER DRAW PROVE------------------------------
+
+DRWPLYER            
+            MOVEM.L D0-D4, -(A7)	; STACK REGISTER
+            MOVEM.L A1-A3, -(A7)	
+            
+            LEA PLYRC, A1   ; EA OF PLAYER BGR
+            LEA PLYRPOSX,   A2  ; X DRAW PLAYER
+            LEA PLYRPOSY,   A3  ; Y DRAW PLAYER
+            
+            
+            
+.NXTCOL     MOVE.B	#80, D0	; SET PEN COLOR TASK
+            MOVE.L  (A1),D1
+            TRAP #15	; SET PEN COLOR
+            CMP.L   #$01234567, D1
+            BEQ .END
+            
+            CLR.L D0
+            CLR.L D1
+            CLR.L D2
+            MOVE.B  (A2),D1  
+            ADD.W  (PLAYERX),D1 ; X PIXEL
+            MOVE.B  (A3),D2  
+            ADD.W  (PLAYERY),D2 ; X PIXEL
+            MOVE.B  #82, D0 ; SET DRAW PIXEL TASK
+            TRAP    #15
+            
+            ADDA.L  #4,A1
+            ADDA.L  #1,A2
+            ADDA.L  #1,A3
+            
+            BRA .NXTCOL
+            
+	        
+
+.END        
+            MOVEM.L (A7)+, A1-A3 	; RESTORE REGISTERS
+            MOVEM.L (A7)+, D0-D4 	; 
+	        
+	        RTS
+
+;----------------------------------------------------
+
+
+DRAW            
+            MOVEM.L D0-D4, -(A7)	; STACK REGISTER
+            MOVEM.L A1-A3, -(A7)	
+            
+            LEA PLYRC, A1   ; EA OF PLAYER BGR
+            LEA PLYRPOSX,   A2
+            LEA PLYRPOSY,   A3
+            
+            MOVE.B	#80, D0	; SET PEN COLOR TASK            
+            MOVE.L  (A1),D1
+            TRAP #15	; SET PEN COLOR    
+            CLR.L D0
+            CLR.L D1
+            CLR.L D2
+            MOVE.B  (A2),D1 ; X PIXEL
+            MOVE.B  (A3),D2 ; Y PIXEL
+            MOVE.B  #82, D0 ; SET DRAW PIXEL TASK
+            TRAP    #15
+            
+            
+            
+            ADDA.L  #4,A1
+            ADDA.L  #1,A2
+            ADDA.L  #1,A3
+
+
+            
+            MOVE.B	#80, D0	; SET PEN COLOR TASK    
+            MOVE.L  (A1),D1
+            TRAP #15	; SET PEN COLOR                     
+            CLR.L D0
+            CLR.L D1
+            CLR.L D2
+            MOVE.B  (A2),D1 ; X PIXEL
+            MOVE.B  (A3),D2 ; Y PIXEL
+            MOVE.B  #82, D0 ; SET DRAW PIXEL TASK
+            TRAP    #15
+            
+            
+            
+            ADDA.L  #4,A1
+            ADDA.L  #1,A2
+            ADDA.L  #1,A3
 
 
 
+            MOVE.B	#80, D0	; SET PEN COLOR TASK    
+            MOVE.L  (A1),D1
+            TRAP #15	; SET PEN COLOR
+            CLR.L D0
+            CLR.L D1
+            CLR.L D2
+            MOVE.B  (A2),D1 ; X PIXEL
+            MOVE.B  (A3),D2 ; Y PIXEL
+            MOVE.B  #82, D0 ; SET DRAW PIXEL TASK
+            TRAP    #15
 
+
+         
+	        
+
+.END        
+            MOVEM.L (A7)+, A1-A3 	; RESTORE REGISTERS
+            MOVEM.L (A7)+, D0-D4 	; 
+	        
+	        RTS
 
 
 

@@ -16,8 +16,10 @@
             INCLUDE "AGENTLST.X68"	; 
             INCLUDE "BLOCK.X68"	; BLOCK MANAGEMENT	
             INCLUDE "LAND.X68"              ; LAND CREATION
-            INCLUDE "PLAYER.X68"              ; PLAYER MANAGEMENT			
-
+            INCLUDE "PLAYER.X68"              ; PLAYER MANAGEMENT	
+            INCLUDE "DIAMOND.X68"              ; DIAMOND MANAGEMENT
+            INCLUDE "GFXDATA.X68"			
+            
 ; --- INITIALIZE --------------------------------------------------------------
 
 START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
@@ -26,19 +28,17 @@ START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
             ; TO DO : ADD YOUR GAME INITIALIZATION HERE
             JSR	  RNDINIT
             
-           
+            
+            ; PLACE PLAYER
+            JSR     PLYRINIT 
             
             ; GENERATES LAND 
-
-            ;JSR     LANDINIT
             JSR     LANDCRTE
-            ; PLACE PLAYER
-            JSR     PLYRINIT             
-           
+                                            
             
             
             
-
+            
 
 ; --- UPDATE ------------------------------------------------------------------
 
@@ -50,7 +50,7 @@ START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
             JSR     PLYRUPDX               
             JSR     PLYRUPDY
             
-            ; ONE SUBRUTINE JUST ALLOWING PLAYER TO MOVE
+*            ; ONE SUBRUTINE JUST ALLOWING PLAYER TO MOVE
             ; IN ONE DIRECTION AT ONCE
             ; JSR     PLYRUPD               
             
@@ -66,10 +66,13 @@ START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
 ; --- PLOT --------------------------------------------------------------------
 
             ; TO DO : ADD YOUR GAME PLOT HERE           
+           
+            
+            ;JSR     PLYRPLOT
+            
+            JSR     DRWPLYER
+            ;JSR     DRAW
             JSR     AGLPLOT
-            
-            JSR     PLYRPLOT
-            
             TRAP    #SCRTRAP                ; SHOW GRAPHICS
             BRA     .LOOP                   ; MAIN LOOP
             SIMHALT
@@ -79,6 +82,13 @@ START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
             INCLUDE "SYSVAR.X68"
             INCLUDE "VAR.X68"
             END    START
+
+
+
+
+
+
+
 
 
 

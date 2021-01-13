@@ -16,6 +16,12 @@ BLOCKY	    DS.W	    1	; BLOCK Y COORDINATE (XCENTER)
 RNDINDEX	DS.B	    1	; RANDOM INDEX
 	        DS.W	    0
 	        
+; --- DIAMOND RELATED VARIABLES --------------------------------------------------
+
+DMNDIDX 	 DC.W	 0	; DIAMOND INDEX
+DMNDPOSX     DC.W    40  , 450  , 800  , 708  , 920  , 100  , 210  , 329 , 0   
+DMNDPOSY     DC.W    400  , 450  , 600  , 520 , 360  , 400  , 390  , 500, 0 
+	        
 ; --- PLAYER RELATED VARIABLES ------------------------------------------------
 
 PLAYERX     DS.W    1                       ; PAD X COORDINATE (XCENTER)
@@ -38,6 +44,14 @@ LANDHEIG    DC.B    10  ,  10 ,  11 ,  12  ,  13  , 14  , 14  , 13
             DC.B    14  ,  13 ,  12 ,  12  ,  13  , 14  , 14  , 13 
             DC.B    12  ,  11 ,  11 ,  10  ,  11  , 12  , 11  , 10
             DS.W    0 
+            
+
+            
+            
+
+
+
+
 
 
 
