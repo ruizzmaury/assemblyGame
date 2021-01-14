@@ -1,6 +1,6 @@
-0000145C Starting Address
+00005362 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 21/12/2020 0:27:51
+Created On: 14/01/2021 5:00:32
 
 00000000                             1  ; =============================================================================
 00000000                             2  ; TITLE    : GAME CONSTANTS
@@ -8,21 +8,21 @@ Created On: 21/12/2020 0:27:51
 00000000                             4  ; HISTORY  : 15/12/2020  -  CREATION
 00000000                             5  ; =============================================================================
 00000000                             6  
-00000000                             7  ; ----BLOCK RELATED CONSTANTS--------------------------------------------------
+00000000                             7  ; ---- BLOCK RELATED CONSTANTS-------------------------------------------------
 00000000                             8  
 00000000  =00000028                  9  BLOCSIZE    EQU     40                  ; BLOCK WIDTH
 00000000                            10  
 00000000                            11  ; ---- BLOCK TYPES - 00BBGGRR -----------------------
 00000000                            12  
-00000000  =00000000                 13  BLOCPCOL    EQU      $00000000               ; PEN COLOR
-Line 14 ERROR: Undefined symbol
-00000000                            14  NROWBLKS    EQU     SCRWIDTH/BLOCSIZE       ; NUMBER OF BLOCKS PER ROW TO PAINT
+00000000  =00000000                 13  BLOCPCOL    EQU     $00000000               ; PEN COLOR
+00000000  =00000001                 14  BLOCID      EQU       1                      ; STONE IDENTIFIER
 Line 15 ERROR: Undefined symbol
-00000000                            15  NCOLBLKS    EQU     SCRHEIGH/BLOCSIZE       ; NUMBER OF BLOCKS PER COLUMN TO PAINT
-00000000                            16  
+00000000                            15  NROWBLKS    EQU     SCRWIDTH/BLOCSIZE       ; NUMBER OF BLOCKS PER ROW TO PAINT
+Line 16 ERROR: Undefined symbol
+00000000                            16  NCOLBLKS    EQU     SCRHEIGH/BLOCSIZE       ; NUMBER OF BLOCKS PER COLUMN TO PAINT
 00000000                            17  
-00000000                            18  ; STONE
-00000000  =00000001                 19  STNID       EQU       1                 ; STONE IDENTIFIER
+00000000                            18  
+00000000                            19  ; STONE
 Line 20 ERROR: Undefined symbol
 00000000                            20  NUMSTN      EQU     SCRHEIGH/BLOCSIZE       ; NUMBER OF STONES TO PAINT
 00000000  =00000014                 21  STNINITX    EQU     BLOCSIZE/2              ; INITIALX STONES
@@ -31,38 +31,97 @@ Line 22 ERROR: Undefined symbol
 00000000  =00676767                 23  STNFCOL     EQU      $00676767          ; FILL STONE COLOR
 00000000                            24  
 00000000                            25  ; DIRT
-00000000  =00000002                 26  DIRTID      EQU       2                 ; DIRT IDENTIFIER
-00000000  =00000014                 27  DRTINITX    EQU     BLOCSIZE/2              ; INITIALX DIRT
-Line 28 ERROR: Undefined symbol
-00000000                            28  DRTINITY    EQU     SCRHEIGH-BLOCSIZE/2       ; INITIALY DIRT
-00000000  =00002850                 29  DIRTFCOL    EQU      $00002850              ; FILL DIRT COLOR 
-00000000                            30  
-00000000                            31  ; GRASS
-00000000  =00000003                 32  GRASSID     EQU      3                 ; GRASS IDENTIFIER
+00000000  =00000014                 26  DRTINITX    EQU     BLOCSIZE/2              ; INITIALX DIRT
+Line 27 ERROR: Undefined symbol
+00000000                            27  DRTINITY    EQU     SCRHEIGH-BLOCSIZE     ; INITIALY DIRT
+00000000  =00002850                 28  DIRTFCOL    EQU      $00002850              ; FILL DIRT COLOR 
+00000000                            29  
+00000000                            30  ; GRASS
+00000000  =00000014                 31  GRASINTX    EQU     BLOCSIZE/2              ; INITIALX DIRT
+Line 32 ERROR: Undefined symbol
+00000000                            32  GRASINTY    EQU     SCRHEIGH-3*BLOCSIZE+BLOCSIZE/2      ; INITIALY DIRT
 00000000  =00008C50                 33  GRASFCOL    EQU      $00008C50         ; FILL GRASS COLOR
 00000000                            34  
 00000000                            35  
-00000000                            36  
-00000000                            37  
-00000000                            38  
-00000000                            39  
-00000000                            40  
-Line 41 WARNING: END directive missing, starting address not set
+00000000                            36  ; ---- PLAYER RELATED CONSTANTS--------------------------------------------------
+00000000  =0000002E                 37  PLYRWDTH    EQU     46                  ; PLAYER WIDTH
+00000000  =00000036                 38  PLYRHEIG    EQU     54                  ; PLAYER HEIGHT
+00000000  =000000FF                 39  PLYRCOL     EQU      $000000FF          ; PLAYER COLOR
+00000000  =00FFEC00                 40  ORIPCOL     EQU      $00FFEC00          ; ORIENTATION PLAYER COLOR 
+00000000  =00000010                 41  PLYSPEED    EQU     16                  ; PLAYER SPEED
+00000000                            42  
+00000000                            43  
+00000000                            44  
+00000000                            45  ; ---- DIAMOND RELATED CONSTANTS--------------------------------------------------
+00000000  =00000002                 46  DMNDID      EQU      2                      ; DIAMOND IDENTIFIER
+00000000  =00FFFF99                 47  DMNDCOL     EQU      $00FFFF99          ; DIAMOND COLOR          
+00000000                            48  
+00000000                            49  
+00000000                            50  
+00000000                            51  ; --- EXPLOSION RELATED CONSTANTS ---------------------------------------------
+00000000                            52  
+00000000  =0000000A                 53  EXPGORE     EQU     10                      ; NUMBER OF BLOOD DROPS
+00000000                            54  
+00000000                            55  
+00000000                            56  
+00000000                            57  ; --- AGENT DATABLOCK OFFSETS -------------------------------------------------
+00000000                            58  
+00000000                            59  ; OFFSETS TO AGENT VARIABLES
+00000000                            60  
+00000000  =00000000                 61  AGNFRAOF    EQU     0                       ; BASE FRAME
+00000000  =00000002                 62  AGNPOXOF    EQU     2                       ; X COORD
+00000000  =00000004                 63  AGNPOYOF    EQU     4                       ; Y COORD
+00000000  =00000008                 64  AGNSPYOF    EQU     8                       ; Y SPEED
+00000000                            65  
+00000000                            66  ; OFFSETS TO AGENT COMMANDS
+00000000                            67  
+00000000  =0000000C                 68  AGNMOTOF    EQU     12                      ; DESIRED MOTION
+00000000                            69  
+00000000                            70  ; OFFSET TO AGENT PARAMETERS
+00000000                            71  
+00000000  =0000000D                 72  AGNTYPOF    EQU     13                      ; TYPE
+00000000  =0000000E                 73  AGNFRMOF    EQU     14                      ; FRAMES FOR LEFT AND RIGHT
+00000000  =00000012                 74  AGNSPXOF    EQU     18                      ; X SPEED
+00000000                            75  
+00000000                            76  
+00000000                            77  
+00000000                            78  
+00000000                            79  
+00000000                            80  
+00000000                            81  
+00000000                            82  
+00000000                            83  
+Line 84 WARNING: END directive missing, starting address not set
 
-5 errors detected
+6 errors detected
 1 warning generated
 
 
 SYMBOL TABLE INFORMATION
 Symbol-name         Value
 -------------------------
+AGNFRAOF            0
+AGNFRMOF            E
+AGNMOTOF            C
+AGNPOXOF            2
+AGNPOYOF            4
+AGNSPXOF            12
+AGNSPYOF            8
+AGNTYPOF            D
+BLOCID              1
 BLOCPCOL            0
 BLOCSIZE            28
 DIRTFCOL            2850
-DIRTID              2
+DMNDCOL             FFFF99
+DMNDID              2
 DRTINITX            14
+EXPGORE             A
 GRASFCOL            8C50
-GRASSID             3
+GRASINTX            14
+ORIPCOL             FFEC00
+PLYRCOL             FF
+PLYRHEIG            36
+PLYRWDTH            2E
+PLYSPEED            10
 STNFCOL             676767
-STNID               1
 STNINITX            14

@@ -1,21 +1,20 @@
 *-----------------------------------------------------------
-* Title      : BLOCK MANAGEMENT
-* Written by : MAURICI RUIZ PLAZA
-* Date       : 15/12/2020
-* Description: ALL ABOUT THE BLOCK BEHAVIOR
+* Title      :
+* Written by :
+* Date       :
+* Description:
 *-----------------------------------------------------------
-
 ;-----------------------------------------------------------
 BLOCINIT
 ; INITIALIZE BLOCK
-; INPUT	- D1.W  X PLACE COORDINATE
+; INPUT	-   D1.W  X PLACE COORDINATE
 ;          - D2.W  Y PLACE COORDINATE 
 ;          - D3.L  BLOCK COLOR
 ; OUTPUT	- NONE
 ; MODIFIES	- NONE	
 ;-----------------------------------------------------------
                        
-           MOVE.W	D1, (A0)
+    MOVE.W	D1, (A0)
 	MOVE.W	D2, 2(A0)
 	MOVE.L	D3, 4(A0)
 	
@@ -24,162 +23,148 @@ BLOCINIT
 
 
 ;-----------------------------------------------------------
+;-----------------------------------------------------------
 BLOCUPD
 ; UPDATE BLOCK
 ; INPUT	- NONE
 ; OUTPUT	- NONE
 ; MODIFIES	- NONE	
 ;-----------------------------------------------------------
-            MOVEM.L D0-D4, -(A7)	; STACK REGISTER
+            MOVEM.L D0-D7, -(A7)	; STACK REGISTER
             
             CLR D0
             CLR D1
             
             JSR     BREAKBLOC
-          
-            ; CHECK BOTTOM'S PLAYER WITH TOP'S BLOCK
-            MOVE.W  (PLAYERY),D0            
-            ADD.W   #PLYRHEIG/2, D0         ; BOTTOM OF PLAYER
             
-            MOVE.W  2(A0),D1
-            SUB.W   #BLOCSIZE/2, D1         ; TOP OF BLOCK
 
-            CMP.W   D1, D0
-            BGT     .CHKB
-            BRA     .END
+            MOVE.W  (PLAYERX),D0  ; PLAYER X
+            MOVE.W  (PLAYERY),D1  ; PLAYER Y
             
-.CHKB       SUB.W  #PLYRHEIG, D0            ; TOP OF PLAYER             
-            ADD.W  #BLOCSIZE-8, D1            ; BOTTOM OF BLOCK
+            MOVE.W   (A0),D2  ; BLOCK X
+            MOVE.W  2(A0),D3  ; BLOCK Y
+            
+            
+            
+;---------- CHECK IF PLAYER IN LEFT SIDE OF BLOCK------------
 
-            CMP.W  D1, D0
-            BLT    .CHKPRHT 
+            ADD.W   #PLYRHEIG/2+10, D1     ; BOT OF PLAYER                 
+            SUB.W   #BLOCSIZE/2, D3      ; TOP OF BLOCK
+               
+                       
+            CMP.W   D3, D1
+            BLT     .CPABOVE
             
-            ; CHECK IF PLAYER COLLISION WITH BOTTOM OF BLOCK
+            ADD.W   #BLOCSIZE, D3       ; BOT OF BLOCK
+            SUB.W   #PLYRHEIG/2, D1       ; PLAYER Y
+            CMP.W   D3, D1              ; TOP OF PLAYER > BOT OF BLOCK? YES: JUMP
+            BGT .END
             
                         
-            MOVE.W  (PLAYERX),D0
-            MOVE.W  (A0),D1
-            SUB.W   #10, D1
-            CMP.W   D1, D0
-            BLT     .ENDF
-            ADD.W   #20, D1
-            CMP.W   D1, D0
-            BGT     .ENDF
-            MOVE.W  (PLAYERY),D0
-            SUB.W   #PLYRHEIG/2, D0         ; TOP OF PLAYER
-            MOVE.W  2(A0),D1
-            ADD.W   #BLOCSIZE/2, D1         ; BOT OF BLOCK
-            CMP.W   D1, D0
-            BLE     .BLOCKB
-            
-            
-            BRA     .ENDF
-                     
-            
-.CHKPRHT    
-            ; CHECK RIGHT'S PLAYER WITH LEFT'S BLOCK
-            MOVE.W  (PLAYERX),D0            
-            ADD.W   #PLYRWDTH/2, D0         ; RIGHT OF PLAYER            
-            MOVE.W  (A0),D1                 ; BLOCKX             
-            CMP.W   D1, D0
-            BLT     .CHKPINL
-            
-            
-            ; CHECK LEFT'S PLAYER WITH RIGHT'S BLOCK
-            
-.CHKPLFT    MOVE.W   (PLYRLFTX),D0           ; LEFT OF PLAYER                        
-            CMP.W   D1, D0
-            BGT     .CHKPINR
-            
+            CMP.W   D2, D0          ; PLAYERX > BLOCKX?  YES: JUMP
+            BGT .CPINRHT
+                               
+ 
+            ADD.W   #PLYRWDTH/2, D0       ; RIGHT OF PLAYER            
+            SUB.W   #BLOCSIZE, D2       ; LEFT OF BLOCK
+            CMP.W   D2, D0
+            BGT .BLKLFT
             BRA .END
             
+            ;---------- CHECK IF PLAYER IN RIGHT SIDE OF BLOCK------------
             
-.CHKPINL    
-            SUB.W #BLOCSIZE/2, D1               ; LEFT SIDE OF BLOCK                                             
-            CMP.W   D1, D0
-            BGE     .BLOCKL
+; 'CHECK IF PLAYER IN RIGHT'               
+.CPINRHT    
+            ; D0 PLAYER X
+            ; D1 PLAYER Y 
+            ; D2 BLOCK X
+            ; D3 TOP OF BLOCK
             
-            ADD.W   #BLOCSIZE/2, D1           ; BLOCKX            
-            BRA .CHKPLFT
+            ADD.W   #BLOCSIZE/2, D2     ; RIGHT OF BLOCK
+            CMP.W   D2, D0              ; PLAYERX  > RIGHT OF BLOCK? YES: JUMP
+            BGT     .END
+            BRA .BLKRHT
             
-
-.CHKPINR      
-            ADD.W #BLOCSIZE/2, D1           ; THE RIGHT SIDE OF THE BLOCK
-            CMP.W   D1, D0
-            BLT     .BLOCKR
+            SUB.W   #PLYRWDTH, D0       ; LEFT OF PLAYER
+            SUB.W   #PLYRWDTH, D2       ; RIGHT OF BLOCK
+            CMP.W   D2, D0
+            BLT .BLKRHT
             BRA .END
-           
-            
-.END        ; CHECK BOTTOM'S PLAYER WITH TOP'S BLOCK
 
-            CLR D0
-            CLR D1
-          
+            
+            
+            ;---------- CHECK IF PLAYER ABOVE THE BLOCK------------
+            ; WE ALREADY KNOW PLAYER IS ABOVE THE PLAYER
+            ; NOW WE HAVE TO CHECK IF PLAYER IS IN THE SAME X ZONE OF THE BLOCK
+            ; BOT OF PLAYER < TOP OF BLOCK
+
+; 'CHECK IF PLAYER ABOVE'               
+.CPABOVE            
+            ; D0 PLAYER X
+            ; D1 BOT OF PLAYER 
+            ; D2 BLOCK X
+            ; D3 TOP OF BLOCK + 5
             ; CHECK BOTTOM'S PLAYER WITH TOP'S BLOCK
-            MOVE.W  (PLAYERY),D0            
-            ADD.W   #PLYRHEIG, D0         ; BOTTOM OF PLAYER
-                     
-                       
-            MOVE.W  2(A0),D1
-            SUB.W   #BLOCSIZE, D1         ; TOP OF BLOCK
-
-            CMP.W   D1, D0
-            BLE     .ENDF
-
-
-            MOVE.W  (PLAYERX),D0            
-            ADD.W   #PLYRWDTH, D0         ; RIGHT OF PLAYER
+           
+            SUB.W   #20, D3
+            CMP.W   D3, D1
+            BLE .END
             
-            MOVE.W  (A0),D1
-            SUB.W   #PLYRWDTH, D1         ; LEFT OF BLOCK
+                
+.CHKXZNE    
+            SUB.W   #BLOCSIZE/2, D2 ; LEFT BLOCK
+            ADD.W   #PLYRWDTH/2, D0 ; RIGHT PLAYER
+            CMP.W   D2, D0
+            BGT .CHKXL
+            BRA .END
+.CHKXL      ADD.W   #BLOCSIZE, D2   ; RIGHT OF BLOCK
+            CMP.W   D2, D0
+            BLT .BLKABVE        
+           
+            BRA .END
+
+    
             
-            CMP.W   D1, D0
-            BGT     .CHKPINT
-     
+            ;---------- CHECK IF PLAYER UNDER THE BLOCK------------
+            ; WE ALREADY KNOW PLAYER IS UNDER THE PLAYER
+            ; NOW WE HAVE TO CHECK IF PLAYER IS IN THE SAME X ZONE OF THE BLOCK
+            ; TOP OF PLAYER > BOT OF BLOCK
+
+.CPUNDER    
+            BRA .END
             
-.ENDF       MOVEM.L (A7)+, D0-D4
+         
+                        
+.BLKABVE      
+            MOVE.W  2(A0),D5
+            SUB.W   #75, D5
+            MOVE.W  D5, (PLAYERY)            
+            BRA .END  
+            
+.BLKDWN     
+            MOVE.W  2(A0),D5
+            SUB.W   #BLOCSIZE/2+PLYRHEIG/2, D5
+            MOVE.W  D5, (PLAYERY)            
+            BRA .END 
+            
+.BLKLFT
+            MOVE.W  (A0),D5
+            SUB.W   #60, D5
+            MOVE.W  D5, (PLAYERX)
+            BRA .END
+            
+.BLKRHT 
+            MOVE.W  (A0),D5
+            ADD.W   #BLOCSIZE/2, D5
+            MOVE.W  D5, (PLAYERX)
+            BRA .END
+                 
+                                    
+.END        
+            MOVEM.L (A7)+, D0-D7
             RTS
-            
-            
-.BLOCKL     
-            MOVE.W  (A0),D4
-            SUB.W   #BLOCSIZE/2+PLYRWDTH/2, D4
-            MOVE.W  D4, (PLAYERX)
-            BRA .ENDF
-
-.BLOCKR     
-            MOVE.W  (A0),D4
-            SUB.W   #BLOCSIZE/2+PLYRWDTH/2, D4
-            MOVE.W  D4, (PLAYERX)
-            BRA .ENDF 
-
-.BLOCKT     
-            MOVE.W  2(A0),D4
-            SUB.W   #BLOCSIZE/2+PLYRHEIG/2, D4
-            MOVE.W  D4, (PLAYERY)            
-            BRA .ENDF  
-
-.BLOCKB     
-            MOVE.W  2(A0),D4
-            ADD.W   #BLOCSIZE/2+PLYRHEIG/2, D4
-            MOVE.W  D4, (PLAYERY)
-            
-            BRA .ENDF 
-
-
-.CHKPINT    
-            ADD.W   #BLOCSIZE, D1           ; RIGHT SIDE OF BLOCK
-            CMP.W   D1, D0
-            BLT     .BLOCKT
-            
-            SUB.W   #BLOCSIZE, D0           ; LEFT OF PLAYER
-            CMP.W   D1, D0
-            BLT     .BLOCKT
-            
-            BRA .ENDF     
-            
-
 ;-----------------------------------------------------------
+
 BREAKBLOC
 ; BREAK BLOCK IN FRONT OF PLAYER WHEN SPACEKEY IS PRESSED
 ; INPUT	- NONE
@@ -280,6 +265,8 @@ BREAKBLOC
             BRA     .END  
 
 ;-----------------------------------------------------------
+
+;-----------------------------------------------------------
 BLOCPLOT
 ; PLOT BLOCK
 ; INPUT	- NONE
@@ -313,6 +300,44 @@ BLOCPLOT
 	RTS
 
 
+;-----------------SUBRUTINE TO CHECK COLLISIONS----------------
+; CHECK COLLISIONS
+; INPUT	-   D0.W - PLAYER COORDINATE X
+;           D1.W - PLAYER COORDINATE Y
+;           D2.W - BLOCK COORDINATE X 
+;           D3.W - BLOCK COORDINATE Y
+;
+; OUTPUT	-   D0.W :    0 --> IF THERE IS NOT A COLLISION
+;           D0.W :    1 --> IF THERE IS A COLLISION
+;           
+; MODIFIES	- NONE	
+;-----------------------------------------------------------
+CHEKSIDE
+        ;------ CHECK INFERIOR PART X ------------------------
+        SUB.W   #BLOCSIZE/2+10, D2
+        CMP.W   D2, D0
+        BLT .END
+        ;------ CHECK SUPERIOR PART X ------------------------
+        ADD.W   #BLOCSIZE+20, D2
+        CMP.W   D2, D0
+        BGT .END
+        
+        ;------ CHECK INFERIOR PART Y ------------------------
+        SUB.W   #BLOCSIZE/2+10, D2
+        CMP.W   D2, D0
+        BLT .END
+        ;------ CHECK SUPERIOR PART Y ------------------------
+        ADD.W   #BLOCSIZE+20, D2
+        CMP.W   D2, D0
+        BGT .END
+
+             
+            
+            
+.END    MOVE.W  #0, D0
+        RTS
+
+
 
 
 
@@ -326,6 +351,6 @@ BLOCPLOT
 
 
 *~Font name~Courier New~
-*~Font size~12~
-*~Tab type~0~
+*~Font size~10~
+*~Tab type~1~
 *~Tab size~4~

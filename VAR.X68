@@ -11,6 +11,7 @@ BLOCKX	    DS.W	    1	; BLOCK X COORDINATE (XCENTER)
 BLOCKY	    DS.W	    1	; BLOCK Y COORDINATE (XCENTER)
 
 
+
 ; --- RANDOM NUMBER GENERATOR VARIABLES ---------------------------------------
 
 RNDINDEX	DS.B	    1	; RANDOM INDEX
@@ -28,7 +29,7 @@ PLAYERX     DS.W    1                       ; PAD X COORDINATE (XCENTER)
 PLAYERY     DS.W    1                       ; PAD X COORDINATE (YCENTER)
 
 PLYERORI    DS.W    1                       ; PLAYER ORIENTATION
-
+PLYRUPDW    DS.W    1  
 
 ; --- LAND RELATED VARIABLES --------------------------------------------------
 
@@ -48,6 +49,10 @@ LANDHEIG    DC.B    10  ,  10 ,  11 ,  12  ,  13  , 14  , 14  , 13
 
             
             
+
+
+
+
 
 
 
