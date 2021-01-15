@@ -35,7 +35,7 @@ BLOCUPD
             CLR D0
             CLR D1
             
-            JSR     BREAKBLOC
+            
             
 
             MOVE.W  (PLAYERX),D0  ; PLAYER X
@@ -56,9 +56,9 @@ BLOCUPD
             BLT     .CPABOVE
             
             ADD.W   #BLOCSIZE, D3       ; BOT OF BLOCK
-            SUB.W   #PLYRHEIG/2, D1       ; PLAYER Y
-            CMP.W   D3, D1              ; TOP OF PLAYER > BOT OF BLOCK? YES: JUMP
-            BGT .END
+            SUB.W   #25, D1       ; PLAYER Y
+            CMP.W   D3, D1              ; PLAYER Y > BOT OF BLOCK? YES: JUMP
+            BGT .CPUNDER
             
                         
             CMP.W   D2, D0          ; PLAYERX > BLOCKX?  YES: JUMP
@@ -103,15 +103,14 @@ BLOCUPD
             ; D0 PLAYER X
             ; D1 BOT OF PLAYER 
             ; D2 BLOCK X
-            ; D3 TOP OF BLOCK + 5
+            ; D3 TOP OF BLOCK
             ; CHECK BOTTOM'S PLAYER WITH TOP'S BLOCK
            
             SUB.W   #20, D3
             CMP.W   D3, D1
             BLE .END
             
-                
-.CHKXZNE    
+                  
             SUB.W   #BLOCSIZE/2, D2 ; LEFT BLOCK
             ADD.W   #PLYRWDTH/2, D0 ; RIGHT PLAYER
             CMP.W   D2, D0
@@ -131,7 +130,36 @@ BLOCUPD
             ; TOP OF PLAYER > BOT OF BLOCK
 
 .CPUNDER    
+
+            ; D0 PLAYER X
+            ; D1 PLAYER Y 
+            ; D2 BLOCK X
+            ; D3 TOP OF BLOCK 
+            ; CHECK BOTTOM'S PLAYER WITH TOP'S BLOCK
+            
+            MOVE.W  (PLAYERX),D0  ; PLAYER X
+            MOVE.W  (PLAYERY),D1  ; PLAYER Y
+            
+            MOVE.W   (A0),D2  ; BLOCK X
+            MOVE.W  2(A0),D3  ; BLOCK Y
+            
+            
+            
+            ADD.W   #BLOCSIZE/2, D3     ; BOT OF BLOCK 
+            ADD.W   #5, D1
+            CMP.W   D3, D1      ; PLAYER TOP > BOT OF BLOCK
+            BGT .END
+             
+            SUB.W   #BLOCSIZE/2, D2 ; LEFT BLOCK
+            ADD.W   #80, D0 ; RIGHT PLAYER
+            CMP.W   D2, D0
+            BGT .CHKXLD
             BRA .END
+.CHKXLD     ADD   #BLOCSIZE+10, D2   ; RIGHT OF BLOCK
+            CMP.W   D2, D0
+            BLT .BLKDWN
+            BRA .END
+
             
          
                         
@@ -139,26 +167,36 @@ BLOCUPD
             MOVE.W  2(A0),D5
             SUB.W   #75, D5
             MOVE.W  D5, (PLAYERY)            
-            BRA .END  
+            BRA .KILLB 
             
 .BLKDWN     
             MOVE.W  2(A0),D5
-            SUB.W   #BLOCSIZE/2+PLYRHEIG/2, D5
+            ADD.W   #20, D5
             MOVE.W  D5, (PLAYERY)            
-            BRA .END 
+            BRA .KILLB 
             
-.BLKLFT
+.BLKLFT     
+           
             MOVE.W  (A0),D5
             SUB.W   #60, D5
             MOVE.W  D5, (PLAYERX)
-            BRA .END
+            
+            
+            BRA .KILLB
             
 .BLKRHT 
             MOVE.W  (A0),D5
             ADD.W   #BLOCSIZE/2, D5
             MOVE.W  D5, (PLAYERX)
+            
+
+
+
+.KILLB      BTST.B  #KBDCHRMK,(KBDVAL)      ; M KEY PRESSED?
+            BNE     .KILLF                 ; YES: BREAK?
             BRA .END
-                 
+.KILLF      JSR     AGLKILL
+                            
                                     
 .END        
             MOVEM.L (A7)+, D0-D7
@@ -171,92 +209,79 @@ BREAKBLOC
 ; OUTPUT	- NONE
 ; MODIFIES	- NONE	
 ;-----------------------------------------------------------
-            MOVEM.L D0-D4, -(A7)	; STACK REGISTER
+            MOVEM.L D0-D5, -(A7)	; STACK REGISTER
+            
+            
+            ; PLYERORI  == 1 WHEN PLAYER LEFT
+            ; PLYERORI  == 0 WHEN PLAYER RIGHT
+            ; PLYERUPDW == 2 WHEN PLAYER UP
+            ; PLYERUPDW == 1 WHEN PLAYER DOWN
+            
+            ;PLAYER TOP
+            MOVE.W  (PLAYERY),D0
+            ADD.W   #5, D0
+            
+            ;PLAYER BOT
+            MOVE.W  (PLAYERY),D1
+            ADD.W   #50, D1
+            
+            ;PLAYER LEFT
+            MOVE.W  (PLAYERX),D2
+            SUB.W   #55, D2
+            
+            ;PLAYER RIGHT
+            MOVE.W  (PLAYERX),D3
+            ADD.W   #80, D3
+            
+            MOVE.W  (A0),D4         ; BLOCK X
+            MOVE.W  2(A0),D5        ; BLOCK Y
+
+            
+            
+            
             
             BTST.B  #KBDCHRMK,(KBDVAL)      ; M KEY PRESSED?
             BNE     .BREAK                  ; YES: BREAK?
             BRA     .END
             
             
-.BREAK      
-            CMP.W   #2, (PLYERORI)          ; ORIPLAYER LEFT OR RIGHT?
-            BLT     .RORL                   ; YES: JUMP
-                                            ; NO : THEN BOT OR TOP
-.BORT       MOVE.W  (PLAYERX),D0            
-            MOVE.W  (A0),D1
-            SUB.W   #10, D1
-            MOVE.W  #2, D2
-            MOVE.W  #3, D3
-
-            BRA     .CHKZNE
-            
-.RORL       MOVE.W  (PLAYERY),D0            
-            MOVE.W  2(A0),D1
-            SUB.W   #10, D1
-            MOVE.W  #0, D2
-            MOVE.W  #1, D3
-            
-                                            ; SIMILAR IN OPPOSITE CASE WITH Y
-.CHKZNE     CMP.W   D1, D0                  ; PLAYERX > BLOCKX-10?
-            BLT     .END                    ; NO: JUMP
-            ADD.W   #20, D1                 
-            CMP.W   D1, D0                  ; PLAYERX < BLOCKX +10 ?
-            BGT     .END                    ; NO: JUMP
-                                    
+.BREAK      CMP.W   #0, (PLYRUPDW)
+            BEQ .LFTRHT
+            CMP.W   #1, (PLYRUPDW)
+            BEQ .BRKDWN
+            ;BREAK UP
             
             
-            CMP.W   #1, (PLYERORI)          ; ORIPLAYER == 1? 
-            BEQ     .ORIONE                ; YES: JUMP TO PLAYER ORI TOP
-            
-            CMP.W   #0, (PLYERORI)          ; ORIPLAYER == 1? 
-            BEQ     .ORIZERO                ; NO: JUMP TO PLAYER ORI TOP
-            
-            CMP.W   #3, (PLYERORI)          ; ORIPLAYER == 1? 
-            BEQ     .ORITRI                ; NO: JUMP TO PLAYER ORI TOP
-            
-            CMP.W   #2, (PLYERORI)          ; ORIPLAYER == 1? 
-            BEQ     .ORITWO
-            BRA     .END
-                                                           
-.ORIONE    MOVE.W  (PLAYERX),D0
-            MOVE.W  (A0),D1
-            BRA     .ONECHK
+.LFTRHT
+            CMP.W   #1, (PLYERORI) 
+            BEQ .BRKLFT
+            ; BREAK RIGHT
             
             
-.ORITRI     MOVE.W  (PLAYERY),D0
-            MOVE.W  2(A0),D1
             
-.ONECHK    ADD.W   #BLOCSIZE+5, D1
             
-            CMP.W   D1, D0                  ; PX/PY < BX/BY-BLOCSIZE-5
-            BGT     .END                    ; NO: JUMP
-            SUB.W   #25, D1
-            CMP.W   D1, D0
-            BLT     .END
-            BRA     .KILLB
+            CMP.W   D5,D1     ; PLAYER BOT < BLOCK Y?
+            BGT .END
+            ADD.W #BLOCSIZE/2, D5   ; BOT OF BLOCK
+            CMP.W   D5, D1      ; PLAYER BOT > BOT OF BLOCK?
+            BGT .END            ; YES: JUMP
+            ;CHECK XPLAYER CLOSE TO XBLOCK
+            SUB.W   #BLOCSIZE-10,D4   ; BLOCKX - BLOCSIZE
+            CMP.W   D4, D3          ; PLAYER RIGHT > BLOCK LEFT + 10
+            BLT .END
+            ADD.W   #10, D4     ; LEFT SIDE OF BLOCK
+            CMP.W   D4, D3
+            BGT .END
+            BRA .KILLB
+            
+            
             
 
-.ORIZERO     MOVE.W  (PLAYERX),D0
-            MOVE.W  (A0),D1
-            BRA     .ZEROCHK
-            
-            
-.ORITWO     MOVE.W  (PLAYERY),D0
-            MOVE.W  2(A0),D1            
-            
-
-.ZEROCHK     SUB.W   #BLOCSIZE+5, D1
-            
-            CMP.W   D1, D0                  ; PX/PY > BX/BY-BLOCSIZE-5
-            BLT     .END                    ; NO: JUMP
-            ADD.W   #25, D1
-            CMP.W   D1, D0
-            BGT     .END
-            BRA     .KILLB
-            
-                                                
+.BRKLFT            
+                        
+.BRKDWN                                                
                                          
-.END        MOVEM.L (A7)+, D0-D4 	; RESTORE REGISTERS
+.END        MOVEM.L (A7)+, D0-D5 	; RESTORE REGISTERS
             RTS
 
 
@@ -336,6 +361,7 @@ CHEKSIDE
             
 .END    MOVE.W  #0, D0
         RTS
+
 
 
 

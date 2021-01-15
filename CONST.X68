@@ -38,7 +38,7 @@ PLYRWDTH    EQU	46                  ; PLAYER WIDTH
 PLYRHEIG    EQU	54                  ; PLAYER HEIGHT
 PLYRCOL     EQU	 $000000FF          ; PLAYER COLOR
 ORIPCOL     EQU	 $00FFEC00          ; ORIENTATION PLAYER COLOR 
-PLYSPEED    EQU     8                 ; PLAYER SPEED
+PLYSPEED    EQU     10                 ; PLAYER SPEED
 
 
 
@@ -72,6 +72,8 @@ AGNMOTOF    EQU     12                      ; DESIRED MOTION
 AGNTYPOF    EQU     13                      ; TYPE
 AGNFRMOF    EQU     14                      ; FRAMES FOR LEFT AND RIGHT
 AGNSPXOF    EQU     18                      ; X SPEED
+
+
 
 
 

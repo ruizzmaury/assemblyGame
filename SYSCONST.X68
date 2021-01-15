@@ -70,7 +70,7 @@ KBDBITPS    EQU     7
 
 ; --- SCREEN RELATED CONSTANTS ------------------------------------------------
 
-SCRWIDTH    EQU     1280                    ; SCREEN WIDTH (PIXELS)
+SCRWIDTH    EQU     1280                   ; SCREEN WIDTH (PIXELS)
 SCRHEIGH    EQU     720                     ; SCREEN HEIGHT (PIXELS)
 SCRIRQ      EQU     1                       ; SCREEN INTERRUPT NUMBER
 SCRTIM      EQU     20                      ; SCREEN TIMER (MS)
@@ -80,6 +80,7 @@ SCRTIM      EQU     20                      ; SCREEN TIMER (MS)
 DMMBSIZE    EQU     64                      ; BLOCK SIZE (BYTES). POWER OF TWO
 DMMBNUM     EQU     520                      ; NUMBER OF BLOCKS
 DMMSYSID    EQU     0                       ; SYSTEM OWNER ID (MUST BE 0)
+
 
 
 
