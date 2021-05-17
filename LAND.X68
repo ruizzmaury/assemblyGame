@@ -20,9 +20,6 @@ LANDCRTE
            
             JSR     SETDMNDS
             
-            JSR     SETCLK
-            
-            JSR     SETMGNFR
             
             ;--------- INITIALIZING LAND -----------
 
@@ -66,17 +63,18 @@ SETDMNDS
             MOVEM.L D0-D4, -(A7)	; STACK REGISTER
             MOVEM.L A0-A5, -(A7)
             
+            MOVE.B  #7, D4
             LEA     DMNDINIT, A1
             LEA     DMNDUPD,  A2
-            LEA     DMNDPLOT, A3
+            LEA     DMNDPLT, A3
             MOVE.W  #DMNDID, D0
             LEA  DMNDPOSX, A4
             LEA  DMNDPOSY, A5
             
 .PRINTD                             
             MOVE.W  (A4),D1
-            CMP.W     #0, D1
-            BEQ     .END
+            ;CMP.W     #0, D1
+            ;BEQ     .END
             MOVE.W  (A5),D2
                         
             JSR     AGLADD
@@ -84,7 +82,7 @@ SETDMNDS
             ADDA.L  #2,A4
             ADDA.L  #2,A5
             
-            BRA     .PRINTD             
+            DBRA    D4, .PRINTD             
 
 .END
             MOVEM.L (A7)+, A0-A5
@@ -92,15 +90,10 @@ SETDMNDS
             RTS    
            
 ;-----------------------------------------------------------               
-                       
-SETCLK
-            RTS
 
-;-----------------------------------------------------------   
-
-SETMGNFR    
-            RTS
             
+
+
 
 
 

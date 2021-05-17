@@ -1,8 +1,8 @@
 *-----------------------------------------------------------
-* Title      :
-* Written by :
-* Date       :
-* Description:
+* Title      : BLOCK MANAGEMENT
+* Written by : MAURICI RUIZ PLAZA
+* Date       : 28/12/2020
+* Description: ALL ABOUT THE TIME BLOCK BEHAVIOR AND CONTROL
 *-----------------------------------------------------------
 ;-----------------------------------------------------------
 BLOCINIT
@@ -48,25 +48,25 @@ BLOCUPD
             
 ;---------- CHECK IF PLAYER IN LEFT SIDE OF BLOCK------------
 
-            ADD.W   #PLYRHEIG/2+10, D1     ; BOT OF PLAYER                 
-            SUB.W   #BLOCSIZE/2, D3      ; TOP OF BLOCK
+            ADD.W   #50, D1     ; BOT OF PLAYER                 
+            SUB.W   #BLOCSIZE/2-15, D3      ; TOP OF BLOCK - 10
                
                        
             CMP.W   D3, D1
             BLT     .CPABOVE
             
-            ADD.W   #BLOCSIZE, D3       ; BOT OF BLOCK
-            SUB.W   #25, D1       ; PLAYER Y
-            CMP.W   D3, D1              ; PLAYER Y > BOT OF BLOCK? YES: JUMP
+            ADD.W   #BLOCSIZE-15, D3       ; BOT OF BLOCK
+            ADD.W   #5, D1          ; TOP OF PLAYER 
+            CMP.W   D3, D1              ; TOP PLAYER Y > BOT OF BLOCK-10? YES: JUMP
             BGT .CPUNDER
             
-                        
-            CMP.W   D2, D0          ; PLAYERX > BLOCKX?  YES: JUMP
+            ADD.W   #22, D0     ; CENTER OF PLAYER            
+            CMP.W   D2, D0          ; CENTER PLAYER > BLOCKX? YES: JUMP
             BGT .CPINRHT
                                
  
-            ADD.W   #PLYRWDTH/2, D0       ; RIGHT OF PLAYER            
-            SUB.W   #BLOCSIZE, D2       ; LEFT OF BLOCK
+            ADD.W   #18, D0       ; RIGHT OF PLAYER            
+            SUB.W   #BLOCSIZE/2, D2       ; LEFT OF BLOCK
             CMP.W   D2, D0
             BGT .BLKLFT
             BRA .END
@@ -79,18 +79,12 @@ BLOCUPD
             ; D1 PLAYER Y 
             ; D2 BLOCK X
             ; D3 TOP OF BLOCK
-            
+            SUB.W   #25, D0     ; LEFT OF PLAYER
             ADD.W   #BLOCSIZE/2, D2     ; RIGHT OF BLOCK
-            CMP.W   D2, D0              ; PLAYERX  > RIGHT OF BLOCK? YES: JUMP
+            CMP.W   D2, D0              ; LEFT PLAYERX  > RIGHT OF BLOCK? YES: JUMP
             BGT     .END
             BRA .BLKRHT
-            
-            SUB.W   #PLYRWDTH, D0       ; LEFT OF PLAYER
-            SUB.W   #PLYRWDTH, D2       ; RIGHT OF BLOCK
-            CMP.W   D2, D0
-            BLT .BLKRHT
             BRA .END
-
             
             
             ;---------- CHECK IF PLAYER ABOVE THE BLOCK------------
@@ -103,20 +97,19 @@ BLOCUPD
             ; D0 PLAYER X
             ; D1 BOT OF PLAYER 
             ; D2 BLOCK X
-            ; D3 TOP OF BLOCK
-            ; CHECK BOTTOM'S PLAYER WITH TOP'S BLOCK
-           
-            SUB.W   #20, D3
-            CMP.W   D3, D1
-            BLE .END
+            ; D3 TOP OF BLOCK - 10
             
+            ; CHECK BOTTOM'S PLAYER WITH TOP'S BLOCK           
+            SUB.W   #15, D3     ; TOP OF BLOCK
+            CMP.W   D3, D1
+            BLT .END            
                   
-            SUB.W   #BLOCSIZE/2, D2 ; LEFT BLOCK
-            ADD.W   #PLYRWDTH/2, D0 ; RIGHT PLAYER
+            SUB.W   #BLOCSIZE/2-5, D2 ; LEFT BLOCK
+            ADD.W   #45, D0 ; RIGHT PLAYER
             CMP.W   D2, D0
             BGT .CHKXL
             BRA .END
-.CHKXL      ADD.W   #BLOCSIZE, D2   ; RIGHT OF BLOCK
+.CHKXL      ADD.W   #BLOCSIZE+10, D2   ; RIGHT OF BLOCK
             CMP.W   D2, D0
             BLT .BLKABVE        
            
@@ -132,36 +125,25 @@ BLOCUPD
 .CPUNDER    
 
             ; D0 PLAYER X
-            ; D1 PLAYER Y 
+            ; D1 TOP OF PLAYER
             ; D2 BLOCK X
-            ; D3 TOP OF BLOCK 
-            ; CHECK BOTTOM'S PLAYER WITH TOP'S BLOCK
+            ; D3 BOT OF BLOCK - 10 
             
-            MOVE.W  (PLAYERX),D0  ; PLAYER X
-            MOVE.W  (PLAYERY),D1  ; PLAYER Y
+            ; CHECK TOP OF PLAYER WITH BOT OF BLOCK
             
-            MOVE.W   (A0),D2  ; BLOCK X
-            MOVE.W  2(A0),D3  ; BLOCK Y
-            
-            
-            
-            ADD.W   #BLOCSIZE/2, D3     ; BOT OF BLOCK 
-            ADD.W   #5, D1
-            CMP.W   D3, D1      ; PLAYER TOP > BOT OF BLOCK
-            BGT .END
-             
-            SUB.W   #BLOCSIZE/2, D2 ; LEFT BLOCK
-            ADD.W   #80, D0 ; RIGHT PLAYER
+            ADD.W   #26, D1     ; PLAYER Y CENTER
+            ADD.W   #65, D3     ; BOT OF BLOCK
+            CMP.W   D3, D1      ;  PLAYER Y CENTER < BOT OF BLOCK? YES: CHECK X
+            BGT .END              
+                 
+            SUB.W   #BLOCSIZE/2-5, D2 ; LEFT BLOCK
+            ADD.W   #45, D0 ; RIGHT PLAYER
             CMP.W   D2, D0
-            BGT .CHKXLD
-            BRA .END
-.CHKXLD     ADD   #BLOCSIZE+10, D2   ; RIGHT OF BLOCK
+            BLT .END
+            ADD.W   #BLOCSIZE+10, D2   ; RIGHT OF BLOCK
             CMP.W   D2, D0
             BLT .BLKDWN
-            BRA .END
-
-            
-         
+            BRA  .END       
                         
 .BLKABVE      
             MOVE.W  2(A0),D5
@@ -171,17 +153,15 @@ BLOCUPD
             
 .BLKDWN     
             MOVE.W  2(A0),D5
-            ADD.W   #20, D5
+            ADD.W   #5, D5
             MOVE.W  D5, (PLAYERY)            
-            BRA .KILLB 
+            BRA .KILLB
             
 .BLKLFT     
            
             MOVE.W  (A0),D5
-            SUB.W   #60, D5
-            MOVE.W  D5, (PLAYERX)
-            
-            
+            SUB.W   #65, D5
+            MOVE.W  D5, (PLAYERX)                      
             BRA .KILLB
             
 .BLKRHT 
@@ -201,94 +181,6 @@ BLOCUPD
 .END        
             MOVEM.L (A7)+, D0-D7
             RTS
-;-----------------------------------------------------------
-
-BREAKBLOC
-; BREAK BLOCK IN FRONT OF PLAYER WHEN SPACEKEY IS PRESSED
-; INPUT	- NONE
-; OUTPUT	- NONE
-; MODIFIES	- NONE	
-;-----------------------------------------------------------
-            MOVEM.L D0-D5, -(A7)	; STACK REGISTER
-            
-            
-            ; PLYERORI  == 1 WHEN PLAYER LEFT
-            ; PLYERORI  == 0 WHEN PLAYER RIGHT
-            ; PLYERUPDW == 2 WHEN PLAYER UP
-            ; PLYERUPDW == 1 WHEN PLAYER DOWN
-            
-            ;PLAYER TOP
-            MOVE.W  (PLAYERY),D0
-            ADD.W   #5, D0
-            
-            ;PLAYER BOT
-            MOVE.W  (PLAYERY),D1
-            ADD.W   #50, D1
-            
-            ;PLAYER LEFT
-            MOVE.W  (PLAYERX),D2
-            SUB.W   #55, D2
-            
-            ;PLAYER RIGHT
-            MOVE.W  (PLAYERX),D3
-            ADD.W   #80, D3
-            
-            MOVE.W  (A0),D4         ; BLOCK X
-            MOVE.W  2(A0),D5        ; BLOCK Y
-
-            
-            
-            
-            
-            BTST.B  #KBDCHRMK,(KBDVAL)      ; M KEY PRESSED?
-            BNE     .BREAK                  ; YES: BREAK?
-            BRA     .END
-            
-            
-.BREAK      CMP.W   #0, (PLYRUPDW)
-            BEQ .LFTRHT
-            CMP.W   #1, (PLYRUPDW)
-            BEQ .BRKDWN
-            ;BREAK UP
-            
-            
-.LFTRHT
-            CMP.W   #1, (PLYERORI) 
-            BEQ .BRKLFT
-            ; BREAK RIGHT
-            
-            
-            
-            
-            CMP.W   D5,D1     ; PLAYER BOT < BLOCK Y?
-            BGT .END
-            ADD.W #BLOCSIZE/2, D5   ; BOT OF BLOCK
-            CMP.W   D5, D1      ; PLAYER BOT > BOT OF BLOCK?
-            BGT .END            ; YES: JUMP
-            ;CHECK XPLAYER CLOSE TO XBLOCK
-            SUB.W   #BLOCSIZE-10,D4   ; BLOCKX - BLOCSIZE
-            CMP.W   D4, D3          ; PLAYER RIGHT > BLOCK LEFT + 10
-            BLT .END
-            ADD.W   #10, D4     ; LEFT SIDE OF BLOCK
-            CMP.W   D4, D3
-            BGT .END
-            BRA .KILLB
-            
-            
-            
-
-.BRKLFT            
-                        
-.BRKDWN                                                
-                                         
-.END        MOVEM.L (A7)+, D0-D5 	; RESTORE REGISTERS
-            RTS
-
-
-.KILLB        
-            JSR     AGLKILL
-            BRA     .END  
-
 ;-----------------------------------------------------------
 
 ;-----------------------------------------------------------
@@ -361,6 +253,11 @@ CHEKSIDE
             
 .END    MOVE.W  #0, D0
         RTS
+
+
+
+
+
 
 
 

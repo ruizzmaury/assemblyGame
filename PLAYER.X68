@@ -133,107 +133,8 @@ PLYRUPD
 
 
 
-;-----------------------------------------------------------
-;------------------------------------------------------------------------------------------------------
+;---------------------------------------------------------------
 
-
-PLYRPLOT
-; PLOT PLAYER
-; INPUT	- NONE
-; OUTPUT	- NONE
-; MODIFIES	- NONE	
-;-----------------------------------------------------------
-	        MOVEM.L D0-D4, -(A7)	; STACK REGISTER
-	        MOVE.B	#80, D0	; SET PEN COLOR TASK
-	        MOVE.L	#PLYRCOL, D1	; PLAYER COLOR
-	        TRAP #15	; SET PEN COLOR
-	        MOVE.B	#81, D0	; SET FILL COLOR TASK
-	        MOVE.L	#PLYRCOL,D1	; BLOCK COLOR
-	        TRAP #15	; SET FILL COLOR
-	
-	        MOVE.W	(PLAYERX),D1	; D1:=XCENTER
-	        MOVE.W	(PLAYERY),D2	; D2:=YCENTER
-	        MOVE.W	D1, D3	; D3:=XCENTER
-	        MOVE.W	D2, D4	; D4:=YCENTER
-	
-	        SUB.W	#BLOCSIZE/2, D1	; D1:=XLEFT
-	        SUB.W	#BLOCSIZE/2, D2	; D2:=YTOP
-	        ADD.W	#BLOCSIZE/2, D3	; D3:=XRIGHT
-	        ADD.W	#BLOCSIZE/2, D4	; D4:=YBOTTOM
-	        MOVE.B	#87, D0
-	        TRAP	#15	; DRAW PLAYER
-	        
-	        
-	        ; DRAW ORIENTATION OF PLAYER
-	        
-	        MOVE.B	#80, D0	; SET PEN COLOR TASK
-	        MOVE.L	#PLYRCOL, D1	; PLAYER COLOR
-	        TRAP #15	; SET PEN COLOR
-	        MOVE.B	#81, D0	; SET FILL COLOR TASK
-	        MOVE.L	#ORIPCOL, D1	; BLOCK COLOR
-	        TRAP #15	; SET FILL COLOR
-	        
-	        MOVE.W	(PLAYERX),D1	; D1:=XCENTER
-	        MOVE.W	(PLAYERY),D2	; D2:=YCENTER
-	        MOVE.W	D1, D3	; D3:=XCENTER
-	        MOVE.W	D2, D4	; D4:=YCENTER
-	        
-	        CMP.W   #3, (PLYERORI)
-	        BEQ .ORIT
-	        CMP.W   #2, (PLYERORI)
-	        BEQ .ORIB
-            CMP.W   #1, (PLYERORI)
-	        BEQ .ORIL           	        
-
-	        
-	        ; ORIENTATION RIGHT
-	        
-.ORIR       
-	        ADD.W	#BLOCSIZE/2-10, D1	; D1:=XLEFT
-	        SUB.W	#5, D2	; D2:=YTOP
-	        ADD.W	#BLOCSIZE/2, D3	; D3:=XRIGHT
-	        ADD.W	#5, D4	; D4:=YBOTTOM
-	        BRA .PAINT
-	        
-	        ; ORIENTATION BOTTOM
-	        
-.ORIB       
-	        SUB.W	#5, D1	; D1:=XLEFT
-	        ADD.W	#BLOCSIZE/2-10, D2	; D2:=YTOP
-	        ADD.W	#5, D3	; D3:=XRIGHT
-	        ADD.W	#BLOCSIZE/2, D4	; D4:=YBOTTOM
-	        BRA .PAINT
-	        
-	        ; ORIENTATION LEFT
-	        
-.ORIL       
-	        SUB.W	#BLOCSIZE/2, D1	; D1:=XLEFT
-	        SUB.W	#5, D2	; D2:=YTOP
-	        SUB.W	#BLOCSIZE/2-10, D3	; D3:=XRIGHT
-	        ADD.W	#5, D4	; D4:=YBOTTOM
-	        BRA .PAINT
-   
-	        
-	        ; ORIENTATION TOP
-	        
-.ORIT       	
-	        SUB.W	#5, D1	; D1:=XLEFT
-	        SUB.W	#BLOCSIZE/2, D2	; D2:=YTOP
-	        ADD.W	#5, D3	; D3:=XRIGHT
-	        SUB.W	#BLOCSIZE/2-10, D4	; D4:=YBOTTOM
-	        
-	        
-	        
-	        
-.PAINT      MOVE.B	#87, D0
-	        TRAP	#15	; DRAW PLAYER
-	        
-	        
-	        
-	        
-	        MOVEM.L (A7)+, D0-D4 	; RESTORE REGISTERS
-	        
-	        RTS
 
 
 ;-------------- PLAYER DRAW PROVE------------------------------
@@ -270,7 +171,7 @@ DRWPLYER
             MOVE.B  (A2),D1  
             ADD.W  (PLAYERX),D1 ; X PIXEL
             MOVE.B  (A3),D2  
-            ADD.W  (PLAYERY),D2 ; X PIXEL
+            ADD.W  (PLAYERY),D2 ; Y PIXEL
             MOVE.B  #82, D0 ; SET DRAW PIXEL TASK
             TRAP    #15
             
@@ -326,6 +227,9 @@ DRWPLYER
 	        RTS
 
 ;----------------------------------------------------
+
+
+
 
 
 

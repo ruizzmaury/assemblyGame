@@ -1,12 +1,10 @@
-; =============================================================================
-; TITLE    : PSEUDO-RANDOM NUMBER GENERATOR
-; AUTHOR   : ANTONI BURGUERA
-; COMMENTS : VERY LAZY AND STUPID "ALGORITHM" IMPLEMENTED.
-; HISTORY  : XX-XXX-201X - CREATION
-;            11-OCT-2020 - MINOR CHANGES
-; =============================================================================
-
-; -----------------------------------------------------------------------------
+*-----------------------------------------------------------
+* Title      : RANDOM 
+* Written by : MAURICI RUIZ PLAZA
+* Date       : 25/12/2020
+* Description: RANDOM GETS
+*-----------------------------------------------------------
+       
 RNDINIT
 ; INITIALIZES RANDOM NUMBER GENERATOR
 ; INPUT    - NONE
@@ -83,6 +81,7 @@ RNDGET
             DC.B    236, 127, 126, 3  , 207, 45 , 193, 2
             DC.B    148, 91 , 35 , 242, 139, 205, 248, 237
             DC.B    116, 51 , 236, 185, 15 , 213, 221, 6
+
 
 
 

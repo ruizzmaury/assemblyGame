@@ -1,6 +1,6 @@
-000089E8 Starting Address
+0007C834 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 14/01/2021 20:43:06
+Created On: 17/01/2021 20:54:10
 
 00000000                             1  *-----------------------------------------------------------
 00000000                             2  * Title      : PLAYER MANAGEMENT
@@ -177,274 +177,145 @@ Line 131 ERROR: Symbol value differs between first and second pass
 000000E0                           133  
 000000E0                           134  
 000000E0                           135  
-000000E0                           136  ;-----------------------------------------------------------
-000000E0                           137  ;------------------------------------------------------------------------------------------------------
+000000E0                           136  ;---------------------------------------------------------------
+000000E0                           137  
 000000E0                           138  
 000000E0                           139  
-Line 140 ERROR: Symbol value differs between first and second pass
-000000E0                           140  PLYRPLOT
-000000E0                           141  ; PLOT PLAYER
-000000E0                           142  ; INPUT - NONE
-000000E0                           143  ; OUTPUT    - NONE
-000000E0                           144  ; MODIFIES  - NONE  
-000000E0                           145  ;-----------------------------------------------------------
-000000E0  48E7 F800                146              MOVEM.L D0-D4, -(A7)    ; STACK REGISTER
-000000E4  103C 0050                147              MOVE.B  #80, D0 ; SET PEN COLOR TASK
-Line 148 ERROR: Undefined symbol
-000000E8  223C 004DBD16            148              MOVE.L  #PLYRCOL, D1    ; PLAYER COLOR
-000000EE  4E4F                     149              TRAP #15    ; SET PEN COLOR
-000000F0  103C 0051                150              MOVE.B  #81, D0 ; SET FILL COLOR TASK
+000000E0                           140  ;-------------- PLAYER DRAW PROVE------------------------------
+000000E0                           141  
+Line 142 ERROR: Symbol value differs between first and second pass
+000000E0                           142  DRWPLYER            
+000000E0  48E7 F800                143              MOVEM.L D0-D4, -(A7)    ; STACK REGISTER
+000000E4  48E7 0070                144              MOVEM.L A1-A3, -(A7)    
+000000E8                           145              
+Line 146 ERROR: Undefined symbol
+000000E8  0C79 0000 005455B8       146              CMP.W   #0, (PLYERORI)
+000000F0  6700 00C0                147              BEQ .ORIL
+000000F4                           148              
+000000F4                           149              
+Line 150 ERROR: Undefined symbol
+000000F4  43F9 004DBD16            150              LEA PLYRC,      A1   ; EA OF PLAYER BGR
 Line 151 ERROR: Undefined symbol
-000000F4  223C 004DBD16            151              MOVE.L  #PLYRCOL,D1 ; BLOCK COLOR
-000000FA  4E4F                     152              TRAP #15    ; SET FILL COLOR
-000000FC                           153      
-Line 154 ERROR: Undefined symbol
-000000FC  3239 004DBD16            154              MOVE.W  (PLAYERX),D1    ; D1:=XCENTER
-Line 155 ERROR: Undefined symbol
-00000102  3439 004DBD16            155              MOVE.W  (PLAYERY),D2    ; D2:=YCENTER
-00000108  3601                     156              MOVE.W  D1, D3  ; D3:=XCENTER
-0000010A  3802                     157              MOVE.W  D2, D4  ; D4:=YCENTER
-0000010C                           158      
-Line 159 ERROR: Comma expected
-0000010C                           159              SUB.W   #BLOCSIZE/2, D1 ; D1:=XLEFT
-Line 160 ERROR: Comma expected
-0000010C                           160              SUB.W   #BLOCSIZE/2, D2 ; D2:=YTOP
-Line 161 ERROR: Comma expected
-0000010C                           161              ADD.W   #BLOCSIZE/2, D3 ; D3:=XRIGHT
-Line 162 ERROR: Comma expected
-0000010C                           162              ADD.W   #BLOCSIZE/2, D4 ; D4:=YBOTTOM
-0000010C  103C 0057                163              MOVE.B  #87, D0
-00000110  4E4F                     164              TRAP    #15 ; DRAW PLAYER
-00000112                           165              
-00000112                           166              
-00000112                           167              ; DRAW ORIENTATION OF PLAYER
-00000112                           168              
-00000112  103C 0050                169              MOVE.B  #80, D0 ; SET PEN COLOR TASK
-Line 170 ERROR: Undefined symbol
-00000116  223C 004DBD16            170              MOVE.L  #PLYRCOL, D1    ; PLAYER COLOR
-0000011C  4E4F                     171              TRAP #15    ; SET PEN COLOR
-0000011E  103C 0051                172              MOVE.B  #81, D0 ; SET FILL COLOR TASK
-Line 173 ERROR: Undefined symbol
-00000122  223C 004DBD16            173              MOVE.L  #ORIPCOL, D1    ; BLOCK COLOR
-00000128  4E4F                     174              TRAP #15    ; SET FILL COLOR
-0000012A                           175              
-Line 176 ERROR: Undefined symbol
-0000012A  3239 004DBD16            176              MOVE.W  (PLAYERX),D1    ; D1:=XCENTER
-Line 177 ERROR: Undefined symbol
-00000130  3439 004DBD16            177              MOVE.W  (PLAYERY),D2    ; D2:=YCENTER
-00000136  3601                     178              MOVE.W  D1, D3  ; D3:=XCENTER
-00000138  3802                     179              MOVE.W  D2, D4  ; D4:=YCENTER
-0000013A                           180              
-Line 181 ERROR: Undefined symbol
-0000013A  0C79 0003 005455B8       181              CMP.W   #3, (PLYERORI)
-00000142  6700 0102                182              BEQ .ORIT
-Line 183 ERROR: Undefined symbol
-00000146  0C79 0002 005455B8       183              CMP.W   #2, (PLYERORI)
-0000014E  6700 00D6                184              BEQ .ORIB
-Line 185 ERROR: Undefined symbol
-00000152  0C79 0001 005455B8       185              CMP.W   #1, (PLYERORI)
-0000015A  6700 00DA                186              BEQ .ORIL                       
-0000015E                           187  
-0000015E                           188              
-0000015E                           189              ; ORIENTATION RIGHT
-0000015E                           190              
-Line 191 ERROR: Symbol value differs between first and second pass
-0000015E                           191  .ORIR       
-Line 192 ERROR: Comma expected
-0000015E                           192              ADD.W   #BLOCSIZE/2-10, D1  ; D1:=XLEFT
-0000015E  5B42                     193              SUB.W   #5, D2  ; D2:=YTOP
-Line 194 ERROR: Comma expected
-00000160                           194              ADD.W   #BLOCSIZE/2, D3 ; D3:=XRIGHT
-00000160  5A44                     195              ADD.W   #5, D4  ; D4:=YBOTTOM
-00000162  6000 00EE                196              BRA .PAINT
-00000166                           197              
-00000166                           198              ; ORIENTATION BOTTOM
-00000166                           199              
-Line 200 ERROR: Symbol value differs between first and second pass
-00000166                           200  .ORIB       
-00000166  5B41                     201              SUB.W   #5, D1  ; D1:=XLEFT
-Line 202 ERROR: Comma expected
-00000168                           202              ADD.W   #BLOCSIZE/2-10, D2  ; D2:=YTOP
-00000168  5A43                     203              ADD.W   #5, D3  ; D3:=XRIGHT
-Line 204 ERROR: Comma expected
-0000016A                           204              ADD.W   #BLOCSIZE/2, D4 ; D4:=YBOTTOM
-0000016A  6000 00E6                205              BRA .PAINT
-0000016E                           206              
-0000016E                           207              ; ORIENTATION LEFT
-0000016E                           208              
-Line 209 ERROR: Symbol value differs between first and second pass
-0000016E                           209  .ORIL       
-Line 210 ERROR: Comma expected
-0000016E                           210              SUB.W   #BLOCSIZE/2, D1 ; D1:=XLEFT
-0000016E  5B42                     211              SUB.W   #5, D2  ; D2:=YTOP
-Line 212 ERROR: Comma expected
-00000170                           212              SUB.W   #BLOCSIZE/2-10, D3  ; D3:=XRIGHT
-00000170  5A44                     213              ADD.W   #5, D4  ; D4:=YBOTTOM
-00000172  6000 00DE                214              BRA .PAINT
-00000176                           215     
-00000176                           216              
-00000176                           217              ; ORIENTATION TOP
-00000176                           218              
-Line 219 ERROR: Symbol value differs between first and second pass
-00000176                           219  .ORIT           
-00000176  5B41                     220              SUB.W   #5, D1  ; D1:=XLEFT
-Line 221 ERROR: Comma expected
-00000178                           221              SUB.W   #BLOCSIZE/2, D2 ; D2:=YTOP
-00000178  5A43                     222              ADD.W   #5, D3  ; D3:=XRIGHT
-Line 223 ERROR: Comma expected
-0000017A                           223              SUB.W   #BLOCSIZE/2-10, D4  ; D4:=YBOTTOM
-0000017A                           224              
-0000017A                           225              
-0000017A                           226              
-0000017A                           227              
-Line 228 ERROR: Symbol value differs between first and second pass
-0000017A                           228  .PAINT      MOVE.B  #87, D0
-0000017A  4E4F                     229              TRAP    #15 ; DRAW PLAYER
-0000017C                           230              
-0000017C                           231              
-0000017C                           232              
-0000017C                           233              
-0000017C  4CDF 001F                234              MOVEM.L (A7)+, D0-D4    ; RESTORE REGISTERS
-00000180                           235              
-00000180  4E75                     236              RTS
-00000182                           237  
-00000182                           238  
-00000182                           239  ;-------------- PLAYER DRAW PROVE------------------------------
-00000182                           240  
-Line 241 ERROR: Symbol value differs between first and second pass
-00000182                           241  DRWPLYER            
-00000182  48E7 F800                242              MOVEM.L D0-D4, -(A7)    ; STACK REGISTER
-00000186  48E7 0070                243              MOVEM.L A1-A3, -(A7)    
-0000018A                           244              
-Line 245 ERROR: Undefined symbol
-0000018A  0C79 0000 005455B8       245              CMP.W   #0, (PLYERORI)
-00000192  6700 00F4                246              BEQ .ORIL
-00000196                           247              
-00000196                           248              
-Line 249 ERROR: Undefined symbol
-00000196  43F9 004DBD16            249              LEA PLYRC,      A1   ; EA OF PLAYER BGR
-Line 250 ERROR: Undefined symbol
-0000019C  45F9 004DBD16            250              LEA PLYRPOSX,   A2  ; X DRAW PLAYER
-Line 251 ERROR: Undefined symbol
-000001A2  47F9 004DBD16            251              LEA PLYRPOSY,   A3  ; Y DRAW PLAYER
-000001A8  6000 00F0                252              BRA .NXTCOL
-000001AC                           253              
-Line 254 ERROR: Symbol value differs between first and second pass
-000001AC                           254  .ORIL                   
-Line 255 ERROR: Undefined symbol
-000001AC  43F9 004DBD16            255              LEA PLYRLFT,    A1   ; EA OF PLAYER BGR
-Line 256 ERROR: Undefined symbol
-000001B2  45F9 004DBD16            256              LEA PLYRXLFT,   A2  ; X DRAW PLAYER
-Line 257 ERROR: Undefined symbol
-000001B8  47F9 004DBD16            257              LEA PLYRYLFT,   A3  ; Y DRAW PLAYER           
-000001BE                           258  
-000001BE                           259              
-000001BE                           260              
-Line 261 ERROR: Symbol value differs between first and second pass
-000001BE                           261  .NXTCOL     MOVE.B  #80, D0 ; SET PEN COLOR TASK
-000001BE  2211                     262              MOVE.L  (A1),D1
-000001C0  4E4F                     263              TRAP #15    ; SET PEN COLOR
-000001C2  B2BC 01234567            264              CMP.L   #$01234567, D1
-000001C8  6700 0106                265              BEQ .DRWORI
-000001CC                           266              
-000001CC  4280                     267              CLR.L D0
-000001CE  4281                     268              CLR.L D1
-000001D0  4282                     269              CLR.L D2
-000001D2  1212                     270              MOVE.B  (A2),D1  
-Line 271 ERROR: Undefined symbol
-000001D4  D279 004DBD16            271              ADD.W  (PLAYERX),D1 ; X PIXEL
-000001DA  1413                     272              MOVE.B  (A3),D2  
-Line 273 ERROR: Undefined symbol
-000001DC  D479 004DBD16            273              ADD.W  (PLAYERY),D2 ; X PIXEL
-000001E2  103C 0052                274              MOVE.B  #82, D0 ; SET DRAW PIXEL TASK
-000001E6  4E4F                     275              TRAP    #15
-000001E8                           276              
-000001E8  5889                     277              ADDA.L  #4,A1
-000001EA  528A                     278              ADDA.L  #1,A2
-000001EC  528B                     279              ADDA.L  #1,A3
-000001EE                           280              
-000001EE  6000 00AA                281              BRA .NXTCOL
-000001F2                           282              
-Line 283 ERROR: Symbol value differs between first and second pass
-000001F2                           283  .DRWORI            
-000001F2                           284              ; DRAW ORIENTATION OF PLAYER
-000001F2                           285              
-000001F2  103C 0050                286              MOVE.B  #80, D0 ; SET PEN COLOR TASK
-Line 287 ERROR: Undefined symbol
-000001F6  223C 004DBD16            287              MOVE.L  #PLYRCOL, D1    ; PLAYER COLOR
-000001FC  4E4F                     288              TRAP #15    ; SET PEN COLOR
-000001FE  103C 0051                289              MOVE.B  #81, D0 ; SET FILL COLOR TASK
-Line 290 ERROR: Undefined symbol
-00000202  223C 004DBD16            290              MOVE.L  #ORIPCOL, D1    ; BLOCK COLOR
-00000208  4E4F                     291              TRAP #15    ; SET FILL COLOR
-0000020A                           292              
-Line 293 ERROR: Undefined symbol
-0000020A  3239 004DBD16            293              MOVE.W  (PLAYERX),D1    ; D1:=XCENTER
-Line 294 ERROR: Undefined symbol
-00000210  3439 004DBD16            294              MOVE.W  (PLAYERY),D2    ; D2:=YCENTER
-00000216  3601                     295              MOVE.W  D1, D3  ; D3:=XCENTER
-00000218  3802                     296              MOVE.W  D2, D4  ; D4:=YCENTER
-0000021A                           297              
-Line 298 ERROR: Undefined symbol
-0000021A  0C79 0000 005455B8       298              CMP.W   #0, (PLYRUPDW)
-00000222  6700 0114                299              BEQ .END
-Line 300 ERROR: Undefined symbol
-00000226  0C79 0001 005455B8       300              CMP.W   #1, (PLYRUPDW)
-0000022E  6700 00F2                301              BEQ .LOOKD                      
-00000232                           302              
-00000232  0641 000F                303              ADD.W   #15, D1 ; D1:=XLEFT
-00000236  0442 000A                304              SUB.W   #10, D2 ; D2:=YTOP
-0000023A  0643 0019                305              ADD.W   #25, D3 ; D3:=XRIGHT
-0000023E  5B44                     306              SUB.W   #5, D4  ; D4:=YBOTTOM
-00000240  6000 00F0                307              BRA .PAINT
-00000244                           308              
-00000244                           309              
-Line 310 ERROR: Symbol value differs between first and second pass
-00000244                           310  .LOOKD                      ; LOOKINDOWN PLAYER
-00000244                           311  
-00000244  0441 0023                312              SUB.W   #35, D1 ; D1:=XLEFT
-00000248  0642 0037                313              ADD.W   #55, D2 ; D2:=YTOP
-0000024C  0643 0019                314              ADD.W   #25, D3 ; D3:=XRIGHT
-00000250  0644 0041                315              ADD.W   #65, D4 ; D4:=YBOTTOM
-00000254                           316  
-00000254                           317             
-00000254                           318              
-Line 319 ERROR: Symbol value differs between first and second pass
-00000254                           319  .PAINT      MOVE.B  #87, D0
-00000254  4E4F                     320              TRAP    #15 ; DRAW PLAYER
-00000256                           321  
-Line 322 ERROR: Symbol value differs between first and second pass
-00000256                           322  .END        
-00000256  4CDF 0E00                323              MOVEM.L (A7)+, A1-A3    ; RESTORE REGISTERS
-0000025A  4CDF 001F                324              MOVEM.L (A7)+, D0-D4    ; 
-0000025E                           325              
-0000025E  4E75                     326              RTS
-00000260                           327  
-00000260                           328  ;----------------------------------------------------
-00000260                           329  
-Line 330 WARNING: END directive missing, starting address not set
+000000FA  45F9 004DBD16            151              LEA PLYRPOSX,   A2  ; X DRAW PLAYER
+Line 152 ERROR: Undefined symbol
+00000100  47F9 004DBD16            152              LEA PLYRPOSY,   A3  ; Y DRAW PLAYER
+00000106  6000 00BC                153              BRA .NXTCOL
+0000010A                           154              
+Line 155 ERROR: Symbol value differs between first and second pass
+0000010A                           155  .ORIL                   
+Line 156 ERROR: Undefined symbol
+0000010A  43F9 004DBD16            156              LEA PLYRLFT,    A1   ; EA OF PLAYER BGR
+Line 157 ERROR: Undefined symbol
+00000110  45F9 004DBD16            157              LEA PLYRXLFT,   A2  ; X DRAW PLAYER
+Line 158 ERROR: Undefined symbol
+00000116  47F9 004DBD16            158              LEA PLYRYLFT,   A3  ; Y DRAW PLAYER           
+0000011C                           159  
+0000011C                           160              
+0000011C                           161              
+Line 162 ERROR: Symbol value differs between first and second pass
+0000011C                           162  .NXTCOL     MOVE.B  #80, D0 ; SET PEN COLOR TASK
+0000011C  2211                     163              MOVE.L  (A1),D1
+0000011E  4E4F                     164              TRAP #15    ; SET PEN COLOR
+00000120  B2BC 01234567            165              CMP.L   #$01234567, D1
+00000126  6700 00D2                166              BEQ .DRWORI
+0000012A                           167              
+0000012A  4280                     168              CLR.L D0
+0000012C  4281                     169              CLR.L D1
+0000012E  4282                     170              CLR.L D2
+00000130  1212                     171              MOVE.B  (A2),D1  
+Line 172 ERROR: Undefined symbol
+00000132  D279 004DBD16            172              ADD.W  (PLAYERX),D1 ; X PIXEL
+00000138  1413                     173              MOVE.B  (A3),D2  
+Line 174 ERROR: Undefined symbol
+0000013A  D479 004DBD16            174              ADD.W  (PLAYERY),D2 ; Y PIXEL
+00000140  103C 0052                175              MOVE.B  #82, D0 ; SET DRAW PIXEL TASK
+00000144  4E4F                     176              TRAP    #15
+00000146                           177              
+00000146  5889                     178              ADDA.L  #4,A1
+00000148  528A                     179              ADDA.L  #1,A2
+0000014A  528B                     180              ADDA.L  #1,A3
+0000014C                           181              
+0000014C  6076                     182              BRA .NXTCOL
+0000014E                           183              
+Line 184 ERROR: Symbol value differs between first and second pass
+0000014E                           184  .DRWORI            
+0000014E                           185              ; DRAW ORIENTATION OF PLAYER
+0000014E                           186              
+0000014E  103C 0050                187              MOVE.B  #80, D0 ; SET PEN COLOR TASK
+Line 188 ERROR: Undefined symbol
+00000152  223C 004DBD16            188              MOVE.L  #PLYRCOL, D1    ; PLAYER COLOR
+00000158  4E4F                     189              TRAP #15    ; SET PEN COLOR
+0000015A  103C 0051                190              MOVE.B  #81, D0 ; SET FILL COLOR TASK
+Line 191 ERROR: Undefined symbol
+0000015E  223C 004DBD16            191              MOVE.L  #ORIPCOL, D1    ; BLOCK COLOR
+00000164  4E4F                     192              TRAP #15    ; SET FILL COLOR
+00000166                           193              
+Line 194 ERROR: Undefined symbol
+00000166  3239 004DBD16            194              MOVE.W  (PLAYERX),D1    ; D1:=XCENTER
+Line 195 ERROR: Undefined symbol
+0000016C  3439 004DBD16            195              MOVE.W  (PLAYERY),D2    ; D2:=YCENTER
+00000172  3601                     196              MOVE.W  D1, D3  ; D3:=XCENTER
+00000174  3802                     197              MOVE.W  D2, D4  ; D4:=YCENTER
+00000176                           198              
+Line 199 ERROR: Undefined symbol
+00000176  0C79 0000 005455B8       199              CMP.W   #0, (PLYRUPDW)
+0000017E  6700 00E2                200              BEQ .END
+Line 201 ERROR: Undefined symbol
+00000182  0C79 0001 005455B8       201              CMP.W   #1, (PLYRUPDW)
+0000018A  6700 00C0                202              BEQ .LOOKD                      
+0000018E                           203              
+0000018E  0641 000F                204              ADD.W   #15, D1 ; D1:=XLEFT
+00000192  5A42                     205              ADD.W   #5, D2  ; D2:=YTOP
+00000194  0643 0019                206              ADD.W   #25, D3 ; D3:=XRIGHT
+00000198  0644 0000                207              ADD.W   #0, D4  ; D4:=YBOTTOM
+0000019C  6000 00BE                208              BRA .PAINT
+000001A0                           209              
+000001A0                           210              
+Line 211 ERROR: Symbol value differs between first and second pass
+000001A0                           211  .LOOKD                      ; LOOKINDOWN PLAYER
+000001A0                           212  
+000001A0  0641 000F                213              ADD.W   #15, D1 ; D1:=XLEFT
+000001A4  0642 002D                214              ADD.W   #45, D2 ; D2:=YTOP
+000001A8  0643 0019                215              ADD.W   #25, D3 ; D3:=XRIGHT
+000001AC  0644 0032                216              ADD.W   #50, D4 ; D4:=YBOTTOM
+000001B0                           217  
+000001B0                           218             
+000001B0                           219              
+Line 220 ERROR: Symbol value differs between first and second pass
+000001B0                           220  .PAINT      MOVE.B  #87, D0
+000001B0  4E4F                     221              TRAP    #15 ; DRAW PLAYER
+000001B2                           222  
+Line 223 ERROR: Symbol value differs between first and second pass
+000001B2                           223  .END        
+000001B2  4CDF 0E00                224              MOVEM.L (A7)+, A1-A3    ; RESTORE REGISTERS
+000001B6  4CDF 001F                225              MOVEM.L (A7)+, D0-D4    ; 
+000001BA                           226              
+000001BA  4E75                     227              RTS
+000001BC                           228  
+000001BC                           229  ;----------------------------------------------------
+000001BC                           230  
+000001BC                           231  
+000001BC                           232  
+000001BC                           233  
+000001BC                           234  
+000001BC                           235  
+Line 236 WARNING: END directive missing, starting address not set
 
-91 errors detected
+62 errors detected
 1 warning generated
 
 
 SYMBOL TABLE INFORMATION
 Symbol-name         Value
 -------------------------
-DRWPLYER            25E
-DRWPLYER:DRWORI     2D0
-DRWPLYER:END        338
-DRWPLYER:LOOKD      322
-DRWPLYER:NXTCOL     29A
-DRWPLYER:ORIL       288
-DRWPLYER:PAINT      332
+DRWPLYER            188
+DRWPLYER:DRWORI     1FA
+DRWPLYER:END        262
+DRWPLYER:LOOKD      24C
+DRWPLYER:NXTCOL     1C4
+DRWPLYER:ORIL       1B2
+DRWPLYER:PAINT      25C
 PLYRINIT            0
-PLYRPLOT            188
-PLYRPLOT:ORIB       226
-PLYRPLOT:ORIL       236
-PLYRPLOT:ORIR       216
-PLYRPLOT:ORIT       246
-PLYRPLOT:PAINT      252
 PLYRUPD             E6
 PLYRUPD:DOD         17E
 PLYRUPD:DOL         12E

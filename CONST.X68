@@ -33,6 +33,20 @@ GRASINTY    EQU     SCRHEIGH-3*BLOCSIZE+BLOCSIZE/2      ; INITIALY DIRT
 GRASFCOL    EQU	 $00008C50         ; FILL GRASS COLOR	
 
 
+; ---- TIME RELATED CONSTANTS-------------------------------------------------
+TMECOLOU    EQU     $000A0A0A               ; FILLING THE TIME BAR 
+TIMEPOSX    EQU	40                  ; TIME BAR OUTSIDE X	
+TIMEPOSY    EQU	20                  ; TIME BAR OUTSIDE Y
+TIMEWDTH    EQU	300                 ; TIME BAR OUTSIDE WIDTH	
+TIMEHEIG    EQU	30                  ; TIME BAR OUTSIDE HEIGHT
+
+
+TIMEINX     EQU	44                  ; TIME BAR INSIDE X	
+TIMEINY     EQU	24                  ; TIME BAR INSIDE Y
+TIMEINHG    EQU	22                  ; TIME BAR INSIDE HEIGHT	
+TIMEINWD    EQU	292                  ; TIME BAR FULL CHARGED WIDTH	
+
+
 ; ---- PLAYER RELATED CONSTANTS--------------------------------------------------
 PLYRWDTH    EQU	46                  ; PLAYER WIDTH	
 PLYRHEIG    EQU	54                  ; PLAYER HEIGHT
@@ -44,34 +58,27 @@ PLYSPEED    EQU     10                 ; PLAYER SPEED
 
 ; ---- DIAMOND RELATED CONSTANTS--------------------------------------------------
 DMNDID      EQU	 2                      ; DIAMOND IDENTIFIER
-DMNDCOL     EQU	 $00FFFF99          ; DIAMOND COLOR          
+DMNDWDTH    EQU     40
+DMNDHEIG    EQU     32         
+
+
+; --- DIAMOND COUNTER RELATED CONSTANTS ---------------------------------------------
+
+CONTDMNX     EQU     560                   ; COUNTER DIAMOND X
+CONTDMNY     EQU     30                    ; COUNTER DIAMOND X
+
+
+; --- STATE RELATED VARIABLES ------------------------------------
+
+STAINT      EQU     0                       ; STATE 0
+
+STAGAME     EQU     1                       ; STATE 1
+
+STATOVER    EQU     2                       ; STATE 2
 
 
 
-; --- EXPLOSION RELATED CONSTANTS ---------------------------------------------
 
-EXPGORE     EQU     10                      ; NUMBER OF BLOOD DROPS
-
-
-
-; --- AGENT DATABLOCK OFFSETS -------------------------------------------------
-
-; OFFSETS TO AGENT VARIABLES
-
-AGNFRAOF    EQU     0                       ; BASE FRAME
-AGNPOXOF    EQU     2                       ; X COORD
-AGNPOYOF    EQU     4                       ; Y COORD
-AGNSPYOF    EQU     8                       ; Y SPEED
-
-; OFFSETS TO AGENT COMMANDS
-
-AGNMOTOF    EQU     12                      ; DESIRED MOTION
-
-; OFFSET TO AGENT PARAMETERS
-
-AGNTYPOF    EQU     13                      ; TYPE
-AGNFRMOF    EQU     14                      ; FRAMES FOR LEFT AND RIGHT
-AGNSPXOF    EQU     18                      ; X SPEED
 
 
 

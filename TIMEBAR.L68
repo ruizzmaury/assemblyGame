@@ -1,0 +1,134 @@
+0000A87E Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 16/01/2021 18:06:51
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      : PLAYER MANAGEMENT
+00000000                             3  * Written by : MAURICI RUIZ PLAZA
+00000000                             4  * Date       : 20/12/2020
+00000000                             5  * Description: ALL ABOUT THE PLAYER BEHAVIOR AND CONTROL
+00000000                             6  *-----------------------------------------------------------
+00000000                             7  
+00000000                             8  
+00000000                             9  ;-----------------------------------------------------------
+00000000                            10  TIMEINIT
+00000000                            11  ; INITIALIZE PLAYER
+00000000                            12  ; INPUT -   - NONE
+00000000                            13  ; OUTPUT    - NONE  
+00000000                            14  ; MODIFIES  - NONE  
+00000000                            15  ;-----------------------------------------------------------
+00000000                            16             ;  INITIAL VALUE OF TIME BAR (FULLY CHARGED)             
+00000000                            17              
+Line 18 ERROR: Undefined symbol
+00000000  33FC BD16 005455B8        18              MOVE.W  #TIMEINWD, TIMEX  
+00000008  4E75                      19              RTS
+0000000A                            20  
+0000000A                            21  
+0000000A                            22  
+0000000A                            23  ;-----------------------------------------------------------
+0000000A                            24  ;-----------------------------------------------------------
+0000000A                            25  TIMEUPD
+0000000A                            26  ; UPDATE PLAYER
+0000000A                            27  ; INPUT     - NONE
+0000000A                            28  ; OUTPUT    - NONE
+0000000A                            29  ; MODIFIES  - NONE  
+0000000A                            30  ;-----------------------------------------------------------
+0000000A                            31              
+Line 32 ERROR: Comma expected
+0000000A                            32              CMP.W   #TIMEINX-45,(TIMEX)
+0000000A  6D00 0012                 33              BLT .END
+Line 34 ERROR: Undefined symbol
+0000000E  0479 000A 005455B8        34              SUB.W   #10, (TIMEX)
+00000016                            35              
+Line 36 ERROR: Symbol value differs between first and second pass
+00000016                            36  .END            
+00000016  4E75                      37              RTS
+00000018                            38  
+00000018                            39  
+00000018                            40  
+00000018                            41  ;-----------------------------------------------------------
+00000018                            42  ;------------------------------------------------------------------------------------------------------
+Line 43 ERROR: Symbol value differs between first and second pass
+00000018                            43  TIMEPLOT
+00000018                            44  ; PLOT PLAYER
+00000018                            45  ; INPUT - NONE
+00000018                            46  ; OUTPUT    - NONE
+00000018                            47  ; MODIFIES  - NONE  
+00000018                            48  ;-----------------------------------------------------------
+00000018                            49              
+00000018  48E7 F800                 50              MOVEM.L D0-D4, -(A7)    ; STACK REGISTER
+0000001C  103C 0050                 51              MOVE.B  #80, D0 ; SET PEN COLOR TASK
+Line 52 ERROR: Undefined symbol
+00000020  223C 004DBD16             52              MOVE.L  #ORIPCOL, D1    ; BLOCK COLOR
+00000026  4E4F                      53              TRAP #15    ; SET PEN COLOR
+00000028                            54                      
+00000028  103C 0051                 55              MOVE.B  #81, D0 ; SET FILL COLOR TASK
+Line 56 ERROR: Undefined symbol
+0000002C  223C 004DBD16             56              MOVE.L  #TMECOLOU,D1    ; BLOCK COLOR
+00000032  4E4F                      57              TRAP #15    ; SET FILL COLOR
+00000034                            58              
+00000034                            59              
+Line 60 ERROR: Undefined symbol
+00000034  323C BD16                 60              MOVE.W  #TIMEPOSX,D1    ; D1:=XCENTER
+Line 61 ERROR: Undefined symbol
+00000038  343C BD16                 61              MOVE.W  #TIMEPOSY,D2    ; D2:=YCENTER
+0000003C  3601                      62              MOVE.W  D1, D3  ; D3:=XFINAL
+0000003E  3802                      63              MOVE.W  D2, D4  ; D4:=YFINAL
+00000040                            64      
+Line 65 ERROR: Undefined symbol
+00000040  0643 BD16                 65              ADD.W   #TIMEWDTH, D3   ; D3:=XRIGHT
+Line 66 ERROR: Undefined symbol
+00000044  0644 BD16                 66              ADD.W   #TIMEHEIG, D4   ; D4:=YBOTTOM
+00000048  103C 0057                 67              MOVE.B  #87, D0
+0000004C  4E4F                      68              TRAP    #15 ; DRAW BLOCK
+0000004E                            69              
+0000004E                            70              ;---- DRAWING THE TIME BAR INSIDE WHICH IS GOING TO
+0000004E                            71              ;---- BE REDUCED-----------------------------------
+0000004E                            72              
+0000004E  103C 0050                 73              MOVE.B  #80, D0 ; SET PEN COLOR TASK
+Line 74 ERROR: Undefined symbol
+00000052  223C 004DBD16             74              MOVE.L  #ORIPCOL, D1    ; BLOCK COLOR
+00000058  4E4F                      75              TRAP #15    ; SET PEN COLOR
+0000005A  103C 005D                 76              MOVE.B  #93, D0 ; SET WITDH PEN COLOR TASK
+0000005E  123C 0003                 77              MOVE.B  #3, D1
+00000062  4E4F                      78              TRAP    #15     ; TIME BAR SURROUNDIN
+00000064                            79              
+00000064  103C 0051                 80              MOVE.B  #81, D0 ; SET FILL COLOR TASK
+Line 81 ERROR: Undefined symbol
+00000068  223C 004DBD16             81              MOVE.L  #ORIPCOL,D1 ; BLOCK COLOR
+0000006E  4E4F                      82              TRAP #15    ; SET FILL COLOR
+00000070                            83              
+00000070                            84              
+Line 85 ERROR: Undefined symbol
+00000070  323C BD16                 85              MOVE.W  #TIMEINX,D1 ; D1:=XCENTER
+Line 86 ERROR: Undefined symbol
+00000074  343C BD16                 86              MOVE.W  #TIMEINY,D2 ; D2:=YCENTER
+00000078  3601                      87              MOVE.W  D1, D3  ; D3:=XFINAL
+0000007A  3802                      88              MOVE.W  D2, D4  ; D4:=YFINAL
+0000007C                            89      
+Line 90 ERROR: Undefined symbol
+0000007C  D679 004DBD16             90              ADD.W   (TIMEX),D3  ; D3:=XRIGHT
+Line 91 ERROR: Undefined symbol
+00000082  0644 BD16                 91              ADD.W   #TIMEINHG, D4   ; D4:=YBOTTOM
+00000086  103C 0057                 92              MOVE.B  #87, D0
+0000008A  4E4F                      93              TRAP    #15 ; DRAW BLOCK
+0000008C                            94              
+0000008C                            95              
+0000008C                            96      
+0000008C  4CDF 001F                 97              MOVEM.L (A7)+, D0-D4    ; RESTORE REGISTERS
+00000090  4E75                      98              RTS
+00000092                            99  
+00000092  4E75                     100              RTS
+Line 101 WARNING: END directive missing, starting address not set
+
+17 errors detected
+1 warning generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+TIMEINIT            0
+TIMEPLOT            20
+TIMEUPD             A
+TIMEUPD:END         1E

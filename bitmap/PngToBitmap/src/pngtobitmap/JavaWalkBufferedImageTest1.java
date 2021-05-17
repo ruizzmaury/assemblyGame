@@ -1,5 +1,5 @@
+package pngtobitmap;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -13,7 +13,7 @@ public class JavaWalkBufferedImageTest1 extends Component {
 
     public static void main(String[] args) {
 
-        new JavaWalkBufferedImageTest1();
+        JavaWalkBufferedImageTest1 javaWalkBufferedImageTest1 = new JavaWalkBufferedImageTest1();
 
     }
 
@@ -31,16 +31,28 @@ public class JavaWalkBufferedImageTest1 extends Component {
             System.out.print("\t\t\t");
             System.out.print("DC.L ");
         }
+        
         System.out.print("$00");
         System.out.print(hexBlue.contentEquals("0") ? "00" : hexBlue);
         System.out.print(hexGreen.contentEquals("0") ? "00" : hexGreen);
         if (contCol == 5) {
-            System.out.println(hexRed.contentEquals("0") ? "00" : hexRed);
+             if(hexRed.length()<2){
+                System.out.print(hexRed.contentEquals("0") ? "00" : "0" + hexRed);
+            }else{
+                System.out.print(hexRed.contentEquals("0") ? "00" : hexRed);
+            }
             contCol = 0;
+            System.out.print("\n");
         } else {
-            System.out.print(hexRed.contentEquals("0") ? "00," : hexRed + ",");
+            if(hexRed.length()<2){
+                System.out.print(hexRed.contentEquals("0") ? "00," : "0" + hexRed + ",");
+            }else{
+                System.out.print(hexRed.contentEquals("0") ? "00," : hexRed + ",");
+            }
             contCol++;
+            
         }
+        
 
     }
 
@@ -50,14 +62,14 @@ public class JavaWalkBufferedImageTest1 extends Component {
         System.out.println("width, height: " + w + ", " + h);
 
         for (int i = 0; i < h; i++) {
-            System.out.print("\t\t\t");
-            System.out.print("DC.B ");
+            //System.out.print("\t\t\t");
+            //System.out.print("DC.B ");
             for (int j = 0; j < w; j++) {
-                // System.out.println("x,y: " + j + ", " + i);
+                //System.out.println("x,y: " + j + ", " + i);
                 if (j < 44) {
-                    System.out.print(i + ", ");	// print X
+                    //System.out.print(j + ", ");	// print X
                 } else {
-                    System.out.print(i);	// print X
+                    //System.out.print(j);	// print X
                 }
 
                 //System.out.print(i + ", ");	// print Y
@@ -65,7 +77,7 @@ public class JavaWalkBufferedImageTest1 extends Component {
                 //printPixelRGB(pixel);
                 //System.out.println("");
             }
-            System.out.print("\n");
+            //System.out.print("\n");
         }
     }
 
@@ -74,7 +86,7 @@ public class JavaWalkBufferedImageTest1 extends Component {
             System.out.println(this.getClass().getResource(""));
             // get the BufferedImage, using the ImageIO class
             BufferedImage image
-                    = ImageIO.read(this.getClass().getResource("character_right.png"));
+                    = ImageIO.read(this.getClass().getResource("diamond.png"));
             marchThroughImage(image);
             System.out.print(pixels);
         } catch (IOException e) {

@@ -1,61 +1,48 @@
 ; =============================================================================
-; TITLE    : EXAMPLE GAME (MAIN PROGRAM)
-; AUTHOR   : ANTONI BURGUERA
-; HISTORY  : 10-OCT-2020 - CREATION
-;            11-OCT-2020 - MINOR CHANGES
+; TITLE    : CRAZY MINER
+; AUTHOR   : MAURICI RUIZ PLAZA
+; CREATION : 16-01-2020
 ; =============================================================================
 
             ORG     $1000
 
 ; --- CODE INCLUDES -----------------------------------------------------------
 
-            INCLUDE "SYSCONST.X68"          ; SYSTEM CONSTANTS-
-            INCLUDE "SYSTEM.X68"            ; SYSTEM CODE
-            INCLUDE "CONST.X68"	; GAME CONSTANTS
-            INCLUDE "RANDOM.X68"	; RANDOM NUMBER GENERATOR
-            INCLUDE "AGENTLST.X68"	; 
-            INCLUDE "BLOCK2.X68"	; BLOCK MANAGEMENT	
-            INCLUDE "LAND.X68"              ; LAND CREATION
-            INCLUDE "PLAYER.X68"              ; PLAYER MANAGEMENT	
-            INCLUDE "DIAMOND.X68"              ; DIAMOND MANAGEMENT
-            INCLUDE "GFXDATA.X68"			
+            INCLUDE "SYSCONST.X68"               ; SYSTEM CONSTANTS-
+            INCLUDE "SYSTEM.X68"                 ; SYSTEM CODE
+            INCLUDE "CONST.X68"	        ; GAME CONSTANTS
+            INCLUDE "STATES.X68"                 ; GAME STATES
+            INCLUDE "RANDOM.X68"	        ; RANDOM NUMBER GENERATOR
+            INCLUDE "AGENTLST.X68"	        ; AGENT MANAGEMENT
+            INCLUDE "BLOCK2.X68"	        ; BLOCK MANAGEMENT	
+            INCLUDE "LAND.X68"                   ; LAND CREATION
+            INCLUDE "PLAYER.X68"                 ; PLAYER MANAGEMENT	
+            INCLUDE "DIAMOND.X68"                ; DIAMOND MANAGEMENT
+            INCLUDE "GFXDATA.X68"                ; PLAYER GFX
+            INCLUDE "GFXDIAMOND.X68"             ; DIAMOND GFX
+            INCLUDE "GFXGOVER.X68"               ; GAME OVER GFX
+            INCLUDE "GFXGINIT.X68"               ; GAME INTRO GFX
+            INCLUDE "TIMEBAR.X68"                ; TIME BAR MANAGEMENT
+            INCLUDE "DIAMONDCONT.X68"            ; COUNTER DIAMOND MANAGEMENT
+            INCLUDE "DRAWGAMEINIT.X68"           ; METHOD TO DRAW GFX OF GAME INTRO
+            INCLUDE "DRAWGAMEOVER.X68"           ; METHOD TO DRAW GFX OF GAME OVER
+            				
             
 ; --- INITIALIZE --------------------------------------------------------------
 
 START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
-	 
-
-            ; TO DO : ADD YOUR GAME INITIALIZATION HERE
-            JSR	  RNDINIT
+	             
             
-            
-            ; PLACE PLAYER
-            JSR     PLYRINIT 
-            
-            ; GENERATES LAND 
-            JSR     LANDCRTE
-                                            
-            
-            
-            
+            JSR     STAINIT                 ; INITIALIZE STATES
             
 
 ; --- UPDATE ------------------------------------------------------------------
 
 .LOOP       TRAP    #KBDTRAP                ; READ KEYBOARD
+                        
+            
+            JSR     STAUPD                  ; UPDATE STATES
 
-            ; TO DO : ADD YOUR GAME UPDATE HERE
-            ; SEPARATED SUBRUTINES ALLOW PLAYER TO MOVE 
-            ; DIAGONALLY
-            JSR     PLYRUPDX               
-            JSR     PLYRUPDY
-            
-*            ; ONE SUBRUTINE JUST ALLOWING PLAYER TO MOVE
-            ; IN ONE DIRECTION AT ONCE
-            ; JSR     PLYRUPD               
-            
-            JSR	 AGLUPD
-            
 
 ; --- WAIT SYNCH --------------------------------------------------------------
 
@@ -65,14 +52,10 @@ START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
 
 ; --- PLOT --------------------------------------------------------------------
 
-            ; TO DO : ADD YOUR GAME PLOT HERE           
-           
+            ; GAME PLOT           
+                          
+            JSR     STAPLOT                  ; PLOT STATES
             
-            ;JSR     PLYRPLOT
-            
-            JSR     DRWPLYER
-            ;JSR     DRAW
-            JSR     AGLPLOT
             TRAP    #SCRTRAP                ; SHOW GRAPHICS
             BRA     .LOOP                   ; MAIN LOOP
             SIMHALT
@@ -82,6 +65,16 @@ START       JSR     SYSINIT                 ; INITIALIZE SYSTEM-RELATED STUFF
             INCLUDE "SYSVAR.X68"
             INCLUDE "VAR.X68"
             END    START
+
+
+
+
+
+
+
+
+
+
 
 
 
